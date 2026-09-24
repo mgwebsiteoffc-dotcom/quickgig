@@ -103,12 +103,20 @@ tailwind.config = {
 </div>
 
 <script>
-  // scroll reveal
+  // scroll reveal (with a safe fallback so content can never stay hidden)
   document.addEventListener('DOMContentLoaded', () => {
+    const items = document.querySelectorAll('.reveal');
+    const showAll = () => items.forEach(el => el.classList.add('in'));
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduced || !('IntersectionObserver' in window)) { showAll(); return; }
+
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    items.forEach(el => io.observe(el));
+    setTimeout(showAll, 2500);
   });
 </script>
 @stack('scripts')
