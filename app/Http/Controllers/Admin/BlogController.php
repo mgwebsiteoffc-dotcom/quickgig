@@ -122,7 +122,7 @@ class BlogController extends Controller
         return back()->with('toast','Blog deleted');
     }
 
-    // For Quill image uploads via Hostinger file driver (no Redis/S3)
+    // For rich-text image uploads via the local file driver
     public function uploadImage(Request $request)
     {
         $request->validate(['image'=>'required|image|max:3072']);

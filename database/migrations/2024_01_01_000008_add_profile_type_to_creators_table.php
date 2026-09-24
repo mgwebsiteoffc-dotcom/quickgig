@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
     public function up(): void {
-        // Add profile type & barter/UGC fields — Hostinger MySQL safe, no doctrine needed.
+        // Add profile type & barter/UGC fields — MySQL/SQLite safe, no doctrine needed.
         // Use plain addColumn (no after()) for SQLite compatibility on local tests.
         Schema::table('creators', function (Blueprint $table) {
             if (!Schema::hasColumn('creators','profile_type')) {

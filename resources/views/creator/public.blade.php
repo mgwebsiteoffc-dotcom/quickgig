@@ -1,48 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.site')
+
+@section('content')
 @php
-  $seo = ['title'=>$c->seoTitle(),'description'=>Str::limit(strip_tags($c->bio ?: $c->headline),155),'canonical'=>route('creator.public',$c->id),'image'=>$c->avatarUrl(),'type'=>'profile'];
-  $breadcrumbs = [['name'=>'Home','url'=>url('/')],['name'=>'Creators','url'=>url('/creator')],['name'=>$c->name,'url'=>route('creator.public',$c->id)]];
+  $person = [
+    '@context' => 'https://schema.org',
+    '@type' => 'Person',
+    'name' => $c->name,
+    'alternateName' => $c->handle,
+    'image' => $c->avatarUrl(),
+    'description' => $c->bio,
+    'url' => route('creator.public', $c->id),
+    'jobTitle' => $c->headline,
+    'knowsAbout' => $c->skills ?: ['Video editing'],
+    'aggregateRating' => ['@type' => 'AggregateRating', 'ratingValue' => $c->rating, 'reviewCount' => max(1, (int) $c->reviews_count)],
+  ];
 @endphp
-@include('components.seo', ['seo'=>$seo, 'breadcrumbs'=>$breadcrumbs])
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>*{font-family:Inter,sans-serif}</style>
-<script type="application/ld+json">
-{!! json_encode(['@context'=>'https://schema.org','@type'=>'Person','name'=>$c->name,'alternateName'=>$c->handle,'image'=>$c->avatarUrl(),'description'=>$c->bio,'url'=>route('creator.public',$c->id),'jobTitle'=>$c->headline,'knowsAbout'=> $c->skills ?: ['Video Editing'],'aggregateRating'=>['@type'=>'AggregateRating','ratingValue'=>$c->rating,'reviewCount'=>$c->reviews_count]], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
-</script>
-</head>
-<body class="bg-[#F8F8F7] text-[#0F0F0F]">
-<div class="max-w-[960px] mx-auto px-4 sm:px-6 py-6">
-  <a href="{{ route('landing') }}" class="text-[12px] font-bold text-[#7A7A78]">← Home</a>
-  <div class="mt-4 bg-white border border-[#E8E8E6] rounded-2xl p-6 flex gap-5 flex-wrap">
-    <div class="relative shrink-0"><img src="{{ $c->avatarUrl() }}" class="w-24 h-24 rounded-full object-cover border border-[#E8E8E6]"><span class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full {{ $c->is_verified?'bg-[#1D9BF0]':'bg-amber-400' }} text-white grid place-items-center border-2 border-white" style="aspect-ratio:1/1">@if($c->is_verified)<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>@else<span class="text-[10px] font-black text-[#0F0F0F]">!</span>@endif</span></div>
-    <div class="flex-1 min-w-[240px]">
-      <h1 class="text-[22px] font-black leading-tight">{{ $c->name }} <span class="text-[#7A7A78] font-semibold text-[14px]">{{ $c->handle }}</span></h1>
-      <div class="text-[13px] font-semibold text-[#7A7A78]">{{ $c->headline }}</div>
-      <div class="mt-2 text-[13px] leading-6">{{ $c->bio }}</div>
-      <div class="mt-3 flex flex-wrap gap-2">
-        <span class="px-3 py-1.5 rounded-full text-[12px] font-bold border {{ $c->is_available ? 'bg-green-50 border-green-200 text-green-700' : 'bg-amber-50 border-amber-200 text-amber-700' }}">{{ $c->is_available ? '● Available now' : '● Busy' }}</span>
-        <span class="px-3 py-1.5 rounded-full bg-[#F8F8F7] border border-[#E8E8E6] text-[12px] font-bold">★ {{ $c->rating }} • {{ $c->reviews_count }} reviews</span>
-        <span class="px-3 py-1.5 rounded-full bg-[#F8F8F7] border border-[#E8E8E6] text-[12px] font-bold">{{ $c->orders_count }} orders • {{ $c->on_time_rate }}% on-time</span>
-        @if($c->skills)<span class="px-3 py-1.5 rounded-full bg-[#0F0F0F] text-white text-[12px] font-bold">{{ is_array($c->skills) ? implode(' • ', array_slice($c->skills,0,3)) : $c->skills }}</span>@endif
+
+<section class="py-12">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+
+    <div class="glass rounded-3xl overflow-hidden">
+      <div class="h-[160px] sm:h-[200px] bg-gradient-to-br from-violet/30 via-violet/10 to-cyan/20 relative">
+        @if($c->cover)
+          <img src="{{ filter_var($c->cover, FILTER_VALIDATE_URL) ? $c->cover : asset('storage/'.$c->cover) }}" class="w-full h-full object-cover opacity-70" alt="">
+        @endif
       </div>
-      <div class="mt-4 flex gap-2">
-        <a href="{{ route('business.home') }}" class="h-10 px-6 rounded-full bg-[#0F0F0F] text-white font-bold text-[13px] inline-flex items-center">Hire {{ explode(' ',$c->name)[0] }} — From ₹{{ number_format($c->price_from) }}</a>
-        @if($c->portfolio_url)<a href="{{ $c->portfolio_url }}" target="_blank" class="h-10 px-6 rounded-full border border-[#E8E8E6] bg-white font-bold text-[13px] inline-flex items-center">Portfolio</a>@endif
+
+      <div class="p-6 sm:p-8 -mt-14">
+        <div class="flex flex-wrap items-end gap-5">
+          <img src="{{ $c->avatarUrl() }}" class="w-24 h-24 rounded-3xl object-cover border-4 border-ink" alt="{{ $c->name }}">
+          <div class="flex-1 min-w-[240px]">
+            <h1 class="font-display text-[28px] font-semibold flex items-center gap-2.5">
+              {{ $c->name }}
+              @if($c->is_verified)<span class="text-[10.5px] font-semibold rounded-full bg-cyan/15 text-cyan px-2.5 py-1">Verified</span>@endif
+            </h1>
+            <div class="text-[13.5px] text-mut mt-1">{{ $c->handle }} · {{ $c->headline }}</div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-[12px] font-semibold rounded-full px-3 py-1.5 {{ $c->is_available ? 'bg-lime/15 text-lime' : 'bg-amber-400/15 text-amber-300' }}">
+              {{ $c->is_available ? 'Available now' : 'Busy — free soon' }}
+            </span>
+            <a href="{{ route('marketplace', ['q' => ltrim($c->handle, '@')]) }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">See gigs</a>
+          </div>
+        </div>
+
+        @if($c->bio)
+          <p class="mt-6 text-[14.5px] leading-7 text-mut max-w-[720px]">{{ $c->bio }}</p>
+        @endif
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          @foreach((array) ($c->skills ?? []) as $skill)
+            <span class="text-[12px] rounded-full border border-white/10 px-3 py-1.5 text-mut">{{ $skill }}</span>
+          @endforeach
+        </div>
+
+        <div class="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          @foreach([
+            ['Rating', number_format((float) $c->rating, 1).' ★'],
+            ['Gigs delivered', $c->orders_count ?: 0],
+            ['Response', ($c->response_minutes ?: 8).' min'],
+            ['From', '₹'.number_format($c->price_from)],
+          ] as [$k, $v])
+            <div class="rounded-2xl border border-white/8 bg-white/3 px-4 py-3.5">
+              <div class="text-[11px] text-mut">{{ $k }}</div>
+              <div class="font-display text-[19px] font-semibold mt-0.5">{{ $v }}</div>
+            </div>
+          @endforeach
+        </div>
       </div>
     </div>
+
+    @if($c->portfolio->count())
+      <h2 class="mt-12 font-display text-[22px] font-semibold">Recent work</h2>
+      <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        @foreach($c->portfolio as $p)
+          <div class="glass rounded-3xl overflow-hidden card-hover">
+            <img src="{{ $p->cover && filter_var($p->cover, FILTER_VALIDATE_URL) ? $p->cover : ($p->cover ? asset('storage/'.$p->cover) : 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=600&q=80') }}" class="h-[170px] w-full object-cover" alt="{{ $p->title }}">
+            <div class="p-5">
+              <div class="text-[14.5px] font-semibold leading-snug">{{ $p->title }}</div>
+              <div class="mt-1.5 text-[12.5px] text-mut">{{ $p->category }}</div>
+            </div>
+          </div>
+        @endforeach
+      </div>
+    @endif
   </div>
-  <div class="mt-6 grid md:grid-cols-3 gap-4">
-    @forelse($c->portfolio()->where('is_published',true)->limit(6)->get() as $p)
-      <div class="bg-white border border-[#E8E8E6] rounded-2xl overflow-hidden"><img src="{{ filter_var($p->cover, FILTER_VALIDATE_URL) ? $p->cover : asset('storage/'.$p->cover) }}" class="h-[150px] w-full object-cover"><div class="p-3"><div class="text-[13px] font-bold">{{ $p->title }}</div><div class="text-[11px] font-semibold text-[#7A7A78]">{{ $p->category }} • {{ $p->views }} views</div></div></div>
-    @empty
-      <div class="md:col-span-3 text-center py-8 bg-white border border-dashed border-[#E8E8E6] rounded-2xl text-[#7A7A78] font-medium">No portfolio published yet.</div>
-    @endforelse
-  </div>
-</div>
-</body>
-</html>
+</section>
+@endsection
+
+@push('scripts')
+<script type="application/ld+json">{!! json_encode($person, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
+@endpush

@@ -39,7 +39,7 @@
   @if(auth()->user()->hasAnyRole(['super_admin','admin']))
   <div class="bg-white border border-[#E8E8E6] rounded-2xl p-5 h-fit">
     <div class="font-black text-[14px]">Add Team Member</div>
-    <div class="text-[12px] font-medium text-[#7A7A78]">Creates login for admin panel. Password is hashed. Works on Hostinger file session.</div>
+    <div class="text-[12px] font-medium text-[#7A7A78]">Creates login for admin panel. Password is hashed. Sessions are file based by default.</div>
     <form method="POST" action="{{ route('admin.users.store') }}" class="mt-4 space-y-3">@csrf
       <input name="name" required placeholder="Full name" class="w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">
       <input name="email" required type="email" placeholder="Email" class="w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">
@@ -49,7 +49,7 @@
       <input name="password" required type="password" placeholder="Password (min 8 chars)" class="w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">
       <button class="w-full h-10 rounded-full bg-[#0F0F0F] text-white font-bold text-[13px]">Create User</button>
     </form>
-    <div class="mt-3 text-[11px] font-semibold text-[#7A7A78]">Hostinger tip: After creating, test login in incognito. File session needs <code class="bg-[#F8F8F7] border border-[#E8E8E6] px-1 py-0.5 rounded">storage/framework/sessions</code> writable (755).</div>
+    <div class="mt-3 text-[11px] font-semibold text-[#7A7A78]">Tip: after creating, test the login in a private window. File sessions need <code class="bg-[#F8F8F7] border border-[#E8E8E6] px-1 py-0.5 rounded">storage/framework/sessions</code> writable (755).</div>
   </div>
   @endif
 </div>

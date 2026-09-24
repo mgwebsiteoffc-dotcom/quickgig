@@ -45,4 +45,17 @@ class Service extends Model
     }
 
     public function isBarter(): bool { return $this->price_type === 'barter' || $this->is_barter; }
+
+    /** Cover image URL with a graceful fallback. */
+    public function coverUrl(): string
+    {
+        if ($this->cover && filter_var($this->cover, FILTER_VALIDATE_URL)) return $this->cover;
+        if ($this->cover) return asset('storage/'.$this->cover);
+        return 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=800&q=80';
+    }
+
+    public function deliveryLabel(): string
+    {
+        return $this->delivery_days.($this->delivery_days > 1 ? ' days' : ' day');
+    }
 }

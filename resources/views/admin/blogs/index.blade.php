@@ -34,7 +34,7 @@
           </td>
         </tr>
         @empty
-        <tr><td colspan="6" class="px-4 py-12 text-center"><div class="font-black">No blogs yet</div><div class="text-[13px] text-[#7A7A78] font-medium">Create your first post — Quill editor works on Hostinger file uploads (no S3).</div></td></tr>
+        <tr><td colspan="6" class="px-4 py-12 text-center"><div class="font-black">No blogs yet</div><div class="text-[13px] text-[#7A7A78] font-medium">Create your first post — The editor uploads images straight to your server.</div></td></tr>
         @endforelse
       </tbody>
     </table>

@@ -1,67 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-@include('components.seo', ['seo'=>$seo, 'breadcrumbs'=>$breadcrumbs, 'blog'=>$blog])
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>*{font-family:Inter,sans-serif} .prose h2{font-size:20px;font-weight:800;margin:20px 0 8px} .prose h3{font-size:15px;font-weight:800;margin:16px 0 6px} .prose p{font-size:14px;line-height:1.7;color:#2b2b2b;margin:8px 0} .prose ul{list-style:disc;padding-left:20px;margin:8px 0} .prose pre{font-family:monospace} .prose a{color:#2563EB;text-decoration:underline}</style>
-</head>
-<body class="bg-white text-[#0F0F0F]">
-<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-[#E8E8E6]">
-  <div class="max-w-[1160px] mx-auto px-4 sm:px-6 h-[64px] flex items-center justify-between">
-    <a href="{{ route('landing') }}" class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-[#0F0F0F] text-white grid place-items-center font-black text-[13px]">QC</div><div class="leading-none"><div class="font-extrabold text-[14px]">QuickContent</div><div class="text-[11px] font-semibold text-[#7A7A78]">Playbooks</div></div></a>
-    <div class="flex gap-2"><a href="{{ route('blog.index') }}" class="h-9 px-4 rounded-full border border-[#E8E8E6] font-bold text-[13px] inline-flex items-center">All posts</a><a href="{{ route('business.home') }}" class="h-9 px-5 rounded-full bg-[#0F0F0F] text-white font-bold text-[13px] inline-flex items-center">Hire a Pro</a></div>
-  </div>
-</header>
+@extends('layouts.site')
 
-<article class="max-w-[760px] mx-auto px-4 sm:px-6 py-8">
-  <nav class="text-[11px] font-semibold text-[#7A7A78] flex flex-wrap gap-1.5 items-center">
-    <a href="{{ route('landing') }}" class="hover:text-[#0F0F0F]">Home</a><span>›</span><a href="{{ route('blog.index') }}" class="hover:text-[#0F0F0F]">Blog</a><span>›</span><span class="text-[#0F0F0F]">{{ $blog->category->name ?? 'Post' }}</span>
-  </nav>
-  <div class="mt-3 inline-flex items-center gap-2 text-[11px] font-bold tracking-widest uppercase px-3 py-1 rounded-full text-white" style="background:{{ $blog->category->color ?? '#2563EB' }}">{{ $blog->category->name ?? 'General' }} • {{ $blog->reading_minutes }} MIN • {{ $blog->views }} VIEWS</div>
-  <h1 class="mt-3 text-[26px] sm:text-[34px] font-black tracking-tight leading-[1.05]">{{ $blog->title }}</h1>
-  <div class="mt-2 text-[13px] font-medium text-[#7A7A78] flex flex-wrap gap-3 items-center">
-    <span class="inline-flex items-center gap-2"><img src="https://i.pravatar.cc/100?img=68" class="w-6 h-6 rounded-full"> {{ $blog->author->name ?? 'QuickContent Team' }}</span>
-    <span>•</span><span>{{ $blog->published_at?->format('M d, Y') }}</span>
-    @if($blog->tags)<span>•</span><span>{{ is_array($blog->tags) ? implode(', ', $blog->tags) : $blog->tags }}</span>@endif
-  </div>
-  @if($blog->excerpt)<p class="mt-4 text-[15px] leading-6 font-medium text-[#2b2b2b] bg-[#F8F8F7] border border-[#E8E8E6] rounded-2xl p-4">{{ $blog->excerpt }}</p>@endif
-  <img src="{{ filter_var($blog->cover, FILTER_VALIDATE_URL) ? $blog->cover : asset('storage/'.$blog->cover) }}" alt="{{ $blog->cover_alt ?: $blog->title }}" class="mt-6 w-full h-[380px] object-cover rounded-2xl border border-[#E8E8E6]">
+@push('styles')
+<style>
+  .article h2 { font-family:"Space Grotesk",sans-serif; font-size:23px; font-weight:600; margin:34px 0 12px; letter-spacing:-0.02em; }
+  .article h3 { font-family:"Space Grotesk",sans-serif; font-size:18px; font-weight:600; margin:26px 0 10px; }
+  .article p  { font-size:15.5px; line-height:1.85; color:#B6BCCE; margin:14px 0; }
+  .article ul { list-style:disc; padding-left:22px; margin:14px 0; color:#B6BCCE; font-size:15.5px; line-height:1.8; }
+  .article ol { list-style:decimal; padding-left:22px; margin:14px 0; color:#B6BCCE; font-size:15.5px; line-height:1.8; }
+  .article strong { color:#F2F3F8; font-weight:600; }
+  .article a { color:#A78BFA; text-decoration:underline; }
+  .article pre { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); padding:16px; border-radius:16px; white-space:pre-wrap; font-size:13px; color:#D5DAE8; margin:18px 0; }
+  .article img { border-radius:20px; margin:20px 0; }
+</style>
+@endpush
 
-  {{-- AEO speakable --}}
-  <div class="mt-6 prose max-w-none" id="speakable">
-    {!! $blog->content !!}
-  </div>
+@section('content')
+<article class="py-12">
+  <div class="max-w-[760px] mx-auto px-5 lg:px-8">
 
-  @if(!empty($blog->faq_json) && is_array($blog->faq_json))
-  <div class="mt-8 bg-[#F8F8F7] border border-[#E8E8E6] rounded-2xl p-5">
-    <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Quick Answers (AEO)</div>
-    @foreach($blog->faq_json as $fq)
-      <div class="mt-3"><div class="text-[14px] font-bold">{{ $fq['q'] ?? $fq['question'] ?? '' }}</div><div class="text-[13px] leading-6 text-[#2b2b2b]">{{ $fq['a'] ?? $fq['answer'] ?? '' }}</div></div>
-    @endforeach
-  </div>
-  <script type="application/ld+json">{!! json_encode(['@context'=>'https://schema.org','@type'=>'FAQPage','mainEntity'=> collect($blog->faq_json)->map(fn($f)=>['@type'=>'Question','name'=>$f['q']??$f['question'],'acceptedAnswer'=>['@type'=>'Answer','text'=>$f['a']??$f['answer']]])->values()->toArray()], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
-  @endif
+    <nav class="flex items-center gap-2 text-[12.5px] text-mut">
+      <a href="{{ route('blog.index') }}" class="hover:text-white">Insights</a>
+      <span class="opacity-40">/</span>
+      <span class="text-white/70">{{ $blog->category->name ?? 'Post' }}</span>
+    </nav>
 
-  <div class="mt-8 flex flex-wrap gap-3">
-    <a href="{{ route('business.home') }}" class="h-10 px-6 rounded-full bg-[#0F0F0F] text-white font-extrabold text-[13px] inline-flex items-center">Get this done in 1 day — From ₹1,299</a>
-    <a href="{{ route('blog.index') }}" class="h-10 px-6 rounded-full border border-[#E8E8E6] font-bold text-[13px] inline-flex items-center">More playbooks</a>
-  </div>
+    <h1 class="mt-5 font-display text-[32px] sm:text-[42px] font-semibold leading-[1.08]">{{ $blog->title }}</h1>
 
-  @if($related->count())
-  <div class="mt-10">
-    <div class="text-[14px] font-black">Related playbooks</div>
-    <div class="mt-3 grid sm:grid-cols-3 gap-4">
-      @foreach($related as $r)
-      <a href="{{ route('blog.show',$r->slug) }}" class="border border-[#E8E8E6] rounded-2xl overflow-hidden hover:border-[#0F0F0F]"><img src="{{ filter_var($r->cover, FILTER_VALIDATE_URL) ? $r->cover : asset('storage/'.$r->cover) }}" class="h-[120px] w-full object-cover"><div class="p-3"><div class="text-[12px] font-bold line-clamp-2">{{ $r->title }}</div><div class="text-[11px] text-[#7A7A78] font-semibold">{{ $r->reading_minutes }} min</div></div></a>
-      @endforeach
+    <div class="mt-5 flex flex-wrap items-center gap-4 text-[13px] text-mut">
+      <span class="flex items-center gap-2.5">
+        <span class="w-7 h-7 rounded-lg btn-grad grid place-items-center font-display text-[12px] font-bold text-ink">{{ substr($blog->author->name ?? 'Q', 0, 1) }}</span>
+        {{ $blog->author->name ?? 'Quick GIGS team' }}
+      </span>
+      <span class="opacity-40">·</span>
+      <span>{{ $blog->published_at?->format('d M Y') }}</span>
+      <span class="opacity-40">·</span>
+      <span>{{ $blog->reading_minutes }} min read</span>
     </div>
-  </div>
-  @endif
-</article>
 
-<footer class="border-t border-[#E8E8E6] mt-10 py-6 text-center text-[12px] font-semibold text-[#7A7A78]">© {{ date('Y') }} QuickContent • JSON-LD Article + Breadcrumbs + FAQ (Hostinger shared ready)</footer>
-</body>
-</html>
+    @if($blog->excerpt)
+      <p class="mt-7 glass rounded-2xl p-5 text-[15px] leading-7 text-white/80">{{ $blog->excerpt }}</p>
+    @endif
+
+    @if($blog->cover)
+      <img src="{{ filter_var($blog->cover, FILTER_VALIDATE_URL) ? $blog->cover : asset('storage/'.$blog->cover) }}" alt="{{ $blog->cover_alt ?: $blog->title }}" class="mt-7 w-full h-[300px] sm:h-[380px] object-cover rounded-3xl border border-white/10">
+    @endif
+
+    <div class="article mt-8" id="speakable">{!! $blog->content !!}</div>
+
+    @if(!empty($blog->faq_json) && is_array($blog->faq_json))
+      <div class="mt-10 glass rounded-3xl p-6">
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Quick answers</div>
+        <div class="mt-4 space-y-4">
+          @foreach($blog->faq_json as $f)
+            <div>
+              <div class="text-[14.5px] font-semibold">{{ $f['q'] ?? $f['question'] ?? '' }}</div>
+              <div class="mt-1.5 text-[13.5px] leading-6 text-mut">{{ $f['a'] ?? $f['answer'] ?? '' }}</div>
+            </div>
+          @endforeach
+        </div>
+      </div>
+    @endif
+
+    {{-- CTA --}}
+    <div class="mt-12 rounded-3xl glass-strong p-7 text-center">
+      <div class="font-display text-[22px] font-semibold">Skip the how-to — hire the pro.</div>
+      <p class="mt-2 text-[14px] text-mut">Matched in minutes, escrow protected, from ₹1,299.</p>
+      <div class="mt-5 flex flex-wrap justify-center gap-3">
+        <a href="{{ route('marketplace') }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">Browse gigs</a>
+        <a href="{{ route('register') }}?type=business" class="h-11 px-5 rounded-xl glass inline-flex items-center text-[13.5px] font-medium">Create free account</a>
+      </div>
+    </div>
+
+    @if($related->count())
+      <h2 class="mt-14 font-display text-[22px] font-semibold">Read next</h2>
+      <div class="mt-5 grid sm:grid-cols-3 gap-4">
+        @foreach($related as $r)
+          <a href="{{ route('blog.show', $r->slug) }}" class="glass rounded-2xl overflow-hidden card-hover group">
+            <img src="{{ filter_var($r->cover, FILTER_VALIDATE_URL) ? $r->cover : asset('storage/'.$r->cover) }}" class="h-[110px] w-full object-cover opacity-80 group-hover:opacity-100 transition" alt="">
+            <div class="p-4 text-[13.5px] font-medium leading-snug line-clamp-2">{{ $r->title }}</div>
+          </a>
+        @endforeach
+      </div>
+    @endif
+  </div>
+</article>
+@endsection

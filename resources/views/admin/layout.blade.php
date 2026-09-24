@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>@yield('title','Admin') — QuickContent Admin</title>
+<title>@yield('title','Admin') — Quick GIGS Admin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,9 +15,9 @@
   <!-- Sidebar -->
   <aside class="hidden lg:flex w-[260px] shrink-0 bg-white border-r border-[#E8E8E6] flex-col sticky top-0 h-screen">
     <div class="h-[64px] px-5 flex items-center gap-3 border-b border-[#F0F0EE] shrink-0">
-      <div class="w-8 h-8 rounded-xl bg-[#0F0F0F] text-white grid place-items-center font-black text-[12px]">QC</div>
+      <div class="w-8 h-8 rounded-xl text-white grid place-items-center" style="background:linear-gradient(100deg,#7C5CFF,#22D3EE)"><svg width="14" height="14" viewBox="0 0 24 24" fill="#06060B"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
       <div class="leading-none">
-        <div class="font-black text-[13px]">QuickContent</div>
+        <div class="font-black text-[13px]">Quick GIGS</div>
         <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">ADMIN • {{ strtoupper(auth()->user()->role ?? 'admin') }}</div>
       </div>
     </div>
@@ -60,7 +60,7 @@
     </nav>
     <div class="p-3 border-t border-[#F0F0EE] space-y-2">
       <div class="bg-[#F8F8F7] border border-[#E8E8E6] rounded-xl p-3">
-        <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Hostinger Shared Ready</div>
+        <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">System healthy</div>
         <div class="text-[12px] font-semibold leading-tight mt-1">No Redis • File cache • DB queue (cron)</div>
         <div class="text-[11px] text-[#7A7A78] font-medium">Tailwind CDN • No build needed</div>
       </div>
@@ -92,7 +92,7 @@
     <!-- Mobile drawer -->
     <div x-show="open" x-transition class="lg:hidden fixed inset-0 z-40 bg-black/40" @click="open=false"></div>
     <div x-show="open" x-transition class="lg:hidden fixed left-0 top-0 bottom-0 w-[280px] bg-white border-r border-[#E8E8E6] z-50 overflow-y-auto p-3">
-      <div class="flex items-center justify-between h-[56px] px-2 border-b border-[#F0F0EE]"><span class="font-black">QuickContent Admin</span><button @click="open=false" class="w-8 h-8 rounded-full bg-[#F8F8F7] border border-[#E8E8E6] grid place-items-center">✕</button></div>
+      <div class="flex items-center justify-between h-[56px] px-2 border-b border-[#F0F0EE]"><span class="font-black">Quick GIGS Admin</span><button @click="open=false" class="w-8 h-8 rounded-full bg-[#F8F8F7] border border-[#E8E8E6] grid place-items-center">✕</button></div>
       <div class="mt-3 space-y-1">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#0F0F0F] text-white font-semibold text-[13px]">Dashboard</a>
         <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F8F8F7] font-semibold text-[13px] border border-transparent">Orders</a>
@@ -108,7 +108,7 @@
       @yield('content')
     </main>
 
-    <div class="px-6 py-4 text-center text-[11px] font-semibold text-[#7A7A78] border-t border-[#F0F0EE] bg-white">© {{ date('Y') }} QuickContent • Hostinger Shared • No Redis • File & DB drivers only</div>
+    <div class="px-6 py-4 text-center text-[11px] font-semibold text-[#7A7A78] border-t border-[#F0F0EE] bg-white">© {{ date('Y') }} Quick GIGS • Admin console</div>
   </div>
 </div>
 </body>

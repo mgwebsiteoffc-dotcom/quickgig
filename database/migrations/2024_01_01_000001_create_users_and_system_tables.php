@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
@@ -15,7 +14,7 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            // Hostinger shared — simple enum, no extra package
+            // Simple role enum — no extra package required
             $table->enum('role', ['super_admin','admin','manager','support','finance','business','creator'])->default('business');
             $table->string('phone')->nullable();
             $table->string('avatar')->nullable();
@@ -42,38 +41,7 @@ return new class extends Migration {
             $table->integer('last_activity')->index();
         });
 
-        // Seed default super admin + demo staff (for Hostinger — change password after first login)
-        DB::table('users')->insert([
-            [
-                'name' => 'Super Admin',
-                'email' => 'admin@quickcontent.in',
-                'password' => Hash::make('Admin@12345'),
-                'role' => 'super_admin',
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Manager',
-                'email' => 'manager@quickcontent.in',
-                'password' => Hash::make('Manager@123'),
-                'role' => 'manager',
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Support',
-                'email' => 'support@quickcontent.in',
-                'password' => Hash::make('Support@123'),
-                'role' => 'support',
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
-
-        // Queue table for database driver (Hostinger-safe — no Redis)
+        // Queue tables for the database queue driver
         Schema::create('jobs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('queue')->index();

@@ -1,86 +1,167 @@
-@extends('layouts.app')
+@extends('layouts.site')
+
 @section('content')
-<div class="max-w-[760px] mx-auto">
-  <div class="px-4 sm:px-6 py-5">
-    <a href="{{ route('creator.dashboard') }}" class="text-[12px] font-bold text-[#7A7A78] hover:text-[#0F0F0F]">← Back to Dashboard</a>
-    <h1 class="mt-2 text-[22px] font-black tracking-tight">Creator Profile</h1>
-    <p class="text-[13px] font-medium text-[#7A7A78]">Real DB — your verified tick, portfolio, UPI, and live availability (green dot) come from here. No dummy.</p>
-  </div>
+<section class="py-12">
+  <div class="max-w-[900px] mx-auto px-5 lg:px-8">
 
-  @if(session('toast'))<div class="mx-4 sm:mx-6 mb-4 bg-[#0F0F0F] text-white rounded-full px-4 py-2.5 text-[13px] font-bold">{{ session('toast') }}</div>@endif
+    <a href="{{ route('creator.dashboard') }}" class="text-[12.5px] text-mut hover:text-white">← Back to studio</a>
+    <h1 class="mt-3 font-display text-[30px] font-semibold">Creator profile</h1>
+    <p class="mt-2 text-[14.5px] text-mut">A complete profile gets verified faster and ranks higher in matching.</p>
 
-  <form method="POST" action="{{ route('creator.profile.update') }}" enctype="multipart/form-data" class="bg-white border-y sm:border border-[#E8E8E6] sm:rounded-2xl sm:mx-6 overflow-hidden">
-    @csrf
-    <div class="p-5 sm:p-6">
-      <div class="flex gap-4 flex-wrap">
-        <div class="text-center">
-          <img src="{{ $creator->avatarUrl() }}" class="w-20 h-20 rounded-full object-cover border border-[#E8E8E6]">
-          <div class="mt-2 text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Avatar</div>
-          <input type="file" name="avatar" accept="image/*" class="mt-1 w-[160px] text-[11px]">
+    @if($errors->any())
+      <div class="mt-6 rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-[13.5px] text-rose-200">{{ $errors->first() }}</div>
+    @endif
+
+    <form method="POST" action="{{ route('creator.profile.update') }}" enctype="multipart/form-data" class="mt-7 glass rounded-3xl p-6 sm:p-7">
+      @csrf
+
+      <div class="flex flex-wrap items-center gap-5 pb-6 border-b border-white/8">
+        <img src="{{ $creator->avatarUrl() }}" class="w-16 h-16 rounded-2xl object-cover border border-white/12" alt="">
+        <div class="flex-1 min-w-[220px]">
+          <label class="label" for="avatar">Profile photo</label>
+          <input id="avatar" type="file" name="avatar" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:text-[12.5px]">
         </div>
         <div class="flex-1 min-w-[220px]">
-          <div class="w-full h-[96px] rounded-2xl bg-[#F8F8F7] border border-[#E8E8E6] grid place-items-center text-[11px] font-bold text-[#7A7A78]">Cover image (optional) <input type="file" name="cover" accept="image/*" class="ml-2 text-[11px]"></div>
-          <div class="mt-2 text-[11px] font-medium text-[#7A7A78]">Hostinger file upload — stored in <code class="bg-[#F8F8F7] border px-1 py-0.5 rounded">storage/creators</code> or <code class="bg-[#F8F8F7] px-1 py-0.5 rounded">public/uploads</code>.</div>
+          <label class="label" for="cover">Cover image</label>
+          <input id="cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:text-[12.5px]">
         </div>
       </div>
 
-      <div class="mt-6 grid sm:grid-cols-2 gap-4">
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Name *</label><input name="name" value="{{ old('name',$creator->name) }}" required class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px] font-bold"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Handle *</label><input name="handle" value="{{ old('handle',$creator->handle) }}" required class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px] font-mono"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Email</label><input name="email" type="email" value="{{ old('email',$creator->email) }}" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px]"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Phone</label><input name="phone" value="{{ old('phone',$creator->phone) }}" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px]"></div>
-        <div class="sm:col-span-2"><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Headline</label><input name="headline" value="{{ old('headline',$creator->headline) }}" placeholder="Talking-Head • Retention • For @devtalksbusiness" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-semibold"></div>
-        <div class="sm:col-span-2"><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Bio</label><textarea name="bio" rows="3" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] leading-6">{{ old('bio',$creator->bio) }}</textarea></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Location</label><input name="location" value="{{ old('location',$creator->location) }}" placeholder="Ghaziabad, IN" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Starting Price (₹)</label><input name="price_from" type="number" value="{{ old('price_from',$creator->price_from) }}" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-bold"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Skills (comma separated)</label><input name="skills" value="{{ old('skills', is_array($creator->skills) ? implode(', ', $creator->skills) : $creator->skills) }}" placeholder="Talking-Head, Retention, Captions" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Languages (comma)</label><input name="languages" value="{{ old('languages', is_array($creator->languages) ? implode(', ', $creator->languages) : $creator->languages) }}" placeholder="Hindi, English" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Profile type — controls matching</label><select name="profile_type" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-bold">@foreach(['video_editor'=>'Video Editor','ugc_creator'=>'UGC Creator','influencer'=>'Influencer (Barter)','designer'=>'Designer','hybrid'=>'Hybrid — All'] as $k=>$v)<option value="{{ $k }}" {{ (old('profile_type',$creator->profile_type)==$k?'selected':'') }}>{{ $v }}</option>@endforeach</select><div class="text-[11px] text-[#7A7A78] mt-1">UGC → UGC Video, Influencer → Barter Collab</div></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Collab type</label><select name="collab_type" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-semibold"><option value="paid" {{ old('collab_type',$creator->collab_type)=='paid'?'selected':'' }}>Paid</option><option value="barter" {{ old('collab_type',$creator->collab_type)=='barter'?'selected':'' }}>Barter</option><option value="both" {{ old('collab_type',$creator->collab_type)=='both'?'selected':'' }}>Both</option></select></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Followers</label><input name="followers_count" type="number" min="0" value="{{ old('followers_count',$creator->followers_count) }}" placeholder="85000" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
-        <div class="flex items-center gap-2 pt-6"><label class="flex items-center gap-2 text-[13px] font-bold"><input type="checkbox" name="barter_available" value="1" {{ old('barter_available',$creator->barter_available)?'checked':'' }}> Open to Barter</label><span class="text-[11px] font-semibold text-[#7A7A78]">Shows in Barter</span></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">UGC Niches (comma)</label><input name="ugc_niches" value="{{ old('ugc_niches', is_array($creator->ugc_niches)?implode(', ', $creator->ugc_niches):$creator->ugc_niches) }}" placeholder="Beauty, Skincare, Fashion" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">UPI ID (for payouts)</label><input name="upi_id" value="{{ old('upi_id',$creator->upi_id) }}" placeholder="name@upi" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-mono"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Portfolio URL</label><input name="portfolio_url" value="{{ old('portfolio_url',$creator->portfolio_url) }}" placeholder="https://..." class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Instagram</label><input name="instagram" value="{{ old('instagram',$creator->instagram) }}" placeholder="https://instagram.com/..." class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
-        <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">YouTube</label><input name="youtube" value="{{ old('youtube',$creator->youtube) }}" placeholder="https://youtube.com/..." class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
-      </div>
-
-      @if($errors->any())<div class="mt-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-3 py-2 text-[13px] font-semibold">{{ $errors->first() }}</div>@endif
-
-      <button class="mt-6 w-full h-11 rounded-full bg-[#0F0F0F] text-white font-extrabold text-[14px]">Save Creator Profile ✓</button>
-      <div class="mt-2 text-[11px] text-center font-semibold text-[#7A7A78]">Shows as verified 14px circle tick + green availability dot across marketplace & landing</div>
-    </div>
-  </form>
-
-  {{-- Portfolio manager --}}
-  <div class="mt-6 bg-white border-y sm:border border-[#E8E8E6] sm:rounded-2xl sm:mx-6 p-5 sm:p-6">
-    <div class="flex items-center justify-between"><div class="font-black text-[14px]">Portfolio</div><span class="text-[11px] font-bold bg-[#F8F8F7] border border-[#E8E8E6] px-2.5 py-1 rounded-full">{{ $portfolio->count() }} items</span></div>
-    <div class="mt-4 grid sm:grid-cols-3 gap-3">
-      @forelse($portfolio as $p)
-        <div class="border border-[#E8E8E6] rounded-2xl overflow-hidden">
-          <img src="{{ filter_var($p->cover, FILTER_VALIDATE_URL) ? $p->cover : asset('storage/'.$p->cover) }}" class="h-[120px] w-full object-cover">
-          <div class="p-3"><div class="text-[13px] font-bold leading-tight">{{ $p->title }}</div><div class="text-[11px] font-semibold text-[#7A7A78]">{{ $p->category }} • {{ $p->views }} views</div>
-          <form method="POST" action="{{ route('creator.portfolio.destroy',$p->id) }}" onsubmit="return confirm('Remove?')" class="mt-2">@csrf @method('DELETE')<button class="w-full h-8 rounded-full border border-red-200 bg-red-50 text-red-700 font-bold text-[12px]">Remove</button></form></div>
+      <div class="mt-6 grid sm:grid-cols-2 gap-5">
+        <div>
+          <label class="label" for="name">Name *</label>
+          <input id="name" name="name" value="{{ old('name', $creator->name) }}" required class="field">
         </div>
-      @empty
-        <div class="sm:col-span-3 text-center py-8 bg-[#F8F8F7] border border-dashed border-[#E8E8E6] rounded-2xl"><div class="font-bold">No portfolio yet</div><div class="text-[12px] text-[#7A7A78] font-medium">Add your best reel/thumb below — shows on your public profile & marketplace</div></div>
-      @endforelse
-    </div>
-
-    <form method="POST" action="{{ route('creator.portfolio.store') }}" enctype="multipart/form-data" class="mt-5 bg-[#F8F8F7] border border-[#E8E8E6] rounded-2xl p-4">
-      @csrf
-      <div class="font-bold text-[13px]">Add Portfolio Item</div>
-      <div class="mt-3 grid sm:grid-cols-2 gap-3">
-        <input name="title" required placeholder="Title — e.g. Hook that held 71%" class="h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px]">
-        <input name="category" placeholder="Category — Reel / Thumbnail / AI" class="h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px]">
-        <input name="video_url" placeholder="Video URL (YouTube/Drive)" class="h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px]">
-        <input name="tags" placeholder="Tags comma — Retention, CTR" class="h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px]">
-        <textarea name="description" rows="2" placeholder="Description (optional)" class="sm:col-span-2 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-white text-[13px]"></textarea>
-        <input type="file" name="cover" accept="image/*" class="sm:col-span-2 text-[13px]">
+        <div>
+          <label class="label" for="handle">Handle *</label>
+          <input id="handle" name="handle" value="{{ old('handle', $creator->handle) }}" required class="field font-mono">
+        </div>
+        <div>
+          <label class="label" for="email">Email</label>
+          <input id="email" name="email" type="email" value="{{ old('email', $creator->email) }}" class="field">
+        </div>
+        <div>
+          <label class="label" for="phone">Phone</label>
+          <input id="phone" name="phone" value="{{ old('phone', $creator->phone) }}" class="field">
+        </div>
+        <div class="sm:col-span-2">
+          <label class="label" for="headline">Headline</label>
+          <input id="headline" name="headline" value="{{ old('headline', $creator->headline) }}" placeholder="Talking-head editing that holds attention past 60%" class="field">
+        </div>
+        <div class="sm:col-span-2">
+          <label class="label" for="bio">Bio</label>
+          <textarea id="bio" name="bio" rows="3" class="field" placeholder="What do you make, who for, and what results do clients get?">{{ old('bio', $creator->bio) }}</textarea>
+        </div>
+        <div>
+          <label class="label" for="location">Location</label>
+          <input id="location" name="location" value="{{ old('location', $creator->location) }}" placeholder="Ghaziabad, IN" class="field">
+        </div>
+        <div>
+          <label class="label" for="price_from">Starting price (₹)</label>
+          <input id="price_from" name="price_from" type="number" min="0" value="{{ old('price_from', $creator->price_from) }}" class="field font-mono">
+        </div>
+        <div>
+          <label class="label" for="skills">Skills <span class="normal-case tracking-normal text-white/30">(comma separated)</span></label>
+          <input id="skills" name="skills" value="{{ old('skills', is_array($creator->skills) ? implode(', ', $creator->skills) : $creator->skills) }}" placeholder="Reels, Retention editing, Captions" class="field">
+        </div>
+        <div>
+          <label class="label" for="languages">Languages</label>
+          <input id="languages" name="languages" value="{{ old('languages', is_array($creator->languages) ? implode(', ', $creator->languages) : $creator->languages) }}" placeholder="Hindi, English" class="field">
+        </div>
+        <div>
+          <label class="label" for="profile_type">Profile type</label>
+          <select id="profile_type" name="profile_type" class="field">
+            @foreach(\App\Models\Creator::PROFILE_TYPES as $val => $label)
+              <option value="{{ $val }}" @selected(old('profile_type', $creator->profile_type) === $val)>{{ $label }}</option>
+            @endforeach
+          </select>
+        </div>
+        <div>
+          <label class="label" for="collab_type">Collaboration</label>
+          <select id="collab_type" name="collab_type" class="field">
+            @foreach(['paid' => 'Paid only', 'barter' => 'Barter only', 'both' => 'Paid or barter'] as $val => $label)
+              <option value="{{ $val }}" @selected(old('collab_type', $creator->collab_type) === $val)>{{ $label }}</option>
+            @endforeach
+          </select>
+        </div>
+        <div>
+          <label class="label" for="upi_id">UPI ID for payouts</label>
+          <input id="upi_id" name="upi_id" value="{{ old('upi_id', $creator->upi_id) }}" placeholder="name@upi" class="field font-mono">
+        </div>
+        <div>
+          <label class="label" for="followers_count">Followers</label>
+          <input id="followers_count" name="followers_count" type="number" min="0" value="{{ old('followers_count', $creator->followers_count) }}" class="field">
+        </div>
+        <div>
+          <label class="label" for="portfolio_url">Portfolio URL</label>
+          <input id="portfolio_url" name="portfolio_url" value="{{ old('portfolio_url', $creator->portfolio_url) }}" placeholder="https://" class="field">
+        </div>
+        <div>
+          <label class="label" for="instagram">Instagram</label>
+          <input id="instagram" name="instagram" value="{{ old('instagram', $creator->instagram) }}" placeholder="https://instagram.com/…" class="field">
+        </div>
       </div>
-      <button class="mt-3 w-full h-10 rounded-full bg-[#2563EB] text-white font-bold text-[13px]">Add to Portfolio</button>
+
+      <label class="mt-5 flex items-center gap-3 text-[13.5px] text-mut">
+        <input type="checkbox" name="barter_available" value="1" @checked(old('barter_available', $creator->barter_available)) class="w-4 h-4 rounded border-white/20 bg-white/5 accent-violet">
+        Open to barter collaborations
+      </label>
+
+      <button class="mt-7 h-12 px-7 rounded-xl btn-grad font-semibold text-[14.5px]">Save profile</button>
     </form>
+
+    {{-- portfolio --}}
+    <div class="mt-6 glass rounded-3xl p-6 sm:p-7">
+      <div class="flex items-center justify-between">
+        <h2 class="font-display text-[19px] font-semibold">Portfolio</h2>
+        <span class="text-[12px] text-mut">{{ $portfolio->count() }} items</span>
+      </div>
+
+      <div class="mt-5 grid sm:grid-cols-3 gap-4">
+        @forelse($portfolio as $item)
+          <div class="rounded-2xl border border-white/10 overflow-hidden">
+            <img src="{{ $item->cover && filter_var($item->cover, FILTER_VALIDATE_URL) ? $item->cover : ($item->cover ? asset('storage/'.$item->cover) : 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=500&q=80') }}" class="h-[110px] w-full object-cover" alt="">
+            <div class="p-3.5">
+              <div class="text-[13px] font-medium line-clamp-1">{{ $item->title }}</div>
+              <div class="mt-2 flex items-center justify-between">
+                <span class="text-[11.5px] text-mut">{{ $item->category }}</span>
+                <form method="POST" action="{{ route('creator.portfolio.destroy', $item->id) }}">
+                  @csrf @method('DELETE')
+                  <button class="text-[11.5px] text-rose-300 hover:text-rose-200">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        @empty
+          <div class="sm:col-span-3 rounded-2xl border border-dashed border-white/12 p-8 text-center text-[13.5px] text-mut">
+            No portfolio items yet — add your best three pieces below.
+          </div>
+        @endforelse
+      </div>
+
+      <form method="POST" action="{{ route('creator.portfolio.store') }}" enctype="multipart/form-data" class="mt-6 pt-6 border-t border-white/8 grid sm:grid-cols-2 gap-4">
+        @csrf
+        <div>
+          <label class="label" for="p_title">Title *</label>
+          <input id="p_title" name="title" required class="field" placeholder="Retention reel for a skincare brand">
+        </div>
+        <div>
+          <label class="label" for="p_category">Category</label>
+          <input id="p_category" name="category" class="field" placeholder="Reel">
+        </div>
+        <div>
+          <label class="label" for="p_video">Video URL</label>
+          <input id="p_video" name="video_url" class="field" placeholder="https://youtube.com/…">
+        </div>
+        <div>
+          <label class="label" for="p_cover">Cover image</label>
+          <input id="p_cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:text-[12.5px]">
+        </div>
+        <div class="sm:col-span-2">
+          <button class="h-12 px-6 rounded-xl glass font-medium text-[14px] hover:border-white/30 transition">Add portfolio item</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+</section>
 @endsection

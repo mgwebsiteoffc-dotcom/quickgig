@@ -66,7 +66,7 @@
     @endif
 
     <div class="bg-white border border-[#E8E8E6] rounded-2xl p-5">
-      <div class="font-black text-[13px]">Chat (polling — Hostinger safe)</div>
+      <div class="font-black text-[13px]">Chat</div>
       <div class="mt-3 space-y-2 max-h-[220px] overflow-y-auto">
         <div class="bg-[#F8F8F7] border border-[#E8E8E6] rounded-xl p-3"><div class="text-[11px] font-bold text-[#7A7A78]">Rohan Sharma (Avante) • 10:32 AM</div><div class="text-[13px] font-medium">Hi Priya, can we add a hook text at 0:02?</div></div>
         <div class="bg-blue-50 border border-blue-100 rounded-xl p-3"><div class="text-[11px] font-bold text-blue-700">Priya Sharma • 10:38 AM</div><div class="text-[13px] font-medium">Sure! Adding now — will share draft in 1 hour.</div></div>

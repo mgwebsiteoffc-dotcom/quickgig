@@ -26,8 +26,8 @@ class BlogController extends Controller
 
         // SEO for blog listing
         $seo = [
-            'title' => 'Blog — Reels, Thumbnails & AI Video Playbooks | QuickContent',
-            'description' => 'Playbooks from verified creators: retention cuts, CTR thumbs, Veo 3 UGC ads. Hostinger-safe SOPs you can ship tomorrow.',
+            'title' => 'Blog — Reels, Thumbnails & AI Video Playbooks | Quick GIGS',
+            'description' => 'Playbooks from verified creators: retention cuts, CTR thumbs, Veo 3 UGC ads. -safe SOPs you can ship tomorrow.',
             'canonical' => url('/blog'),
             'image' => url('/og-blog.jpg'),
         ];
@@ -51,7 +51,7 @@ class BlogController extends Controller
             'image' => $blog->cover ? (filter_var($blog->cover, FILTER_VALIDATE_URL) ? $blog->cover : asset('storage/'.$blog->cover)) : url('/og-blog.jpg'),
             'type' => 'article',
             'published' => $blog->published_at,
-            'author' => $blog->author->name ?? 'QuickContent Team',
+            'author' => $blog->author->name ?? 'Quick GIGS Team',
             'tags' => $blog->tags,
         ];
 

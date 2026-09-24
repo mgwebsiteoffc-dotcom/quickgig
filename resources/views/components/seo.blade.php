@@ -1,18 +1,20 @@
-{{-- SEO + AEO component — include in <head> : @include('components.seo', ['seo'=>$seo]) --}}
+{{-- SEO + AEO component — @include('components.seo', ['seo'=>$seo]) --}}
 @php
-  $title = $seo['title'] ?? "QuickContent — India's First Quick Content Delivery Platform";
-  $desc = $seo['description'] ?? "India's First Quick Content Delivery Platform — as easy as ordering food. Get Reels, Thumbnails & AI Videos in hours with 12-min matching, live tracking, and escrow — pay only when you approve.";
+  $seo = $seo ?? [];
+  $title = $seo['title'] ?? 'Quick GIGS — Hire verified creators in minutes, not weeks';
+  $desc = $seo['description'] ?? 'Quick GIGS is the fast gig marketplace for reels, thumbnails, AI video and design. Post a brief, get matched to a verified pro in minutes, track delivery live and pay only when you approve.';
   $canonical = $seo['canonical'] ?? url()->current();
   $image = $seo['image'] ?? url('/og-default.jpg');
   $type = $seo['type'] ?? 'website';
-  $keywords = $seo['keywords'] ?? 'quick content, reels, thumbnails, AI video, quick delivery, Hostinger';
-  $author = $seo['author'] ?? 'QuickContent';
+  $keywords = $seo['keywords'] ?? 'quick gigs, gig marketplace, hire video editor, reels editing, thumbnail designer, AI video, freelance india, escrow payments';
+  $author = $seo['author'] ?? 'Quick GIGS';
 @endphp
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $desc }}">
 <meta name="keywords" content="{{ $keywords }}">
 <link rel="canonical" href="{{ $canonical }}">
 <meta name="author" content="{{ $author }}">
+<meta name="theme-color" content="#06060B">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
 {{-- Open Graph --}}
@@ -21,7 +23,7 @@
 <meta property="og:url" content="{{ $canonical }}">
 <meta property="og:image" content="{{ $image }}">
 <meta property="og:type" content="{{ $type === 'article' ? 'article' : 'website' }}">
-<meta property="og:site_name" content="QuickContent">
+<meta property="og:site_name" content="Quick GIGS">
 <meta property="og:locale" content="en_IN">
 
 {{-- Twitter --}}
@@ -44,13 +46,13 @@
 $orgJsonLd = [
   '@context'=>'https://schema.org',
   '@type'=>'Organization',
-  'name'=>'QuickContent',
-  'alternateName'=>"India's First Quick Content Delivery Platform",
+  'name'=>'Quick GIGS',
+  'alternateName'=>'QuickGigs — the fast gig marketplace',
   'url'=>url('/'),
   'logo'=>url('/logo.png'),
   'description'=>$desc,
   'foundingLocation'=>['@type'=>'Place','address'=>['@type'=>'PostalAddress','addressLocality'=>'Ghaziabad','addressRegion'=>'Uttar Pradesh','addressCountry'=>'IN']],
-  'sameAs'=>['https://www.linkedin.com/company/quickcontent','https://x.com/quickcontent_in'],
+  'sameAs'=>['https://www.linkedin.com/company/quickgigs','https://x.com/quickgigs'],
   'contactPoint'=>['@type'=>'ContactPoint','telephone'=>'+91-98765-43210','contactType'=>'customer support','areaServed'=>'IN','availableLanguage'=>['en','hi']],
 ];
 @endphp
@@ -73,7 +75,6 @@ $bc = [
 {{-- FAQ JSON-LD if $faqs provided --}}
 @if(!empty($faqs) && $faqs->count())
 @php
-  // Support both Eloquent and stdClass fallback
   $faqForLd = $faqs->filter(fn($f)=> !empty($f->question ?? $f['question'] ?? null));
   $faqJson = [
     '@context'=>'https://schema.org',

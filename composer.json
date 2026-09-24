@@ -1,8 +1,8 @@
 {
-    "name": "avante/quick-content",
+    "name": "quickgigs/marketplace",
     "type": "project",
-    "description": "India's First Quick Content Delivery Platform — Laravel",
-    "keywords": ["laravel", "quick-commerce", "content-delivery", "freelance"],
+    "description": "Quick GIGS — a fast, escrow-protected gig marketplace built on Laravel 11",
+    "keywords": ["laravel", "marketplace", "gigs", "freelance", "escrow"],
     "license": "proprietary",
     "require": {
         "php": "^8.2",

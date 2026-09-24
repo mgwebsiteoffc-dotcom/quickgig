@@ -4,7 +4,7 @@
 @section('content')
 <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex gap-3">
   <div class="w-8 h-8 rounded-full bg-[#2563EB] text-white grid place-items-center font-black shrink-0">?</div>
-  <div class="text-[13px] leading-5"><b>AEO — Answer Engine Optimization:</b> These FAQs auto-render on landing + per-blog FAQPage JSON-LD. Google & Perplexity pick them up. Keep answers <b>concise (40-60 words), answer-first, no fluff</b>. Order via <b>Sort</b>. Featured = landing. Hostinger: file cache auto-cleared on save.</div>
+  <div class="text-[13px] leading-5"><b>AEO — Answer Engine Optimization:</b> These FAQs auto-render on landing + per-blog FAQPage JSON-LD. Google & Perplexity pick them up. Keep answers <b>concise (40-60 words), answer-first, no fluff</b>. Order via <b>Sort</b>. Featured = landing. File cache is cleared automatically on save.</div>
 </div>
 
 <div class="mt-4 grid lg:grid-cols-[1.6fr_0.9fr] gap-6">
@@ -42,7 +42,7 @@
     <div class="text-[12px] font-medium text-[#7A7A78]">Writes to DB → landing FAQPage JSON-LD updates instantly (AEO).</div>
     <form method="POST" action="{{ route('admin.faqs.store') }}" class="mt-4 space-y-3">@csrf
       <input name="question" required placeholder="Question — e.g. What does it cost?" class="w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-bold">
-      <textarea name="answer" required rows="4" placeholder="Answer — concise, 40-60 words, answer first for AEO. Mention Hostinger/escrow/pricing clearly." class="w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] leading-6"></textarea>
+      <textarea name="answer" required rows="4" placeholder="Answer — concise, 40-60 words, answer first for AEO. Mention escrow and pricing clearly." class="w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] leading-6"></textarea>
       <div class="grid grid-cols-2 gap-3">
         <select name="category" class="h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-semibold"><option>General</option><option>Pricing</option><option>Delivery</option><option>Creators</option></select>
         <input name="sort_order" type="number" value="99" class="h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]" placeholder="Sort (1 = top)">

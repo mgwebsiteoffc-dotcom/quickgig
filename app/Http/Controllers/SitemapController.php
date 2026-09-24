@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use App\Models\Creator;
 use App\Models\Service;
-use Illuminate\Http\Response;
 
 class SitemapController extends Controller
 {
@@ -13,34 +12,70 @@ class SitemapController extends Controller
     {
         $urls = collect();
 
-        // Static — includes beautiful onboarding (easy like ordering food)
         $statics = [
-            ['loc'=>url('/'), 'changefreq'=>'daily','priority'=>'1.0'],
-            ['loc'=>url('/onboarding/business'), 'changefreq'=>'weekly','priority'=>'0.9'],
-            ['loc'=>url('/onboarding/creator'), 'changefreq'=>'weekly','priority'=>'0.9'],
-            ['loc'=>url('/business'), 'changefreq'=>'daily','priority'=>'0.9'],
-            ['loc'=>url('/creator'), 'changefreq'=>'weekly','priority'=>'0.7'],
-            ['loc'=>url('/blog'), 'changefreq'=>'daily','priority'=>'0.8'],
+            ['loc' => url('/'),            'changefreq' => 'daily',  'priority' => '1.0'],
+            ['loc' => url('/marketplace'), 'changefreq' => 'daily',  'priority' => '0.9'],
+            ['loc' => url('/register'),    'changefreq' => 'monthly','priority' => '0.8'],
+            ['loc' => url('/login'),       'changefreq' => 'monthly','priority' => '0.4'],
+            ['loc' => url('/blog'),        'changefreq' => 'daily',  'priority' => '0.8'],
         ];
-        foreach($statics as $s) $urls->push(array_merge($s, ['lastmod'=>now()->toDateString()]));
 
-        // Blogs
+        foreach ($statics as $s) {
+            $urls->push(array_merge($s, ['lastmod' => now()->toDateString()]));
+        }
+
         try {
-            Blog::published()->orderByDesc('updated_at')->each(function($b) use ($urls){
-                $urls->push(['loc'=>url('/blog/'.$b->slug),'lastmod'=>$b->updated_at->toDateString(),'changefreq'=>'weekly','priority'=>'0.7']);
+            Service::where('is_active', true)->get()->each(function ($s) use ($urls) {
+                $urls->push([
+                    'loc'        => url('/gigs/' . $s->id),
+                    'lastmod'    => optional($s->updated_at)->toDateString() ?? now()->toDateString(),
+                    'changefreq' => 'weekly',
+                    'priority'   => '0.8',
+                ]);
             });
-            Creator::where('is_verified',true)->each(function($c) use ($urls){
-                $urls->push(['loc'=>url('/creator/'.$c->id),'lastmod'=>$c->updated_at->toDateString(),'changefreq'=>'weekly','priority'=>'0.6']);
-            });
-        } catch(\Throwable $e) {}
 
-        $xml = view('sitemap', compact('urls'))->render();
-        return response($xml, 200)->header('Content-Type','application/xml');
+            Blog::published()->get()->each(function ($b) use ($urls) {
+                $urls->push([
+                    'loc'        => url('/blog/' . $b->slug),
+                    'lastmod'    => optional($b->updated_at)->toDateString() ?? now()->toDateString(),
+                    'changefreq' => 'weekly',
+                    'priority'   => '0.7',
+                ]);
+            });
+
+            Creator::where('is_verified', true)->get()->each(function ($c) use ($urls) {
+                $urls->push([
+                    'loc'        => url('/creators/' . $c->id),
+                    'lastmod'    => optional($c->updated_at)->toDateString() ?? now()->toDateString(),
+                    'changefreq' => 'weekly',
+                    'priority'   => '0.6',
+                ]);
+            });
+        } catch (\Throwable $e) {
+            // database not ready — static urls are still valid
+        }
+
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
+
+        foreach ($urls as $u) {
+            $xml .= '  <url>' . PHP_EOL
+                 .  '    <loc>' . e($u['loc']) . '</loc>' . PHP_EOL
+                 .  '    <lastmod>' . e($u['lastmod']) . '</lastmod>' . PHP_EOL
+                 .  '    <changefreq>' . e($u['changefreq']) . '</changefreq>' . PHP_EOL
+                 .  '    <priority>' . e($u['priority']) . '</priority>' . PHP_EOL
+                 .  '  </url>' . PHP_EOL;
+        }
+
+        $xml .= '</urlset>';
+
+        return response($xml, 200)->header('Content-Type', 'application/xml');
     }
 
     public function robots()
     {
-        $content = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /orders\nSitemap: ".url('/sitemap.xml')."\n";
-        return response($content, 200)->header('Content-Type','text/plain');
+        $content = "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /orders\nSitemap: " . url('/sitemap.xml') . "\n";
+
+        return response($content, 200)->header('Content-Type', 'text/plain');
     }
 }

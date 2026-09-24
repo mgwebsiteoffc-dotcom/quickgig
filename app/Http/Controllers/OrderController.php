@@ -2,148 +2,193 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Service;
-use App\Models\Creator;
 use App\Models\Company;
+use App\Models\Creator;
 use App\Models\Order;
+use App\Models\Service;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+    public const PLATFORM_FEE = 0.10;
+
+    /** Speed lanes offered at checkout. */
+    public const LANES = [
+        'express'  => ['label' => 'Express · 3 hours',   'mult' => 1.6,  'days' => 1],
+        'standard' => ['label' => 'Standard · 24 hours', 'mult' => 1.0,  'days' => 1],
+        'relaxed'  => ['label' => 'Relaxed · 48 hours',  'mult' => 0.85, 'days' => 2],
+    ];
+
+    /** Create an order from a marketplace gig. */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'service_id' => 'required',
-            'creator_id' => 'nullable',
-            'company_id' => 'required|integer',
-            'brief' => 'required|string|min:8',
-            'turnaround' => 'nullable|string',
+        $data = $request->validate([
+            'service_id' => ['required', 'exists:services,id'],
+            'brief'      => ['required', 'string', 'min:12', 'max:2000'],
+            'lane'       => ['required', 'in:express,standard,relaxed'],
+        ], [
+            'brief.min' => 'Give the creator a little more detail (at least 12 characters).',
         ]);
 
-        // Try DB-backed order for real flow (supports UGC/Barter same flow)
-        try {
-            $service = Service::with('creator')->find($validated['service_id']);
-            // fallback if id is dummy string like reel1
-            if (!$service && is_numeric($validated['service_id'])) $service = Service::find($validated['service_id']);
-            if ($service) {
-                $companyId = $validated['company_id'];
-                // pick creator: explicit or service creator or available by profile_type
-                $creatorId = $validated['creator_id'] ?? $service->creator_id;
-                if (!$creatorId) {
-                    $q = Creator::where('is_verified', true)->where('is_available', true);
-                    if (in_array($service->profile_type, ['ugc_creator','influencer','video_editor','designer','hybrid'])) {
-                        $q->where('profile_type', $service->profile_type);
-                    }
-                    if ($service->isBarter()) $q->where('barter_available', true);
-                    $creatorId = $q->value('id') ?? Creator::where('is_verified', true)->value('id');
-                }
+        $user = Auth::user();
+        $service = Service::with('creator')->findOrFail($data['service_id']);
+        $company = $this->companyFor($request, $user);
 
-                // Price handling: barter = 0 escrow, hybrid = price, paid = price
-                $subtotal = (int) $service->price;
-                $isBarter = $service->isBarter() && $service->price_type === 'barter';
-                if ($isBarter) $subtotal = 0;
-                $fee = $isBarter ? 0 : (int) round($subtotal * 0.05);
-                $total = $subtotal + $fee;
+        $lane     = self::LANES[$data['lane']];
+        $subtotal = (int) round($service->price * $lane['mult']);
+        $fee      = (int) round($subtotal * self::PLATFORM_FEE);
 
-                $order = Order::create([
-                    'company_id' => $companyId,
-                    'creator_id' => $creatorId,
-                    'service_id' => $service->id,
-                    'brief' => $validated['brief'],
-                    'turnaround' => $validated['turnaround'] ?? $service->delivery_days.' Day',
-                    'subtotal' => $subtotal,
-                    'fee' => $fee,
-                    'discount' => 0,
-                    'total' => $total,
-                    'status' => 'working',
-                    'escrow_status' => $isBarter ? 'barter' : 'held',
-                    'progress' => 25,
-                    'due_at' => now()->addDays($service->delivery_days),
-                ]);
+        $creatorId = $service->creator_id ?: Creator::where('is_verified', true)
+            ->where('is_available', true)->orderByDesc('rating')->value('id');
 
-                $orderId = $order->uid ?? $order->id;
-                $msg = $isBarter
-                    ? 'Barter collab booked — creator in ~12 min (ship product worth ₹'.number_format($service->barter_value).')'
-                    : 'Booked for company — creator in ~12 min ⚡ (₹'.number_format($total).' held in escrow)';
-                return redirect()->route('orders.show', $orderId)->with('toast', $msg);
-            }
-        } catch (\Throwable $e) {
-            // fall through to dummy
-        }
-
-        $orderId = 'UNJ-'.rand(8000,9999);
-        return redirect()->route('orders.show', $orderId)
-            ->with('toast', 'Booked for company — creator in 4 min ⚡')
-            ->with('order', $validated);
-    }
-
-    public function storeTeam(Request $request)
-    {
-        $validated = $request->validate([
-            'prompt' => 'required|string|min:5',
-            'company_id' => 'required|integer',
+        $order = Order::create([
+            'company_id'    => $company->id,
+            'creator_id'    => $creatorId,
+            'service_id'    => $service->id,
+            'brief'         => $data['brief'],
+            'turnaround'    => $lane['label'],
+            'subtotal'      => $subtotal,
+            'fee'           => $fee,
+            'discount'      => 0,
+            'total'         => $subtotal,
+            'status'        => 'working',
+            'escrow_status' => 'held',
+            'progress'      => 15,
+            'due_at'        => now()->addDays($lane['days']),
         ]);
-        $orderId = 'TEAM-'.rand(8000,9999);
-        return redirect()->route('orders.show', $orderId)
-            ->with('toast', 'Team booked — captain will manage delivery');
+
+        $service->increment('sold_count');
+
+        return redirect()->route('orders.show', $order->uid)
+            ->with('toast', 'Gig booked — ₹' . number_format($subtotal) . ' is held in escrow until you approve.');
     }
 
-    public function show($order)
+    public function show(Request $request, $order)
     {
-        try {
-            $o = Order::with(['company','creator','service'])->where('uid',$order)->orWhere('id',$order)->first();
-            if ($o) {
-                return view('orders.show', [
-                    'order' => [
-                        'id' => $o->uid ?? $o->id,
-                        'company' => ['name'=>$o->company->name ?? 'Company','person'=>$o->company->person_name ?? 'Owner','initials'=>strtoupper(substr($o->company->name ?? 'C',0,2))],
-                        'creator' => $o->creator ? ['name'=>$o->creator->name,'handle'=>$o->creator->handle,'img'=>$o->creator->avatarUrl(),'rating'=>number_format($o->creator->rating,1),'available'=>$o->creator->is_available] : ['name'=>'Priya Sharma','handle'=>'@priyaedits','img'=>'https://i.pravatar.cc/100?img=5','rating'=>'4.9','available'=>true],
-                        'service' => ['title'=>$o->service->title ?? 'Service','price'=>$o->service->price ?? $o->total,'time'=>$o->turnaround ?? '1 Day', 'category'=>$o->service->category ?? '', 'price_type'=>$o->service->price_type ?? 'paid', 'display_price'=>$o->service ? $o->service->displayPrice() : '₹'.number_format($o->total)],
-                        'total' => $o->total,
-                        'escrow_status' => $o->escrow_status,
-                        'status' => $o->status,
-                        'progress' => $o->progress,
-                        'brief' => $o->brief,
-                    ]
-                ]);
-            }
-        } catch (\Throwable $e) {}
+        $o = Order::with(['company', 'creator', 'service'])
+            ->where('uid', $order)->orWhere('id', $order)->firstOrFail();
 
-        // Dummy fallback
+        $this->authorizeOrder($request, $o);
+
         return view('orders.show', [
-            'order' => [
-                'id' => $order,
-                'company' => ['name'=>'Avante Studio','person'=>'Rohan Sharma','initials'=>'AS'],
-                'creator' => ['name'=>'Priya Sharma','handle'=>'@priyaedits','img'=>'https://i.pravatar.cc/100?img=5','rating'=>'4.9','available'=>true],
-                'service' => ['title'=>'Engaging Talking-Head Reel','price'=>2499,'time'=>'1 Day','category'=>'Reel','price_type'=>'paid','display_price'=>'₹2,499'],
-                'total' => 2374,
-                'escrow_status' => 'held',
-                'status' => 'working',
-                'progress' => 25,
-                'brief' => 'Need reel',
-            ]
+            'order' => $o,
+            'seo'   => [
+                'title'       => 'Order ' . $o->uid . ' — Quick GIGS',
+                'description' => 'Track your Quick GIGS order live, chat with the creator and release escrow when you approve.',
+                'canonical'   => route('orders.show', $o->uid),
+            ],
         ]);
+    }
+
+    /**
+     * Demo simulation: move the order one step forward through the pipeline
+     * (assigned → in production → delivered) without waiting for real work.
+     */
+    public function simulate(Request $request, $order)
+    {
+        $o = Order::where('uid', $order)->orWhere('id', $order)->firstOrFail();
+        $this->authorizeOrder($request, $o);
+
+        [$status, $progress, $message] = match (true) {
+            $o->progress < 40  => ['working',   45,  'Creator started production — files are being cut now.'],
+            $o->progress < 80  => ['working',   85,  'Sound, captions and colour pass complete.'],
+            $o->status !== 'review' && $o->status !== 'delivered' => ['review', 100, 'Delivery uploaded — review it and approve to release escrow.'],
+            default            => [$o->status,  100, 'This order is already waiting for your approval.'],
+        };
+
+        $o->update(['status' => $status, 'progress' => $progress]);
+
+        return back()->with('toast', $message);
     }
 
     public function approve(Request $request, $order)
     {
-        try {
-            $o = Order::where('uid',$order)->orWhere('id',$order)->first();
-            if ($o) {
-                if ($o->escrow_status === 'barter') {
-                    $o->update(['status'=>'delivered','escrow_status'=>'barter_done']);
-                    return back()->with('toast', 'Barter approved — collaboration complete ✓ (no escrow)');
-                }
-                $o->update(['status'=>'delivered','escrow_status'=>'released']);
-                return back()->with('toast', 'Approved — ₹'.number_format($o->total).' released to creator (escrow)');
-            }
-        } catch (\Throwable $e) {}
-        return back()->with('toast', 'Approved — ₹2,374 released to creator (escrow)');
+        $o = Order::where('uid', $order)->orWhere('id', $order)->firstOrFail();
+        $this->authorizeOrder($request, $o);
+
+        if ($o->escrow_status === 'released') {
+            return back()->with('toast', 'This order was already approved.');
+        }
+
+        $o->update([
+            'status'        => 'delivered',
+            'escrow_status' => 'released',
+            'progress'      => 100,
+        ]);
+
+        if ($o->creator) {
+            $o->creator->increment('orders_count');
+        }
+
+        $payout = $o->total - $o->fee;
+
+        return back()->with('toast', 'Approved — ₹' . number_format($payout) . ' released to the creator.');
     }
 
     public function message(Request $request, $order)
     {
-        $request->validate(['message'=>'required|string|min:1']);
+        $request->validate(['message' => ['required', 'string', 'max:500']]);
+
+        $o = Order::where('uid', $order)->orWhere('id', $order)->firstOrFail();
+        $this->authorizeOrder($request, $o);
+
+        $thread = session('thread.' . $o->uid, []);
+        $thread[] = [
+            'from' => 'you',
+            'text' => $request->input('message'),
+            'at'   => now()->format('H:i'),
+        ];
+        $thread[] = [
+            'from' => 'creator',
+            'text' => 'Got it — noted in the brief. I will share the first cut shortly.',
+            'at'   => now()->addMinute()->format('H:i'),
+        ];
+
+        session(['thread.' . $o->uid => $thread]);
+
         return back();
+    }
+
+    /* ───────────────────────── helpers ───────────────────────── */
+
+    private function companyFor(Request $request, $user): Company
+    {
+        if ($user && $user->company_id && ($c = Company::find($user->company_id))) {
+            return $c;
+        }
+
+        if ($id = $request->session()->get('company_id')) {
+            if ($c = Company::find($id)) return $c;
+        }
+
+        $company = Company::create([
+            'name'        => $user->name . "'s workspace",
+            'person_name' => $user->name,
+            'email'       => $user->email,
+            'is_active'   => true,
+        ]);
+
+        $user?->update(['company_id' => $company->id]);
+        $request->session()->put('company_id', $company->id);
+
+        return $company;
+    }
+
+    /** Buyer, assigned creator or staff only. */
+    private function authorizeOrder(Request $request, Order $order): void
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            abort(403, 'Log in to view this order.');
+        }
+
+        $allowed = $user->isAdmin()
+            || ($user->company_id && $user->company_id === $order->company_id)
+            || ($user->creator_id && $user->creator_id === $order->creator_id)
+            || $request->session()->get('company_id') === $order->company_id;
+
+        abort_unless($allowed, 403, 'This order belongs to another account.');
     }
 }

@@ -29,5 +29,5 @@
   </div>
 </div>
 
-<div class="mt-4 bg-blue-50 border border-blue-200 rounded-2xl p-4 text-[13px] leading-5"><b>How it works on Hostinger (no Redis):</b> Payments are held in Razorpay escrow. A daily cron runs <code class="bg-white border border-blue-200 px-1 py-0.5 rounded font-mono text-[11px]">php artisan payouts:release</code> (you create this command) to move eligible holds to ready. Finance clicks Mark Paid → calls RazorpayX payout API → creator gets UPI. Support cron logs to <code class="bg-white border border-blue-200 px-1 py-0.5 rounded">storage/logs/payouts.log</code>.</div>
+<div class="mt-4 bg-blue-50 border border-blue-200 rounded-2xl p-4 text-[13px] leading-5"><b>How payouts work:</b> Payments are held in Razorpay escrow. A daily cron runs <code class="bg-white border border-blue-200 px-1 py-0.5 rounded font-mono text-[11px]">php artisan payouts:release</code> (you create this command) to move eligible holds to ready. Finance clicks Mark Paid → calls RazorpayX payout API → creator gets UPI. Support cron logs to <code class="bg-white border border-blue-200 px-1 py-0.5 rounded">storage/logs/payouts.log</code>.</div>
 @endsection

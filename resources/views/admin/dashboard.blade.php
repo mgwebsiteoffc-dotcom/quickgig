@@ -84,6 +84,6 @@
 
 <div class="mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex gap-3">
   <div class="w-8 h-8 rounded-full bg-amber-400 text-[#0F0F0F] grid place-items-center font-black shrink-0">!</div>
-  <div class="text-[13px] leading-5"><b>Hostinger cron setup (required for queue):</b> In hPanel → Cron Jobs → Add: <code class="bg-white border border-amber-200 px-1.5 py-0.5 rounded font-mono text-[11px]">* * * * * /usr/bin/php /home/u123456789/domains/yourdomain.com/artisan queue:work --stop-when-empty >> /dev/null 2>&1</code> and <code class="bg-white border border-amber-200 px-1.5 py-0.5 rounded font-mono text-[11px]">* * * * * /usr/bin/php /home/u123456789/domains/yourdomain.com/artisan schedule:run >> /dev/null 2>&1</code></div>
+  <div class="text-[13px] leading-5"><b>Cron setup (required for the queue):</b> Add this to your server crontab: <code class="bg-white border border-amber-200 px-1.5 py-0.5 rounded font-mono text-[11px]">* * * * * /usr/bin/php /var/www/quickgigs/artisan queue:work --stop-when-empty >> /dev/null 2>&1</code> and <code class="bg-white border border-amber-200 px-1.5 py-0.5 rounded font-mono text-[11px]">* * * * * /usr/bin/php /var/www/quickgigs/artisan schedule:run >> /dev/null 2>&1</code></div>
 </div>
 @endsection

@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 return new class extends Migration {
     public function up(): void {
         Schema::table('services', function (Blueprint $table) {
-            // Hostinger + SQLite safe: no after(), check existence
+            // MySQL + SQLite safe: no after(), check existence
             if (!Schema::hasColumn('services','profile_type')) {
                 $table->string('profile_type')->nullable(); // video_editor, ugc_creator, influencer, designer, hybrid, any
             }
