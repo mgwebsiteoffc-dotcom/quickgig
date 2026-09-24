@@ -17,7 +17,16 @@ class SitemapController extends Controller
             ['loc' => url('/marketplace'), 'changefreq' => 'daily',  'priority' => '0.9'],
             ['loc' => url('/register'),    'changefreq' => 'monthly','priority' => '0.8'],
             ['loc' => url('/login'),       'changefreq' => 'monthly','priority' => '0.4'],
-            ['loc' => url('/blog'),        'changefreq' => 'daily',  'priority' => '0.8'],
+            ['loc' => url('/blog'),          'changefreq' => 'daily',   'priority' => '0.8'],
+            ['loc' => url('/how-it-works'),  'changefreq' => 'weekly',  'priority' => '0.9'],
+            ['loc' => url('/ai-engine'),     'changefreq' => 'weekly',  'priority' => '0.9'],
+            ['loc' => url('/brief-builder'), 'changefreq' => 'weekly',  'priority' => '0.9'],
+            ['loc' => url('/pricing'),       'changefreq' => 'weekly',  'priority' => '0.9'],
+            ['loc' => url('/compare'),       'changefreq' => 'monthly', 'priority' => '0.8'],
+            ['loc' => url('/for-creators'),  'changefreq' => 'weekly',  'priority' => '0.8'],
+            ['loc' => url('/enterprise'),    'changefreq' => 'monthly', 'priority' => '0.7'],
+            ['loc' => url('/about'),         'changefreq' => 'monthly', 'priority' => '0.5'],
+            ['loc' => url('/contact'),       'changefreq' => 'monthly', 'priority' => '0.5'],
         ];
 
         foreach ($statics as $s) {

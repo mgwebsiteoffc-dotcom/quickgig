@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->staff();
+        $this->creatorStats();
         $this->faqs();
         $creator = $this->creatorAccount();
         $company = $this->businessAccount();
@@ -50,6 +51,24 @@ class DatabaseSeeder extends Seeder
                     'is_active' => true,
                 ]
             );
+        }
+    }
+
+    /* ── give each creator distinct performance data so matching has signal ── */
+    private function creatorStats(): void
+    {
+        $profiles = [
+            '@priyaedits'   => ['response_minutes' => 6,  'on_time_rate' => 98, 'orders_count' => 318, 'reviews_count' => 312, 'rating' => 4.9, 'price_from' => 2499, 'is_available' => true],
+            '@rahulcuts'    => ['response_minutes' => 21, 'on_time_rate' => 94, 'orders_count' => 176, 'reviews_count' => 168, 'rating' => 4.8, 'price_from' => 2299, 'is_available' => true],
+            '@amanmotion'   => ['response_minutes' => 44, 'on_time_rate' => 91, 'orders_count' => 98,  'reviews_count' => 86,  'rating' => 4.7, 'price_from' => 2799, 'is_available' => false],
+            '@nehacreates'  => ['response_minutes' => 11, 'on_time_rate' => 97, 'orders_count' => 241, 'reviews_count' => 233, 'rating' => 4.9, 'price_from' => 1299, 'is_available' => true],
+            '@sahilai'      => ['response_minutes' => 33, 'on_time_rate' => 89, 'orders_count' => 64,  'reviews_count' => 51,  'rating' => 4.6, 'price_from' => 6499, 'is_available' => true],
+            '@ugc_riya'     => ['response_minutes' => 15, 'on_time_rate' => 96, 'orders_count' => 132, 'reviews_count' => 121, 'rating' => 4.8, 'price_from' => 3999, 'is_available' => true],
+            '@barter_aman'  => ['response_minutes' => 58, 'on_time_rate' => 86, 'orders_count' => 27,  'reviews_count' => 19,  'rating' => 4.5, 'price_from' => 1999, 'is_available' => false],
+        ];
+
+        foreach ($profiles as $handle => $data) {
+            Creator::where('handle', $handle)->update($data);
         }
     }
 

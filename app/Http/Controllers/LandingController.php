@@ -23,6 +23,46 @@ class LandingController extends Controller
             'online_creators' => '1,284',
         ];
 
+        // Product differentiators — each links to the page that proves it.
+        $usps = [
+            [
+                'title' => 'Brief engine', 'tag' => 'Free tool', 'tagTone' => 'bg-cyan/15 text-cyan',
+                'body'  => 'One sentence becomes hooks, a timed beat sheet, deliverables and a spec — before a creator is even matched.',
+                'cta'   => 'Write a brief', 'href' => route('brief-builder'),
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16M4 10h16M4 15h9"/><circle cx="18" cy="17" r="4"/><path d="M18 15.5v3"/></svg>',
+            ],
+            [
+                'title' => 'Explainable matching', 'tag' => 'Auditable', 'tagTone' => 'bg-violet/15 text-violet-soft',
+                'body'  => 'A score out of 100 with the five factors behind it. Re-weight what matters and watch the ranking change.',
+                'cta'   => 'See the scoring', 'href' => route('ai'),
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19V5M9 19v-8M14 19v-5M19 19V9"/></svg>',
+            ],
+            [
+                'title' => 'Automated QA gate', 'tag' => '6 checks', 'tagTone' => 'bg-lime/15 text-lime',
+                'body'  => 'Hook timing, caption coverage, loudness, aspect, resolution and licensing are verified before you ever see the file.',
+                'cta'   => 'Run the gate', 'href' => route('ai').'#m02',
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l8 3v6c0 4.5-3.2 7.9-8 9-4.8-1.1-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+            ],
+            [
+                'title' => 'Revision translator', 'tag' => 'Fewer rounds', 'tagTone' => 'bg-violet/15 text-violet-soft',
+                'body'  => '"Make it punchier" becomes timestamped instructions an editor can execute without a single call.',
+                'cta'   => 'Try it live', 'href' => route('ai').'#m03',
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1 1 21 11.5z"/></svg>',
+            ],
+            [
+                'title' => 'Auto-repurpose', 'tag' => '6 formats', 'tagTone' => 'bg-cyan/15 text-cyan',
+                'body'  => 'One approved master forks into vertical, square, 16:9, thumbnail frames and caption files automatically.',
+                'cta'   => 'See the pipeline', 'href' => route('how-it-works'),
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><path d="M13 7h5a3 3 0 0 1 3 3M11 17H6a3 3 0 0 1-3-3"/></svg>',
+            ],
+            [
+                'title' => 'Escrow with SLA credit', 'tag' => 'No lock-in', 'tagTone' => 'bg-lime/15 text-lime',
+                'body'  => 'No commitment fee and no retainer. Miss the promised window and the express premium is credited back.',
+                'cta'   => 'See pricing', 'href' => route('pricing'),
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M8 8V6a4 4 0 0 1 8 0v2M12 13v3"/></svg>',
+            ],
+        ];
+
         $heroStats = [
             ['value' => '4 min',   'label' => 'Average match time'],
             ['value' => '18,400+', 'label' => 'Gigs delivered'],
@@ -125,6 +165,8 @@ class LandingController extends Controller
 
         return view('landing', [
             'stats'        => $stats,
+            'usps'         => $usps,
+            'comparison'   => PageController::comparison(),
             'heroStats'    => $heroStats,
             'logos'        => $logos,
             'steps'        => $steps,

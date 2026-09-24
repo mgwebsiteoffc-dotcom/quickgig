@@ -33,6 +33,12 @@
         </a>
       </div>
 
+      <div class="mt-4 text-[13px] text-mut">
+        Not sure what to ask for?
+        <a href="{{ route('brief-builder') }}" class="text-white font-medium hover:text-violet-soft transition underline decoration-white/20 underline-offset-4">Write a free brief in 40 seconds</a>
+        — no account needed.
+      </div>
+
       <div class="mt-9 flex flex-wrap items-center gap-x-8 gap-y-4">
         @foreach($heroStats as $s)
           <div>
@@ -153,6 +159,71 @@
           </div>
         </div>
       @endforeach
+    </div>
+  </div>
+</section>
+
+{{-- ───────────────────────── WHAT MAKES IT DIFFERENT ───────────────────────── --}}
+<section class="py-24 border-t border-white/8">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-6 reveal">
+      <div class="max-w-[620px]">
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Why this is different</div>
+        <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1]">Software does the admin. People do the craft.</h2>
+        <p class="mt-4 text-[15px] leading-7 text-mut">Six things that run automatically on every gig — and that you can inspect, override or switch off.</p>
+      </div>
+      <a href="{{ route('ai') }}" class="h-11 px-5 rounded-xl glass inline-flex items-center gap-2 text-[13.5px] font-medium hover:border-white/25 transition">
+        Open the engine
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      @foreach($usps as $i => $u)
+        <a href="{{ $u['href'] }}" class="reveal glass rounded-3xl p-6 card-hover group" style="transition-delay: {{ $i * 60 }}ms">
+          <div class="flex items-start justify-between">
+            <span class="w-11 h-11 rounded-2xl glass grid place-items-center text-violet-soft">{!! $u['icon'] !!}</span>
+            <span class="text-[10.5px] font-semibold tracking-wider uppercase rounded-full px-2.5 py-1 {{ $u['tagTone'] }}">{{ $u['tag'] }}</span>
+          </div>
+          <div class="mt-5 font-display text-[17px] font-semibold group-hover:text-violet-soft transition">{{ $u['title'] }}</div>
+          <p class="mt-2 text-[13.5px] leading-6 text-mut">{{ $u['body'] }}</p>
+          <div class="mt-4 text-[12.5px] text-white/55 group-hover:text-white transition">{{ $u['cta'] }} →</div>
+        </a>
+      @endforeach
+    </div>
+  </div>
+</section>
+
+{{-- ───────────────────────── BRIEF BUILDER BAND ───────────────────────── --}}
+<section class="py-20">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="relative overflow-hidden rounded-[32px] glass-strong px-7 sm:px-12 py-12">
+      <div class="absolute -top-24 right-0 w-[30rem] h-[30rem] bg-cyan/18 blur-[120px] rounded-full -z-10"></div>
+      <div class="grid lg:grid-cols-[1fr_1fr] gap-10 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 text-[11.5px] font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan"></span> Free · no account needed
+          </div>
+          <h2 class="mt-5 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.08]">
+            Describe it once. We write the brief.
+          </h2>
+          <p class="mt-4 text-[15px] leading-7 text-mut max-w-[480px]">
+            Hooks, a timed beat sheet, deliverables, the technical spec and the QA checks your delivery
+            has to pass. Keep it, send it to your own editor, or order it here in two clicks.
+          </p>
+        </div>
+
+        <form method="GET" action="{{ route('brief-builder') }}" class="glass rounded-3xl p-5 sm:p-6">
+          <label class="label" for="idea-quick">Your idea, in one line</label>
+          <textarea id="idea-quick" name="idea" rows="3" class="field" placeholder="A reel announcing our ₹999 protein bar launch, founder on camera"></textarea>
+          <button class="mt-4 w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px]">Write my brief →</button>
+          <div class="mt-3 flex flex-wrap gap-2">
+            @foreach(['Thumbnail pack for a finance video', 'UGC video for a skincare serum', '5 podcast clips from one episode'] as $sample)
+              <button type="submit" name="idea" value="{{ $sample }}" class="rounded-full border border-white/10 px-3 py-1.5 text-[11.5px] text-mut hover:text-white hover:border-violet/50 transition">{{ $sample }}</button>
+            @endforeach
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </section>
@@ -369,6 +440,57 @@
   </div>
 </section>
 
+{{-- ───────────────────────── COMPARISON TEASER ───────────────────────── --}}
+<section class="py-24">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="max-w-[620px] reveal">
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Honest comparison</div>
+      <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1]">How we differ from the alternatives.</h2>
+    </div>
+
+    <div class="mt-10 glass rounded-3xl overflow-hidden reveal">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[820px] text-left">
+          <thead>
+            <tr class="border-b border-white/10 bg-white/3">
+              <th class="p-5 text-[11px] font-semibold tracking-[.14em] uppercase text-white/45 w-[230px]"></th>
+              @foreach($comparison['columns'] as $i => $col)
+                <th class="p-5 text-[13px] font-semibold {{ $i === 0 ? 'text-white' : 'text-mut' }}">{{ $col }}</th>
+              @endforeach
+            </tr>
+          </thead>
+          <tbody>
+            @foreach(array_slice($comparison['rows'], 0, 4) as $row)
+              <tr class="border-b border-white/6 last:border-0">
+                @foreach($row as $i => $cell)
+                  <td class="p-5 align-top text-[13.5px] leading-6 {{ $i === 0 ? 'text-white/60 font-medium' : ($i === 1 ? 'text-white' : 'text-mut') }}">{{ $cell }}</td>
+                @endforeach
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+      <div class="p-5 border-t border-white/8 text-center">
+        <a href="{{ route('compare') }}" class="text-[13.5px] text-violet-soft hover:text-white transition">Full comparison, including where we are the wrong choice →</a>
+      </div>
+    </div>
+
+    {{-- results band --}}
+    <div class="mt-6 grid sm:grid-cols-3 gap-4">
+      @foreach([
+        ['3 days → 4 hours', 'Average turnaround after Avante Studio moved their reels onto Quick GIGS.'],
+        ['−62% revisions', 'Drop in second rounds once briefs were generated instead of written in chat.'],
+        ['₹0 wasted', 'Escrow means nothing is paid for work that never gets approved.'],
+      ] as $i => [$stat, $body])
+        <div class="reveal glass rounded-3xl p-6" style="transition-delay: {{ $i * 70 }}ms">
+          <div class="font-display text-[24px] font-semibold tracking-tight grad-text">{{ $stat }}</div>
+          <p class="mt-2.5 text-[13.5px] leading-6 text-mut">{{ $body }}</p>
+        </div>
+      @endforeach
+    </div>
+  </div>
+</section>
+
 {{-- ───────────────────────── PRICING ───────────────────────── --}}
 <section id="pricing" class="py-24" x-data="{ mode:'gig' }">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
@@ -414,7 +536,11 @@
       @endforeach
     </div>
 
-    <div class="mt-6 grid sm:grid-cols-3 gap-4">
+    <div class="mt-8 text-center">
+      <a href="{{ route('pricing') }}" class="text-[13.5px] text-violet-soft hover:text-white transition">See the full pricing page, calculator and fee breakdown →</a>
+    </div>
+
+    <div class="mt-8 grid sm:grid-cols-3 gap-4">
       @foreach($feeNotes as $n)
         <div class="glass rounded-2xl p-5">
           <div class="text-[13.5px] font-semibold">{{ $n['title'] }}</div>
@@ -496,6 +622,35 @@
           </div>
         </div>
       @endforeach
+    </div>
+  </div>
+</section>
+
+{{-- ───────────────────────── FORMATS + CREATOR CTA ───────────────────────── --}}
+<section class="py-20 border-t border-white/8">
+  <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[1fr_1fr] gap-6">
+    <div class="glass rounded-3xl p-7">
+      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Delivered ready to publish</div>
+      <h3 class="mt-3 font-display text-[22px] font-semibold">Every master forks into the formats you actually post.</h3>
+      <div class="mt-5 flex flex-wrap gap-2">
+        @foreach(['Instagram Reels 9:16','YouTube Shorts','YouTube 16:9','Square 1:1 ads','Story 4:5','Thumbnail frames','SRT captions','Raw project files'] as $f)
+          <span class="rounded-full border border-white/10 px-3 py-1.5 text-[12.5px] text-mut">{{ $f }}</span>
+        @endforeach
+      </div>
+      <a href="{{ route('how-it-works') }}" class="mt-6 inline-flex h-11 px-5 rounded-xl glass items-center text-[13.5px] font-medium hover:border-white/30 transition">See the full pipeline →</a>
+    </div>
+
+    <div class="rounded-3xl p-7 bg-gradient-to-br from-cyan/12 via-violet/10 to-transparent border border-white/10">
+      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-cyan">For creators</div>
+      <h3 class="mt-3 font-display text-[22px] font-semibold">Briefs arrive finished. You keep 90%.</h3>
+      <p class="mt-3 text-[14px] leading-7 text-mut">
+        No bidding, no connects, no proposals. Gigs come with beats, spec and escrow already funded —
+        accept the ones you want and get paid the moment they are approved.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="{{ route('register') }}?type=creator" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">Apply as a creator</a>
+        <a href="{{ route('for-creators') }}" class="h-11 px-5 rounded-xl glass inline-flex items-center text-[13.5px] font-medium hover:border-white/30 transition">See earnings</a>
+      </div>
     </div>
   </div>
 </section>

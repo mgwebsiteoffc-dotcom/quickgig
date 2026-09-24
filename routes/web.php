@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\BriefBuilderController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CreatorController;
@@ -36,6 +38,22 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
 Route::get('/gigs/{id}', [MarketplaceController::class, 'show'])->whereNumber('id')->name('gigs.show');
 Route::get('/services/{id}', fn ($id) => redirect()->route('gigs.show', $id))->whereNumber('id')->name('services.show');
+
+/* ── Product & company pages ── */
+Route::get('/how-it-works', [PageController::class, 'howItWorks'])->name('how-it-works');
+Route::get('/ai-engine',    [PageController::class, 'ai'])->name('ai');
+Route::get('/pricing',      [PageController::class, 'pricing'])->name('pricing');
+Route::get('/for-creators', [PageController::class, 'forCreators'])->name('for-creators');
+Route::get('/compare',      [PageController::class, 'compare'])->name('compare');
+Route::get('/enterprise',   [PageController::class, 'enterprise'])->name('enterprise');
+Route::get('/about',        [PageController::class, 'about'])->name('about');
+Route::get('/contact',      [PageController::class, 'contact'])->name('contact');
+Route::post('/contact',     [PageController::class, 'storeLead'])->name('leads.store');
+
+/* ── Free tool: brief builder ── */
+Route::get('/brief-builder',        [BriefBuilderController::class, 'show'])->name('brief-builder');
+Route::post('/brief-builder',       [BriefBuilderController::class, 'generate'])->name('brief-builder.generate');
+Route::post('/brief-builder/reset', [BriefBuilderController::class, 'reset'])->name('brief-builder.reset');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
@@ -120,6 +138,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,ad
     Route::delete('/creators/{id}', [AdminCreator::class, 'destroy'])->middleware('role:super_admin,admin')->name('creators.destroy');
 
     Route::get('/companies', [AdminCompany::class, 'index'])->name('companies.index');
+
+    Route::get('/leads', function () {
+        return view('admin.leads.index', ['leads' => \App\Models\Lead::latest()->paginate(20)]);
+    })->name('leads.index');
+    Route::post('/leads/{id}/handled', function ($id) {
+        \App\Models\Lead::whereKey($id)->update(['is_handled' => true]);
+        return back()->with('toast', 'Lead marked as handled');
+    })->name('leads.handled');
 
     Route::get('/services', [AdminService::class, 'index'])->name('services.index');
     Route::get('/services/create', [AdminService::class, 'create'])->middleware('role:super_admin,admin,manager')->name('services.create');

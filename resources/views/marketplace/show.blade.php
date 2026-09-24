@@ -131,8 +131,15 @@
               <input type="hidden" name="service_id" value="{{ $gig->id }}">
               <input type="hidden" name="lane" :value="lane">
 
-              <label class="label" for="brief">Your brief</label>
-              <textarea id="brief" name="brief" rows="4" required class="field" placeholder="What are we making? Share the goal, tone, references and any deadlines.">{{ old('brief') }}</textarea>
+              <div class="flex items-center justify-between">
+                <label class="label" for="brief">Your brief</label>
+                @if(session('brief.draft'))
+                  <span class="label text-cyan">loaded from brief builder</span>
+                @else
+                  <a href="{{ route('brief-builder') }}" class="label text-violet-soft hover:text-white transition">generate one free</a>
+                @endif
+              </div>
+              <textarea id="brief" name="brief" rows="{{ session('brief.draft') ? 8 : 4 }}" required class="field" placeholder="What are we making? Share the goal, tone, references and any deadlines.">{{ old('brief', session('brief.draft')) }}</textarea>
               @error('brief')<div class="mt-2 text-[12.5px] text-rose-300">{{ $message }}</div>@enderror
 
               <button class="mt-4 w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-violet/20">

@@ -1,17 +1,25 @@
 @php
   $user = auth()->user();
   $dash = $user ? ($user->isAdmin() ? route('admin.dashboard') : ($user->hasRole('creator') ? route('creator.dashboard') : route('business.home'))) : null;
-  $nav = [
-    ['label' => 'Marketplace',   'href' => route('marketplace')],
-    ['label' => 'How it works',  'href' => route('landing').'#how'],
-    ['label' => 'Pricing',       'href' => route('landing').'#pricing'],
-    ['label' => 'Insights',      'href' => route('blog.index')],
+
+  $platform = [
+    ['How it works',  'The 7-stage delivery pipeline', route('how-it-works')],
+    ['The engine',    'Explainable matching, QA gate', route('ai')],
+    ['Brief builder', 'Free tool — one line to brief', route('brief-builder')],
+    ['Compare',       'Quick GIGS vs the alternatives', route('compare')],
+  ];
+  $company = [
+    ['For creators', 'Keep 90%, no bidding',        route('for-creators')],
+    ['For teams',    'Pods, SLAs, one invoice',     route('enterprise')],
+    ['Insights',     'Playbooks and case studies',  route('blog.index')],
+    ['About',        'Why we built this',           route('about')],
   ];
 @endphp
 
-<header x-data="{ open:false, scrolled:false }" x-on:scroll.window="scrolled = window.scrollY > 12"
+<header x-data="{ open:false, menu:null, scrolled:false }" x-on:scroll.window="scrolled = window.scrollY > 12"
+        x-on:keydown.escape.window="menu=null; open=false"
         class="sticky top-0 z-50 transition-colors duration-300"
-        :class="scrolled || open ? 'glass-strong border-b border-white/10' : 'border-b border-transparent'">
+        :class="scrolled || open || menu ? 'glass-strong border-b border-white/10' : 'border-b border-transparent'">
   <div class="max-w-shell mx-auto px-5 lg:px-8 h-[70px] flex items-center justify-between gap-6">
 
     {{-- Brand --}}
@@ -24,11 +32,47 @@
       </span>
     </a>
 
-    {{-- Desktop menu — 4 links, nothing else --}}
-    <nav class="hidden lg:flex items-center gap-1 text-[14px]">
-      @foreach($nav as $item)
-        <a href="{{ $item['href'] }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-white/5 transition font-medium">{{ $item['label'] }}</a>
-      @endforeach
+    {{-- Desktop menu: 2 dropdowns + 2 links --}}
+    <nav class="hidden lg:flex items-center gap-1 text-[14px]" x-on:mouseleave="menu=null">
+      <div class="relative">
+        <button x-on:mouseenter="menu='platform'" x-on:click="menu = menu==='platform' ? null : 'platform'"
+                class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-white/5 transition font-medium inline-flex items-center gap-1.5"
+                :class="menu==='platform' ? 'text-white bg-white/5' : ''">
+          Platform
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="transition" :class="menu==='platform' ? 'rotate-180' : ''"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+
+      <a href="{{ route('marketplace') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-white/5 transition font-medium">Marketplace</a>
+      <a href="{{ route('pricing') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-white/5 transition font-medium">Pricing</a>
+
+      <div class="relative">
+        <button x-on:mouseenter="menu='company'" x-on:click="menu = menu==='company' ? null : 'company'"
+                class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-white/5 transition font-medium inline-flex items-center gap-1.5"
+                :class="menu==='company' ? 'text-white bg-white/5' : ''">
+          Company
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="transition" :class="menu==='company' ? 'rotate-180' : ''"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+
+      {{-- dropdown panel --}}
+      <div x-show="menu" x-cloak x-transition.opacity.duration.150ms
+           class="absolute left-1/2 -translate-x-1/2 top-[64px] w-[520px] glass-strong rounded-3xl p-3 shadow-2xl">
+        <div class="grid grid-cols-2 gap-1.5">
+          @foreach(['platform' => $platform, 'company' => $company] as $key => $items)
+            <template x-if="menu==='{{ $key }}'">
+              <div class="col-span-2 grid grid-cols-2 gap-1.5">
+                @foreach($items as [$label, $desc, $href])
+                  <a href="{{ $href }}" class="rounded-2xl p-3.5 hover:bg-white/6 transition group">
+                    <div class="text-[13.5px] font-semibold group-hover:text-violet-soft transition">{{ $label }}</div>
+                    <div class="text-[12px] text-mut mt-0.5 leading-snug">{{ $desc }}</div>
+                  </a>
+                @endforeach
+              </div>
+            </template>
+          @endforeach
+        </div>
+      </div>
     </nav>
 
     {{-- Right side --}}
@@ -45,6 +89,7 @@
             <div class="h-px bg-white/10 my-1"></div>
             <a href="{{ $dash }}" class="block px-3 py-2 rounded-xl text-[13.5px] hover:bg-white/8">Dashboard</a>
             <a href="{{ $user->hasRole('creator') ? route('creator.profile') : route('business.profile') }}" class="block px-3 py-2 rounded-xl text-[13.5px] hover:bg-white/8">Profile settings</a>
+            <a href="{{ route('brief-builder') }}" class="block px-3 py-2 rounded-xl text-[13.5px] hover:bg-white/8">Brief builder</a>
             <form method="POST" action="{{ route('logout') }}">@csrf
               <button class="w-full text-left px-3 py-2 rounded-xl text-[13.5px] text-rose-300 hover:bg-rose-500/10">Log out</button>
             </form>
@@ -58,7 +103,6 @@
         </a>
       @endauth
 
-      {{-- Mobile toggle --}}
       <button x-on:click="open=!open" class="lg:hidden w-10 h-10 rounded-xl border border-white/12 grid place-items-center" aria-label="Menu">
         <svg x-show="!open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         <svg x-show="open" x-cloak width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -67,12 +111,22 @@
   </div>
 
   {{-- Mobile drawer --}}
-  <div x-show="open" x-cloak x-transition.origin.top class="lg:hidden border-t border-white/10 px-5 py-4 glass-strong">
+  <div x-show="open" x-cloak x-transition.origin.top class="lg:hidden border-t border-white/10 px-5 py-4 glass-strong max-h-[80vh] overflow-y-auto">
     <div class="flex flex-col gap-1">
-      @foreach($nav as $item)
-        <a href="{{ $item['href'] }}" x-on:click="open=false" class="px-3 py-3 rounded-xl text-[15px] font-medium text-white/85 hover:bg-white/5">{{ $item['label'] }}</a>
+      <a href="{{ route('marketplace') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-white/85 hover:bg-white/5">Marketplace</a>
+      <a href="{{ route('pricing') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-white/85 hover:bg-white/5">Pricing</a>
+
+      <div class="mt-2 px-3 text-[10.5px] font-semibold tracking-[.16em] uppercase text-white/35">Platform</div>
+      @foreach($platform as [$label, $desc, $href])
+        <a href="{{ $href }}" class="px-3 py-2.5 rounded-xl text-[14.5px] text-white/80 hover:bg-white/5">{{ $label }}</a>
       @endforeach
-      <div class="h-px bg-white/10 my-2"></div>
+
+      <div class="mt-2 px-3 text-[10.5px] font-semibold tracking-[.16em] uppercase text-white/35">Company</div>
+      @foreach($company as [$label, $desc, $href])
+        <a href="{{ $href }}" class="px-3 py-2.5 rounded-xl text-[14.5px] text-white/80 hover:bg-white/5">{{ $label }}</a>
+      @endforeach
+
+      <div class="h-px bg-white/10 my-3"></div>
       @auth
         <a href="{{ $dash }}" class="px-3 py-3 rounded-xl text-[15px] font-medium">Dashboard</a>
         <form method="POST" action="{{ route('logout') }}">@csrf<button class="w-full text-left px-3 py-3 rounded-xl text-[15px] text-rose-300">Log out</button></form>

@@ -24,21 +24,24 @@
       $cols = [
         'Platform' => [
           ['Marketplace', route('marketplace')],
-          ['How it works', route('landing').'#how'],
+          ['How it works', route('how-it-works')],
+          ['The engine', route('ai')],
+          ['Brief builder', route('brief-builder')],
           ['Live demo', route('landing').'#demo'],
-          ['Pricing', route('landing').'#pricing'],
         ],
         'For you' => [
           ['Hire talent', route('register').'?type=business'],
-          ['Work as a pro', route('register').'?type=creator'],
-          ['Business dashboard', auth()->check() ? route('business.home') : route('login')],
-          ['Creator studio', auth()->check() ? route('creator.dashboard') : route('login')],
+          ['Work as a pro', route('for-creators')],
+          ['For teams', route('enterprise')],
+          ['Pricing', route('pricing')],
+          ['Compare', route('compare')],
         ],
         'Company' => [
+          ['About', route('about')],
           ['Insights', route('blog.index')],
+          ['Contact', route('contact')],
           ['FAQ', route('landing').'#faq'],
           ['Sitemap', route('sitemap')],
-          ['Status', url('/health')],
         ],
       ];
       @endphp

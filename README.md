@@ -58,8 +58,29 @@ Extra staff logins: `manager@quickgigs.in` / `Manager@123`, `support@quickgigs.i
 | Creator studio | `/creator` | Availability toggle, assigned gigs, deliver flow, earnings, profile-strength meter. |
 | Profiles | `/business/profile`, `/creator/profile`, `/creators/{id}` | Editable and persisted, with portfolio CRUD for creators. |
 | Insights | `/blog`, `/blog/{slug}` | Article + FAQ JSON-LD, categories, search. |
-| Admin | `/admin` | Orders, creators, companies, services, blogs, FAQs, users & roles, payouts, settings. |
+| Admin | `/admin` | Orders, creators, companies, **leads**, services, blogs, FAQs, users & roles, payouts, settings. |
 | SEO | `/sitemap.xml`, `/robots.txt` | Organization, FAQPage, BreadcrumbList and BlogPosting JSON-LD via `components/seo.blade.php`. |
+
+### Differentiators (and where they live in the code)
+
+| USP | Page | Implementation |
+|---|---|---|
+| **Brief engine** — one line becomes hooks, a timed beat sheet, deliverables, spec and QA gate | `/brief-builder` | `app/Services/BriefComposer.php` — deterministic, template/rule based, no API key. `compose()` is the single extension point if you want to hand the draft to an LLM. |
+| **Explainable matching** — score out of 100 with five weighted, published factors | `/ai-engine` | `app/Services/MatchEngine.php` — skill fit, availability, reliability, rating, budget fit. Re-weighted live on the page. |
+| **Automated QA gate** — six checks before a delivery reaches the buyer | `/ai-engine#m02` | Gate definition lives with the brief (`BriefComposer::qaGate()`); the page runs an interactive simulation of it. |
+| **Revision translator** — vague feedback becomes timestamped editor notes | `/ai-engine#m03` | Rule table in the page's Alpine component; mirrors what the order chat sends to creators. |
+| **Auto-repurpose** — one master forks into the formats you publish | `/how-it-works` | Stage 07 of the pipeline defined in `PageController::pipeline()`. |
+| **Escrow with SLA credit** — no commitment fee, refundable until approval | `/pricing` | `OrderController` holds `escrow_status` and releases only on approve. |
+
+Positioning versus quick-commerce gig apps, managed agencies and bidding marketplaces is documented in
+`PageController::comparison()` and rendered on `/compare` — including three cases where we tell people
+to hire someone else.
+
+### Marketing & tool pages
+
+`/how-it-works` · `/ai-engine` · `/brief-builder` · `/pricing` · `/compare` · `/for-creators` ·
+`/enterprise` (lead form) · `/about` · `/contact` (lead form). Enquiries are stored in the `leads`
+table and reviewed at `/admin/leads`.
 
 ### Money flow
 

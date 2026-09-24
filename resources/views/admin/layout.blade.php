@@ -28,6 +28,7 @@
           ['label'=>'Orders','icon'=>'shopping-bag','route'=>'admin.orders.index','roles'=>['super_admin','admin','manager','support','finance'],'badge'=>'23'],
           ['label'=>'Creators','icon'=>'users','route'=>'admin.creators.index','roles'=>['super_admin','admin','manager']],
           ['label'=>'Companies','icon'=>'building','route'=>'admin.companies.index','roles'=>['super_admin','admin','manager','support']],
+          ['label'=>'Leads','icon'=>'inbox','route'=>'admin.leads.index','roles'=>['super_admin','admin','manager','support']],
           ['label'=>'Services','icon'=>'layers','route'=>'admin.services.index','roles'=>['super_admin','admin','manager']],
           ['label'=>'Blogs','icon'=>'file-text','route'=>'admin.blogs.index','roles'=>['super_admin','admin','manager']],
           ['label'=>'FAQs','icon'=>'help','route'=>'admin.faqs.index','roles'=>['super_admin','admin','manager']],
