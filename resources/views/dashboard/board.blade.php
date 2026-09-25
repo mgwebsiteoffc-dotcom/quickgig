@@ -71,7 +71,7 @@
     <div x-show="composing" x-cloak x-transition.duration.300ms class="mt-5 glass-strong rounded-3xl p-5 sm:p-6">
       <div class="flex items-center justify-between">
         <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">New task</div>
-        <button x-on:click="composing = false" class="text-[12.5px] text-mut hover:text-white">Close ✕</button>
+        <button x-on:click="composing = false" class="text-[12.5px] text-mut hover:text-ink">Close ✕</button>
       </div>
 
       <form x-on:submit.prevent="create()" class="mt-4 space-y-4">

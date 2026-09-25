@@ -4,7 +4,7 @@
 <section class="py-12">
   <div class="max-w-[820px] mx-auto px-5 lg:px-8">
 
-    <a href="{{ route('creator.dashboard') }}" class="text-[12.5px] text-mut hover:text-white">← Back to studio</a>
+    <a href="{{ route('creator.dashboard') }}" class="text-[12.5px] text-mut hover:text-ink">← Back to studio</a>
 
     <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
       <div>

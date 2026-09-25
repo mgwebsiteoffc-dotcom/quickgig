@@ -225,7 +225,7 @@
         <div class="mt-4 flex flex-wrap gap-2">
           <template x-for="s in samples" :key="s">
             <button type="button" x-on:click="text = s; translate()"
-                    class="rounded-full border border-line px-3 py-1.5 text-[12px] text-mut hover:text-white hover:border-mint transition"
+                    class="rounded-full border border-line px-3 py-1.5 text-[12px] text-mut hover:text-ink hover:border-mint transition"
                     x-text="s"></button>
           </template>
         </div>

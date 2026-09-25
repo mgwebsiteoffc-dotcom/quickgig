@@ -4,7 +4,7 @@
 <section class="py-12">
   <div class="max-w-[900px] mx-auto px-5 lg:px-8">
 
-    <a href="{{ route('creator.dashboard') }}" class="text-[12.5px] text-mut hover:text-white">← Back to studio</a>
+    <a href="{{ route('creator.dashboard') }}" class="text-[12.5px] text-mut hover:text-ink">← Back to studio</a>
     <h1 class="mt-3 font-display text-[30px] font-semibold">Freelancer profile</h1>
     <p class="mt-2 text-[14.5px] text-mut">A complete profile gets verified faster and ranks higher in matching.</p>
 
@@ -19,11 +19,11 @@
         <img src="{{ $creator->avatarUrl() }}" class="w-16 h-16 rounded-2xl object-cover border border-line" alt="">
         <div class="flex-1 min-w-[220px]">
           <label class="label" for="avatar">Profile photo</label>
-          <input id="avatar" type="file" name="avatar" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-tint file:text-white file:text-[12.5px]">
+          <input id="avatar" type="file" name="avatar" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-ink file:text-white file:text-[12.5px]">
         </div>
         <div class="flex-1 min-w-[220px]">
           <label class="label" for="cover">Cover image</label>
-          <input id="cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-tint file:text-white file:text-[12.5px]">
+          <input id="cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-ink file:text-white file:text-[12.5px]">
         </div>
       </div>
 
@@ -155,7 +155,7 @@
         </div>
         <div>
           <label class="label" for="p_cover">Cover image</label>
-          <input id="p_cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-tint file:text-white file:text-[12.5px]">
+          <input id="p_cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-ink file:text-white file:text-[12.5px]">
         </div>
         <div class="sm:col-span-2">
           <button class="h-12 px-6 rounded-xl glass font-medium text-[14px] hover:border-line transition">Add portfolio item</button>

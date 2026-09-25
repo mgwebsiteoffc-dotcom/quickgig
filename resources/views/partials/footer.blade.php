@@ -51,7 +51,7 @@
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">{{ $head }}</div>
           <ul class="mt-4 space-y-2.5">
             @foreach($links as [$label, $href])
-              <li><a href="{{ $href }}" class="text-[13.5px] text-mut hover:text-white transition">{{ $label }}</a></li>
+              <li><a href="{{ $href }}" class="text-[13.5px] text-mut hover:text-ink transition">{{ $label }}</a></li>
             @endforeach
           </ul>
         </div>

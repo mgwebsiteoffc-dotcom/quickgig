@@ -180,7 +180,7 @@
 
     <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       @foreach($categories as $i => [$name, $desc, $grad])
-        <div class="reveal-s rounded-3xl p-5 {{ $grad }} text-white shadow-lg hover:-translate-y-1.5 transition-transform duration-300" data-delay="{{ $i * 60 }}">
+        <div class="reveal-s rounded-3xl p-5 bg-ink text-white hover:-translate-y-1.5 transition-transform duration-300" data-delay="{{ $i * 60 }}">
           <div class="font-display text-[17px] font-semibold">{{ $name }}</div>
           <div class="mt-1.5 text-[12.5px] text-body">{{ $desc }}</div>
         </div>
@@ -264,7 +264,7 @@
     </div>
 
     <div class="mt-6 text-center text-[13px] text-mut">
-      Not ready to commit? <a href="{{ route('marketplace') }}" class="text-mint-deep hover:text-white transition">Order single gigs from ₹1,299</a> — the board works on pay-as-you-go too.
+      Not ready to commit? <a href="{{ route('marketplace') }}" class="text-mint-deep hover:text-ink transition">Order single gigs from ₹1,299</a> — the board works on pay-as-you-go too.
     </div>
   </div>
 </section>

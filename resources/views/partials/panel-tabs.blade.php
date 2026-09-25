@@ -13,7 +13,7 @@
     @php $active = $currentRoute === $tab['route']; @endphp
     <a href="{{ route($tab['route']) }}"
        class="shrink-0 h-10 px-4 rounded-xl inline-flex items-center gap-2 text-[13.5px] font-medium transition-all duration-300
-              {{ $active ? 'btn-grad text-white shadow-lg shadow-ink/10' : 'glass btn-ghost text-mut hover:text-white hover:border-line' }}">
+              {{ $active ? 'btn-grad text-white shadow-lg shadow-ink/10' : 'glass btn-ghost text-mut hover:text-ink hover:border-line' }}">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="{{ $tab['icon'] }}"/></svg>
       {{ $tab['label'] }}
     </a>

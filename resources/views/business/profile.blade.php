@@ -4,7 +4,7 @@
 <section class="py-12">
   <div class="max-w-[820px] mx-auto px-5 lg:px-8">
 
-    <a href="{{ route('business.home') }}" class="text-[12.5px] text-mut hover:text-white">← Back to dashboard</a>
+    <a href="{{ route('business.home') }}" class="text-[12.5px] text-mut hover:text-ink">← Back to dashboard</a>
     <h1 class="mt-3 font-display text-[30px] font-semibold">Workspace settings</h1>
     <p class="mt-2 text-[14.5px] text-mut">This is the name freelancers, invoices and order pages will show.</p>
 
@@ -19,7 +19,7 @@
         <img src="{{ $company->logoUrl() }}" class="w-16 h-16 rounded-2xl object-cover border border-line" alt="">
         <div class="flex-1 min-w-[240px]">
           <label class="label" for="logo">Company logo</label>
-          <input id="logo" type="file" name="logo" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-tint file:text-white file:text-[12.5px] file:font-medium">
+          <input id="logo" type="file" name="logo" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-ink file:text-white file:text-[12.5px] file:font-medium">
           <div class="mt-1.5 text-[11.5px] text-mut">PNG or JPG, up to 2 MB.</div>
         </div>
       </div>

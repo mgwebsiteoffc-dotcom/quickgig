@@ -29,8 +29,8 @@
       </p>
 
       <div class="mt-8 inline-flex glass rounded-2xl p-1">
-        <button x-on:click="mode='gig'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition" :class="mode==='gig' ? 'btn-grad text-ink' : 'text-mut hover:text-white'">Pay per gig</button>
-        <button x-on:click="mode='retainer'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition" :class="mode==='retainer' ? 'btn-grad text-ink' : 'text-mut hover:text-white'">Monthly retainer <span class="text-[11px] opacity-70">−20%</span></button>
+        <button x-on:click="mode='gig'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition" :class="mode==='gig' ? 'btn-grad text-ink' : 'text-mut hover:text-ink'">Pay per gig</button>
+        <button x-on:click="mode='retainer'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition" :class="mode==='retainer' ? 'btn-grad text-ink' : 'text-mut hover:text-ink'">Monthly retainer <span class="text-[11px] opacity-70">−20%</span></button>
       </div>
     </div>
 
@@ -161,7 +161,7 @@
             <tr class="border-b border-line">
               <th class="p-5 text-[11px] font-semibold tracking-[.14em] uppercase text-faint">How it compares</th>
               @foreach($comparison['columns'] as $i => $col)
-                <th class="p-5 text-[13px] font-semibold {{ $i === 0 ? 'text-white' : 'text-mut' }}">{{ $col }}</th>
+                <th class="p-5 text-[13px] font-semibold {{ $i === 0 ? 'text-ink' : 'text-mut' }}">{{ $col }}</th>
               @endforeach
             </tr>
           </thead>
@@ -169,7 +169,7 @@
             @foreach(array_slice($comparison['rows'], 0, 5) as $row)
               <tr class="border-b border-line last:border-0">
                 @foreach($row as $i => $cell)
-                  <td class="p-5 align-top text-[13.5px] {{ $i === 0 ? 'text-body' : ($i === 1 ? 'text-white font-medium' : 'text-mut') }}">{{ $cell }}</td>
+                  <td class="p-5 align-top text-[13.5px] {{ $i === 0 ? 'text-body' : ($i === 1 ? 'text-ink font-medium' : 'text-mut') }}">{{ $cell }}</td>
                 @endforeach
               </tr>
             @endforeach
@@ -177,7 +177,7 @@
         </table>
       </div>
       <div class="p-5 border-t border-line text-center">
-        <a href="{{ route('compare') }}" class="text-[13.5px] text-mint-deep hover:text-white transition">See the full comparison, including where we are not the right choice →</a>
+        <a href="{{ route('compare') }}" class="text-[13.5px] text-mint-deep hover:text-ink transition">See the full comparison, including where we are not the right choice →</a>
       </div>
     </div>
   </div>

@@ -19,7 +19,7 @@
   <div class="max-w-[760px] mx-auto px-5 lg:px-8">
 
     <nav class="flex items-center gap-2 text-[12.5px] text-mut">
-      <a href="{{ route('blog.index') }}" class="hover:text-white">Insights</a>
+      <a href="{{ route('blog.index') }}" class="hover:text-ink">Insights</a>
       <span class="opacity-40">/</span>
       <span class="text-body">{{ $blog->category->name ?? 'Post' }}</span>
     </nav>

@@ -26,7 +26,7 @@
       <div>
         <div class="flex items-center justify-between">
           <label class="label" for="password">Password</label>
-          <a href="#" class="text-[11.5px] text-mut hover:text-white mb-[7px]">Forgot?</a>
+          <a href="#" class="text-[11.5px] text-mut hover:text-ink mb-[7px]">Forgot?</a>
         </div>
         <input id="password" name="password" type="password" required autocomplete="current-password" class="field" placeholder="••••••••">
       </div>
@@ -39,7 +39,7 @@
       <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Log in</button>
 
       <div class="text-center text-[13.5px] text-mut">
-        New to Quick GIGS? <a href="{{ route('register') }}" class="text-white font-medium hover:underline">Create a free account</a>
+        New to Quick GIGS? <a href="{{ route('register') }}" class="text-ink font-medium underline decoration-mint decoration-2 underline-offset-4 hover:text-mint-deep">Create a free account</a>
       </div>
     </form>
 

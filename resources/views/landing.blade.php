@@ -3,8 +3,8 @@
 @section('content')
 
 {{-- ═══════════════ HERO — the product proves itself ═══════════════ --}}
-<section class="relative pt-12 sm:pt-16 pb-14">
-  <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.02fr_0.98fr] gap-12 items-center">
+<section class="relative pt-8 sm:pt-10 pb-10">
+  <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-center">
 
     <div class="reveal-l">
       <div class="inline-flex items-center gap-2 border border-line rounded-full pl-1.5 pr-3 py-1.5 text-[12px] font-medium">
@@ -12,18 +12,18 @@
         <span class="text-body">No forms. No calls. No waiting.</span>
       </div>
 
-      <h1 class="mt-6 font-display text-[40px] sm:text-[56px] leading-[1.03] font-semibold">
+      <h1 class="mt-4 font-display text-[32px] sm:text-[44px] leading-[1.05] font-semibold">
         Describe the work.<br>
         Get a brief in <span class="grad-text">one second</span>.
       </h1>
 
-      <p class="mt-5 text-[16.5px] leading-7 text-body max-w-[520px]">
+      <p class="mt-3.5 text-[15px] leading-6.5 text-body max-w-[480px]">
         Then we match a verified freelancer, hold your money in escrow and run the delivery through an
         automated quality gate. Video, design, copy, code, voice and marketing.
       </p>
 
       {{-- the proof: a real brief, generated in front of you --}}
-      <div class="mt-8 glass-strong rounded-3xl p-4 sm:p-5" x-data="instantBrief()">
+      <div class="mt-5 glass-strong rounded-2xl p-4" x-data="instantBrief()">
         <form x-on:submit.prevent="run()" class="flex flex-col sm:flex-row gap-2.5">
           <input x-model="idea" maxlength="160" class="field flex-1"
                  placeholder="a launch reel for our ₹999 protein bar">
@@ -86,15 +86,15 @@
         </div>
       </div>
 
-      <div class="mt-7 flex flex-wrap items-center gap-3">
-        <a href="{{ route('register') }}?type=business" class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2">
+      <div class="mt-5 flex flex-wrap items-center gap-2.5">
+        <a href="{{ route('register') }}?type=business" class="h-11 px-5 rounded-xl btn-grad font-semibold text-[14px] inline-flex items-center gap-2">
           Post a gig — free
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a href="{{ route('marketplace') }}" class="h-12 px-6 rounded-xl border border-line btn-ghost font-medium text-[14.5px] inline-flex items-center hover:border-ink/30">Browse {{ number_format($stats['gig_count'] ?? 19) }} gigs</a>
+        <a href="{{ route('marketplace') }}" class="h-11 px-5 rounded-xl border border-line btn-ghost font-medium text-[14px] inline-flex items-center hover:border-ink/30">Browse {{ number_format($stats['gig_count'] ?? 19) }} gigs</a>
       </div>
 
-      <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+      <div class="mt-6 flex flex-wrap items-center gap-x-7 gap-y-3">
         @foreach([
           ['1', 's', 'Brief written in', 0],
           ['4', ' min', 'Freelancer matched in', 0],
@@ -102,10 +102,10 @@
           ['4.9', '/5', 'Client rating', 1],
         ] as $i => [$value, $suffix, $label, $dec])
           <div class="reveal" data-delay="{{ 120 + $i * 80 }}">
-            <div class="font-display text-[22px] font-semibold tracking-tight">
+            <div class="font-display text-[19px] font-semibold tracking-tight">
               <span data-count="{{ $value }}" data-suffix="{{ $suffix }}" data-decimals="{{ $dec }}">0</span>
             </div>
-            <div class="text-[12px] text-faint mt-0.5">{{ $label }}</div>
+            <div class="text-[11.5px] text-faint mt-0.5">{{ $label }}</div>
           </div>
         @endforeach
       </div>
@@ -114,8 +114,8 @@
     {{-- isometric scene --}}
     <div class="reveal-s">
       <img src="{{ asset('img/iso-hero.png') }}" alt="A brief moving through matching, production and delivery"
-           class="w-full max-w-[620px] mx-auto animate-floaty" style="animation-duration:9s">
-      <div class="mt-2 grid grid-cols-3 gap-3 max-w-[560px] mx-auto text-center">
+           class="w-full max-w-[500px] mx-auto animate-floaty" style="animation-duration:9s">
+      <div class="mt-1 grid grid-cols-3 gap-3 max-w-[460px] mx-auto text-center">
         @foreach([['Brief', 'written for you'], ['Match', 'scored and explained'], ['Escrow', 'released on approval']] as [$t, $d])
           <div>
             <div class="text-[13px] font-semibold">{{ $t }}</div>
@@ -139,8 +139,42 @@
   </div>
 </section>
 
+{{-- ═══════════════ PROCESS GIF ═══════════════ --}}
+<section class="py-16 band-light">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-5 reveal">
+      <div class="max-w-[560px]">
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">The whole thing, in 8 seconds</div>
+        <h2 class="mt-3 font-display text-[28px] sm:text-[34px] font-semibold leading-[1.12]">Watch a gig go from one line to delivered.</h2>
+      </div>
+      <a href="{{ route('how-it-works') }}" class="h-11 px-5 rounded-xl border border-line inline-flex items-center gap-2 text-[13.5px] font-medium hover:border-ink/30 transition">
+        Read the detail
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-8 reveal-s">
+      <div class="bg-white border border-line rounded-3xl p-3 shadow-xl shadow-ink/5 max-w-[920px] mx-auto">
+        <div class="flex items-center gap-2 px-2 pb-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-ink/15"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-ink/15"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-mint"></span>
+          <span class="ml-2 text-[11.5px] text-faint">quickgigs.in — live pipeline</span>
+        </div>
+        <img src="{{ asset('img/how-it-works.gif') }}" alt="Animation: describe the work, the brief is written, a freelancer is matched, production runs, escrow is released on approval"
+             class="w-full rounded-2xl border border-line" loading="lazy">
+      </div>
+      <div class="mt-4 flex flex-wrap justify-center gap-x-7 gap-y-2 text-[12.5px] text-faint">
+        <span>✓ No forms to fill</span>
+        <span>✓ No proposals to read</span>
+        <span>✓ Money moves only on approval</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 {{-- ═══════════════ AUDIENCES (light) ═══════════════ --}}
-<section class="band-light py-24">
+<section class="py-24">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px] reveal">
       <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Who it's for</div>
@@ -221,7 +255,7 @@
           </div>
           <div class="mt-5 font-display text-[17px] font-semibold group-hover:text-mint-deep transition">{{ $u['title'] }}</div>
           <p class="mt-2 text-[13.5px] leading-6 text-mut">{{ $u['body'] }}</p>
-          <div class="mt-4 text-[12.5px] text-faint group-hover:text-white transition">{{ $u['cta'] }} →</div>
+          <div class="mt-4 text-[12.5px] text-faint group-hover:text-ink transition">{{ $u['cta'] }} →</div>
         </a>
       @endforeach
     </div>
@@ -276,7 +310,7 @@
           <template x-for="a in cfg.addons" :key="a.id">
             <button type="button" x-on:click="toggleAddon(a.id)"
               class="rounded-full px-3.5 py-2 text-[12.5px] font-medium border transition-all duration-300"
-              :class="addons.includes(a.id) ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-white hover:border-line'">
+              :class="addons.includes(a.id) ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-ink hover:border-line'">
               <span x-text="a.label"></span> <span class="font-mono opacity-60" x-text="'+₹' + a.price"></span>
             </button>
           </template>
@@ -385,7 +419,7 @@
           <div class="mt-1 text-[12.5px] text-mut">{{ $cat['count'] }}</div>
           <div class="mt-6 flex items-center justify-between">
             <span class="text-[13px] text-mut">from <b class="font-semibold text-deep">{{ $cat['from'] }}</b></span>
-            <span class="w-8 h-8 rounded-lg bg-tint text-deep grid place-items-center group-hover:bg-mint group-hover:text-white transition-all duration-300">
+            <span class="w-8 h-8 rounded-lg bg-tint text-deep grid place-items-center group-hover:bg-mint group-hover:text-ink transition-all duration-300">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </span>
           </div>
@@ -495,7 +529,7 @@
             <tr class="border-b border-line bg-tint">
               <th class="p-5 text-[11px] font-semibold tracking-[.14em] uppercase text-faint w-[230px]"></th>
               @foreach($comparison['columns'] as $i => $col)
-                <th class="p-5 text-[13px] font-semibold {{ $i === 0 ? 'text-white' : 'text-mut' }}">{{ $col }}</th>
+                <th class="p-5 text-[13px] font-semibold {{ $i === 0 ? 'text-ink' : 'text-mut' }}">{{ $col }}</th>
               @endforeach
             </tr>
           </thead>
@@ -503,7 +537,7 @@
             @foreach(array_slice($comparison['rows'], 0, 4) as $row)
               <tr class="border-b border-line last:border-0 hover:bg-tint transition-colors">
                 @foreach($row as $i => $cell)
-                  <td class="p-5 align-top text-[13.5px] leading-6 {{ $i === 0 ? 'text-faint font-medium' : ($i === 1 ? 'text-white' : 'text-mut') }}">{{ $cell }}</td>
+                  <td class="p-5 align-top text-[13.5px] leading-6 {{ $i === 0 ? 'text-faint font-medium' : ($i === 1 ? 'text-ink' : 'text-mut') }}">{{ $cell }}</td>
                 @endforeach
               </tr>
             @endforeach
@@ -511,7 +545,7 @@
         </table>
       </div>
       <div class="p-5 border-t border-line text-center">
-        <a href="{{ route('compare') }}" class="text-[13.5px] text-mint-deep hover:text-white transition">Full comparison, including where we are the wrong choice →</a>
+        <a href="{{ route('compare') }}" class="text-[13.5px] text-mint-deep hover:text-ink transition">Full comparison, including where we are the wrong choice →</a>
       </div>
     </div>
 

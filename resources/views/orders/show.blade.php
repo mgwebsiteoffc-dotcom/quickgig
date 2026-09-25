@@ -21,7 +21,7 @@
 
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <a href="{{ route('business.home') }}" class="text-[12.5px] text-mut hover:text-white">← Back to dashboard</a>
+        <a href="{{ route('business.home') }}" class="text-[12.5px] text-mut hover:text-ink">← Back to dashboard</a>
         <h1 class="mt-2 font-display text-[28px] sm:text-[32px] font-semibold">{{ $order->service->title ?? 'Gig' }}</h1>
         <div class="mt-1.5 flex flex-wrap items-center gap-3 text-[13px] text-mut">
           <span class="font-mono">{{ $order->uid }}</span>

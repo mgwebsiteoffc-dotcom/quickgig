@@ -32,6 +32,9 @@ php artisan storage:link
 php artisan serve
 ```
 
+> Running through PHP's built-in server? Use the dev router so static files are not swallowed by
+> Laravel: `php -S 0.0.0.0:8080 -t public scripts/dev/router.php`
+
 Open <http://localhost:8000>.
 
 ### Demo accounts (created by the seeder)
@@ -175,6 +178,8 @@ always gets a brief.
   final CTA, footer) and re-tones glass, muted text, borders, inputs and buttons inside it.
 * **Isometric line illustrations** in `public/img/iso-*.png` (hero, brief, match, deliver, board) —
   monochrome with a single mint accent, matching the flat-vector look of the rest of the UI.
+* **`public/img/how-it-works.gif`** — a five-frame animated walkthrough of the pipeline, generated
+  from the same isometric art (`scripts/dev/make-gif.py`). Re-run it if the steps change.
 * Semantic text/surface helpers instead of theme-specific opacity classes: `.text-body`,
   `.text-faint`, `.bg-tint`, `.border-line`.
 * Catalogue cards follow quick-commerce conventions: image-led, MRP strike-through, “% off” badge,

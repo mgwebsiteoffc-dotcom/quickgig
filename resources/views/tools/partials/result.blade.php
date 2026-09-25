@@ -125,7 +125,7 @@
             <h3 class="font-display text-[17px] font-semibold text-mint-deep">QA gate on delivery</h3>
             <ul class="mt-4 space-y-2.5">
               @foreach($brief['qa_gate'] as $g)
-                <li class="text-[13px] leading-6 text-body"><span class="font-medium text-white/90">{{ $g['check'] }}</span> — {{ $g['detail'] }}</li>
+                <li class="text-[13px] leading-6 text-body"><span class="font-medium text-ink">{{ $g['check'] }}</span> — {{ $g['detail'] }}</li>
               @endforeach
             </ul>
           </div>

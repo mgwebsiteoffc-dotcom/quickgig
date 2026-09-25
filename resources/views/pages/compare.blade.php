@@ -28,7 +28,7 @@
             <tr class="border-b border-line bg-tint">
               <th class="p-5 text-[11px] font-semibold tracking-[.14em] uppercase text-faint w-[220px]"></th>
               @foreach($comparison['columns'] as $i => $col)
-                <th class="p-5 text-[13.5px] font-semibold {{ $i === 0 ? 'text-white' : 'text-mut' }}">
+                <th class="p-5 text-[13.5px] font-semibold {{ $i === 0 ? 'text-ink' : 'text-mut' }}">
                   @if($i === 0)
                     <span class="inline-flex items-center gap-2">
                       <span class="w-5 h-5 rounded-md btn-grad grid place-items-center">
@@ -47,7 +47,7 @@
               <tr class="border-b border-line last:border-0 hover:bg-tint transition">
                 @foreach($row as $i => $cell)
                   <td class="p-5 align-top text-[13.5px] leading-6
-                    {{ $i === 0 ? 'text-faint font-medium' : ($i === 1 ? 'text-white' : 'text-mut') }}">
+                    {{ $i === 0 ? 'text-faint font-medium' : ($i === 1 ? 'text-ink' : 'text-mut') }}">
                     @if($i === 1)
                       <span class="inline-flex items-start gap-2">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A3E635" stroke-width="2.6" class="shrink-0 mt-1"><path d="M20 6 9 17l-5-5"/></svg>

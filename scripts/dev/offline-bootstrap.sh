@@ -228,5 +228,5 @@ echo "▸ 6/6  ready"
 echo "   run:  $TOOLS/phpw artisan serve   (or --serve to start it now on :8080)"
 
 if [ "${1:-}" = "--serve" ]; then
-  exec "$TOOLS/phpw" -d error_reporting="E_ALL & ~E_DEPRECATED" -S 0.0.0.0:8080 -t public public/index.php
+  exec "$TOOLS/phpw" -d error_reporting="E_ALL & ~E_DEPRECATED" -S 0.0.0.0:8080 -t public scripts/dev/router.php
 fi

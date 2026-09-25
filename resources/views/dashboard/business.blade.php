@@ -80,7 +80,7 @@
           </div>
           <p class="mt-1 text-[13px] text-mut">Plain English in, a structured task out — title, dates, description and client.</p>
         </div>
-        <button x-show="task" x-cloak x-on:click="clear()" class="text-[12.5px] text-mut hover:text-white transition">Clear ✕</button>
+        <button x-show="task" x-cloak x-on:click="clear()" class="text-[12.5px] text-mut hover:text-ink transition">Clear ✕</button>
       </div>
 
       <form x-on:submit.prevent="parse()" class="mt-5 flex flex-col sm:flex-row gap-3">
@@ -95,7 +95,7 @@
       <div class="mt-3 flex flex-wrap gap-2">
         <template x-for="s in samples" :key="s">
           <button type="button" x-on:click="prompt = s; parse()"
-                  class="rounded-full border border-line px-3 py-1.5 text-[11.5px] text-mut hover:text-white hover:border-pink/50 transition" x-text="s"></button>
+                  class="rounded-full border border-line px-3 py-1.5 text-[11.5px] text-mut hover:text-ink hover:border-pink/50 transition" x-text="s"></button>
         </template>
       </div>
 
@@ -163,7 +163,7 @@ Accept: application/json
       <div class="glass rounded-3xl p-6 sm:p-7">
         <div class="flex items-center justify-between">
           <h2 class="font-display text-[19px] font-semibold">Your gigs</h2>
-          <a href="{{ route('marketplace') }}" class="text-[12.5px] text-mut hover:text-white">Browse marketplace →</a>
+          <a href="{{ route('marketplace') }}" class="text-[12.5px] text-mut hover:text-ink">Browse marketplace →</a>
         </div>
 
         @forelse($orders as $o)

@@ -17,9 +17,9 @@
     </div>
 
     <div class="mt-7 flex flex-wrap gap-2">
-      <a href="{{ route('blog.index') }}" class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ !$cat ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-white hover:border-line' }}">All</a>
+      <a href="{{ route('blog.index') }}" class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ !$cat ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-ink hover:border-line' }}">All</a>
       @foreach($categories as $c)
-        <a href="{{ route('blog.index', ['category' => $c->slug]) }}" class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $cat == $c->slug ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-white hover:border-line' }}">
+        <a href="{{ route('blog.index', ['category' => $c->slug]) }}" class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $cat == $c->slug ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-ink hover:border-line' }}">
           {{ $c->name }} <span class="opacity-50">{{ $c->blogs_count }}</span>
         </a>
       @endforeach

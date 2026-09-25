@@ -5,7 +5,7 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8">
 
     <nav class="flex items-center gap-2 text-[12.5px] text-mut">
-      <a href="{{ route('marketplace') }}" class="hover:text-white">Marketplace</a>
+      <a href="{{ route('marketplace') }}" class="hover:text-ink">Marketplace</a>
       <span class="opacity-40">/</span>
       <span class="text-body">{{ $gig->category }}</span>
     </nav>
@@ -146,7 +146,7 @@
                 @if(session('brief.draft'))
                   <span class="label text-mint-deep">loaded from brief builder</span>
                 @else
-                  <a href="{{ route('brief-builder') }}" class="label text-mint-deep hover:text-white transition">generate one free</a>
+                  <a href="{{ route('brief-builder') }}" class="label text-mint-deep hover:text-ink transition">generate one free</a>
                 @endif
               </div>
               <textarea id="brief" name="brief" rows="{{ session('brief.draft') ? 8 : 4 }}" required class="field" placeholder="What are we making? Share the goal, tone, references and any deadlines.">{{ old('brief', session('brief.draft')) }}</textarea>
@@ -161,7 +161,7 @@
             <a href="{{ route('register') }}?type=business" class="mt-5 w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] grid place-items-center shadow-lg shadow-ink/10">
               Create an account to order
             </a>
-            <div class="mt-3 text-[12.5px] text-center text-mut">Already a member? <a href="{{ route('login') }}" class="text-white hover:underline">Log in</a></div>
+            <div class="mt-3 text-[12.5px] text-center text-mut">Already a member? <a href="{{ route('login') }}" class="text-ink font-medium underline decoration-mint decoration-2 underline-offset-4">Log in</a></div>
           @endauth
         </div>
 

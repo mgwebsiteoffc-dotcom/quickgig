@@ -35,55 +35,50 @@
     </a>
 
     {{-- Desktop menu: 2 dropdowns + 2 links --}}
-    <nav class="hidden lg:flex items-center gap-1 text-[14px]" x-on:mouseleave="menu=null">
-      <div class="relative">
-        <button x-on:mouseenter="menu='platform'" x-on:click="menu = menu==='platform' ? null : 'platform'"
-                class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-tint transition font-medium inline-flex items-center gap-1.5"
-                :class="menu==='platform' ? 'text-white bg-tint' : ''">
-          Platform
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="transition" :class="menu==='platform' ? 'rotate-180' : ''"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
-      </div>
+    <nav class="hidden lg:flex items-center gap-1 text-[14px]">
+      @foreach(['platform' => ['Platform', $platform], 'company' => ['Company', $company]] as $key => [$label, $items])
+        {{-- each trigger owns its panel, so the pointer never leaves the hover area --}}
+        <div class="relative" x-on:mouseenter="menu='{{ $key }}'" x-on:mouseleave="menu=null">
+          <button type="button" x-on:click="menu = menu==='{{ $key }}' ? null : '{{ $key }}'"
+                  class="px-3.5 py-2 rounded-lg transition font-medium inline-flex items-center gap-1.5 hover:text-ink hover:bg-tint"
+                  :class="menu==='{{ $key }}' ? 'text-ink bg-tint' : 'text-mut'">
+            {{ $label }}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                 class="transition-transform duration-200" :class="menu==='{{ $key }}' ? 'rotate-180' : ''"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
 
-      <a href="{{ route('marketplace') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-tint transition font-medium">Marketplace</a>
-      <a href="{{ route('pricing') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-tint transition font-medium">Pricing</a>
-
-      <div class="relative">
-        <button x-on:mouseenter="menu='company'" x-on:click="menu = menu==='company' ? null : 'company'"
-                class="px-3.5 py-2 rounded-lg text-mut hover:text-white hover:bg-tint transition font-medium inline-flex items-center gap-1.5"
-                :class="menu==='company' ? 'text-white bg-tint' : ''">
-          Company
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" class="transition" :class="menu==='company' ? 'rotate-180' : ''"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
-      </div>
-
-      {{-- dropdown panel --}}
-      <div x-show="menu" x-cloak x-transition.opacity.duration.150ms
-           class="absolute left-1/2 -translate-x-1/2 top-[64px] w-[520px] glass-strong rounded-3xl p-3 shadow-2xl">
-        <div class="grid grid-cols-2 gap-1.5">
-          @foreach(['platform' => $platform, 'company' => $company] as $key => $items)
-            <template x-if="menu==='{{ $key }}'">
-              <div class="col-span-2 grid grid-cols-2 gap-1.5">
-                @foreach($items as [$label, $desc, $href])
-                  <a href="{{ $href }}" class="rounded-2xl p-3.5 hover:bg-tint transition group">
-                    <div class="text-[13.5px] font-semibold group-hover:text-mint-deep transition">{{ $label }}</div>
-                    <div class="text-[12px] text-mut mt-0.5 leading-snug">{{ $desc }}</div>
+          {{-- pt-3 is the bridge between button and panel --}}
+          <div x-show="menu==='{{ $key }}'" x-cloak
+               x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1"
+               x-transition:leave="transition ease-in duration-100" x-transition:leave-end="opacity-0 -translate-y-1"
+               class="absolute left-0 top-full pt-3 w-[440px] z-50">
+            <div class="bg-white border border-line rounded-2xl p-2 shadow-xl shadow-ink/10">
+              <div class="grid grid-cols-2 gap-1">
+                @foreach($items as [$itemLabel, $desc, $href])
+                  <a href="{{ $href }}" class="rounded-xl p-3 hover:bg-tint transition group">
+                    <div class="text-[13.5px] font-semibold text-ink group-hover:text-mint-deep transition">{{ $itemLabel }}</div>
+                    <div class="text-[12px] text-faint mt-0.5 leading-snug">{{ $desc }}</div>
                   </a>
                 @endforeach
               </div>
-            </template>
-          @endforeach
+            </div>
+          </div>
         </div>
-      </div>
+
+        @if($key === 'platform')
+          <a href="{{ route('marketplace') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-ink hover:bg-tint transition font-medium">Marketplace</a>
+          <a href="{{ route('pricing') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-ink hover:bg-tint transition font-medium">Pricing</a>
+        @endif
+      @endforeach
     </nav>
 
     {{-- Right side --}}
     <div class="flex items-center gap-2.5">
       @auth
-        <a href="{{ $dash }}" class="hidden sm:inline-flex h-10 px-4 rounded-xl border border-line hover:bg-tint items-center text-[13.5px] font-medium transition">Dashboard</a>
+        <a href="{{ $dash }}" class="hidden sm:inline-flex h-10 px-4 rounded-xl border border-line hover:border-ink/30 hover:bg-tint items-center text-[13.5px] font-medium transition">Dashboard</a>
         <div x-data="{ m:false }" class="relative hidden sm:block">
           <button x-on:click="m=!m" class="w-10 h-10 rounded-xl btn-grad grid place-items-center font-display font-bold text-[13px] text-ink">{{ strtoupper(substr($user->name ?? 'U',0,1)) }}</button>
-          <div x-show="m" x-cloak x-on:click.outside="m=false" x-transition class="absolute right-0 mt-2 w-56 glass-strong rounded-2xl p-2 shadow-2xl">
+          <div x-show="m" x-cloak x-on:click.outside="m=false" x-transition class="absolute right-0 mt-2 w-56 bg-white border border-line rounded-2xl p-2 shadow-xl shadow-ink/10 z-50">
             <div class="px-3 py-2">
               <div class="text-[13px] font-semibold truncate">{{ $user->name }}</div>
               <div class="text-[11.5px] text-mut truncate">{{ $user->email }}</div>
@@ -98,14 +93,14 @@
           </div>
         </div>
       @else
-        <a href="{{ route('login') }}" class="hidden sm:inline-flex h-10 px-4 rounded-xl text-mut hover:text-white items-center text-[13.5px] font-medium transition">Log in</a>
+        <a href="{{ route('login') }}" class="hidden sm:inline-flex h-10 px-4 rounded-xl text-mut hover:text-ink hover:bg-tint items-center text-[13.5px] font-medium transition">Log in</a>
         <a href="{{ route('register') }}" class="inline-flex h-10 px-5 rounded-xl btn-grad items-center gap-1.5 text-[13.5px] font-semibold shadow-lg shadow-ink/10 transition">
           Get started
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       @endauth
 
-      <button x-on:click="open=!open" class="lg:hidden w-10 h-10 rounded-xl border border-line grid place-items-center" aria-label="Menu">
+      <button x-on:click="open=!open" class="lg:hidden w-10 h-10 rounded-xl border border-line grid place-items-center hover:bg-tint transition" aria-label="Menu">
         <svg x-show="!open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         <svg x-show="open" x-cloak width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
@@ -113,19 +108,19 @@
   </div>
 
   {{-- Mobile drawer --}}
-  <div x-show="open" x-cloak x-transition.origin.top class="lg:hidden border-t border-line px-5 py-4 glass-strong max-h-[80vh] overflow-y-auto">
+  <div x-show="open" x-cloak x-transition.origin.top class="lg:hidden border-t border-line px-5 py-4 bg-white max-h-[80vh] overflow-y-auto">
     <div class="flex flex-col gap-1">
-      <a href="{{ route('marketplace') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-body hover:bg-tint">Marketplace</a>
-      <a href="{{ route('pricing') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-body hover:bg-tint">Pricing</a>
+      <a href="{{ route('marketplace') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-ink hover:bg-tint">Marketplace</a>
+      <a href="{{ route('pricing') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-ink hover:bg-tint">Pricing</a>
 
       <div class="mt-2 px-3 text-[10.5px] font-semibold tracking-[.16em] uppercase text-faint">Platform</div>
       @foreach($platform as [$label, $desc, $href])
-        <a href="{{ $href }}" class="px-3 py-2.5 rounded-xl text-[14.5px] text-body hover:bg-tint">{{ $label }}</a>
+        <a href="{{ $href }}" class="px-3 py-2.5 rounded-xl text-[14.5px] text-body hover:bg-tint hover:text-ink">{{ $label }}</a>
       @endforeach
 
       <div class="mt-2 px-3 text-[10.5px] font-semibold tracking-[.16em] uppercase text-faint">Company</div>
       @foreach($company as [$label, $desc, $href])
-        <a href="{{ $href }}" class="px-3 py-2.5 rounded-xl text-[14.5px] text-body hover:bg-tint">{{ $label }}</a>
+        <a href="{{ $href }}" class="px-3 py-2.5 rounded-xl text-[14.5px] text-body hover:bg-tint hover:text-ink">{{ $label }}</a>
       @endforeach
 
       <div class="h-px bg-tint my-3"></div>

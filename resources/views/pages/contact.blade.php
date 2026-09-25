@@ -22,7 +22,7 @@
           <div class="glass rounded-3xl p-5">
             <div class="text-[14.5px] font-semibold">{{ $t }}</div>
             <p class="mt-1 text-[13px] leading-6 text-mut">{{ $b }}</p>
-            <a href="mailto:{{ $mail }}" class="mt-2 inline-block text-[13px] font-mono text-mint-deep hover:text-white transition">{{ $mail }}</a>
+            <a href="mailto:{{ $mail }}" class="mt-2 inline-block text-[13px] font-mono text-mint-deep hover:text-ink transition">{{ $mail }}</a>
           </div>
         @endforeach
       </div>

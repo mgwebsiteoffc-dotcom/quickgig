@@ -35,12 +35,12 @@
 
       <div class="mt-4 flex flex-wrap items-center gap-2">
         <a href="{{ route('marketplace', array_filter(['q' => $filters['q'], 'sort' => $filters['sort']])) }}"
-           class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === '' ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-white hover:border-line' }}">
+           class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === '' ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-ink hover:border-line' }}">
           All categories
         </a>
         @foreach($categories as $cat => $count)
           <a href="{{ route('marketplace', array_filter(['q' => $filters['q'], 'sort' => $filters['sort'], 'category' => $cat])) }}"
-             class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === $cat ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-white hover:border-line' }}">
+             class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === $cat ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-ink hover:border-line' }}">
             {{ $cat }} <span class="opacity-50">{{ $count }}</span>
           </a>
         @endforeach
@@ -61,10 +61,10 @@
       <div class="flex items-center justify-between mb-6">
         <div class="text-[13.5px] text-mut">
           {{ $gigs->total() }} {{ Str::plural('gig', $gigs->total()) }}
-          @if($filters['q']) for “<span class="text-white">{{ $filters['q'] }}</span>” @endif
+          @if($filters['q']) for “<span class="text-ink font-medium">{{ $filters['q'] }}</span>” @endif
         </div>
         @if($filters['q'] || $filters['category'] || $filters['fast'])
-          <a href="{{ route('marketplace') }}" class="text-[12.5px] text-mut hover:text-white">Clear filters ✕</a>
+          <a href="{{ route('marketplace') }}" class="text-[12.5px] text-mut hover:text-ink">Clear filters ✕</a>
         @endif
       </div>
 
@@ -88,7 +88,7 @@
                   @endif
                 </div>
 
-                <div class="mt-3 text-[15px] font-semibold leading-snug line-clamp-2 group-hover:text-white">{{ $gig->title }}</div>
+                <div class="mt-3 text-[15px] font-semibold leading-snug line-clamp-2 group-hover:text-ink">{{ $gig->title }}</div>
                 <div class="mt-2 text-[12.5px] text-mut line-clamp-2">{{ Str::limit(strip_tags($gig->description ?? ''), 80) }}</div>
 
                 <div class="mt-auto pt-4 flex items-end justify-between">

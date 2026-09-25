@@ -103,6 +103,14 @@ tailwind.config = {
   .band-dark .btn-grad:hover { background:#E8FAF3; }
   .band-dark .field { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.18); color:#fff; }
   .band-dark .label { color:rgba(250,250,250,.6); }
+  .band-dark .text-ink, .band-dark .text-deep { color:#FAFAFA; }
+  .band-dark .hover\:text-ink:hover, .band-dark .group:hover .group-hover\:text-ink { color:#fff; }
+  .band-dark .text-mint-deep { color:#3BE0AE; }
+  .band-dark .bg-ink { background:rgba(255,255,255,.10); }
+  .band-dark .bg-mint-wash { background:rgba(0,196,140,.16); }
+  .band-dark .badge-off { background:rgba(0,196,140,.18); color:#7FE7C6; }
+  .band-dark .price-strike { color:rgba(250,250,250,.45); }
+  .band-dark .skeleton { background:linear-gradient(90deg, rgba(255,255,255,.07) 25%, rgba(255,255,255,.16) 50%, rgba(255,255,255,.07) 75%); background-size:200% 100%; }
 
   /* light bands break up the dark — same markup, flipped surface */
   .band-light { background:#FAFAFA; color:var(--ink); position:relative; z-index:1; }

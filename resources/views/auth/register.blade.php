@@ -94,7 +94,7 @@
         </button>
 
         <div class="text-center text-[13.5px] text-mut">
-          Already have an account? <a href="{{ route('login') }}" class="text-white font-medium hover:underline">Log in</a>
+          Already have an account? <a href="{{ route('login') }}" class="text-ink font-medium underline decoration-mint decoration-2 underline-offset-4 hover:text-mint-deep">Log in</a>
         </div>
       </form>
     </div>
@@ -129,7 +129,7 @@
             @endforeach
           </div>
           <div class="text-[12.5px] text-mut leading-tight">
-            <span class="block text-white font-medium">1,284 freelancers online</span>
+            <span class="block text-ink font-medium">1,284 freelancers online</span>
             average match time 4 min
           </div>
         </div>
