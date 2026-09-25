@@ -47,7 +47,16 @@
           <div class="h-3.5 w-2/3 rounded skeleton"></div>
         </div>
 
-        <div x-show="done && !busy" x-cloak x-transition.duration.300ms class="mt-4">
+        <div x-show="done && !busy" x-cloak x-transition.duration.300ms class="mt-4" x-ref="out">
+          {{-- unmistakable confirmation --}}
+          <div x-show="flash" x-cloak x-transition
+               class="mb-3 flex items-center gap-2.5 rounded-xl bg-mint-wash border border-mint/40 px-3.5 py-2.5">
+            <span class="w-5 h-5 rounded-full bg-mint grid place-items-center shrink-0">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#04120D" stroke-width="3.2"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            <span class="text-[12.5px] font-medium text-mint-deep">Brief ready in <span x-text="elapsed"></span>s — read it below</span>
+          </div>
+
           <div class="flex items-center justify-between">
             <div class="text-[10.5px] font-semibold tracking-[.14em] uppercase text-faint">Generated brief</div>
             <div class="text-[11px] font-mono text-mint-deep" x-text="elapsed + 's'"></div>
@@ -866,7 +875,7 @@ document.addEventListener('alpine:init', () => {
 
   /* hero: a genuine brief, composed locally in well under a second */
   Alpine.data('instantBrief', () => ({
-    idea: '', busy: false, done: false, elapsed: '0.00',
+    idea: '', busy: false, done: false, flash: false, elapsed: '0.00',
     samples: ['thumbnail pack for a finance video', 'SEO article on GST for freelancers', 'UGC video for a skincare serum', 'landing page in Laravel'],
     out: { hook: '', beats: [], spec: [], price: '', eta: '', matches: '' },
 
@@ -920,7 +929,19 @@ document.addEventListener('alpine:init', () => {
           matches: '3 freelancers matched',
         };
         this.elapsed = ((performance.now() - started) / 1000).toFixed(2);
-        this.busy = false; this.done = true;
+        this.busy = false; this.done = true; this.flash = true;
+
+        // make sure the result is actually on screen, then say so
+        this.$nextTick(() => {
+          const el = this.$refs.out;
+          if (el) {
+            const r = el.getBoundingClientRect();
+            const hidden = r.bottom > window.innerHeight - 24 || r.top < 90;
+            if (hidden) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          window.qg.toast('Brief ready in ' + this.elapsed + 's');
+        });
+        setTimeout(() => this.flash = false, 5000);
       }, 620);
     },
   }));

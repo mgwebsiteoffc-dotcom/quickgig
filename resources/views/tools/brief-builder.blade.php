@@ -107,7 +107,7 @@
 <div x-data="briefTool({{ $brief ? 'true' : 'false' }})" x-on:brief-reset.window="reset()">
 
   {{-- skeleton --}}
-  <section x-show="busy" x-cloak class="py-12">
+  <section x-show="busy" x-cloak class="py-12" x-ref="loading">
     <div class="max-w-shell mx-auto px-5 lg:px-8">
       <div class="glass rounded-3xl p-7 space-y-4">
         <div class="h-5 w-1/3 rounded skeleton"></div>
@@ -120,6 +120,19 @@
         <div class="h-40 rounded-2xl skeleton"></div>
       </div>
       <div class="mt-4 text-center text-[12.5px] text-mut">Composing hooks, beats and the QA gate…</div>
+    </div>
+  </section>
+
+  {{-- confirmation banner --}}
+  <section x-show="flash" x-cloak x-transition class="pt-6">
+    <div class="max-w-shell mx-auto px-5 lg:px-8">
+      <div class="flex flex-wrap items-center gap-3 rounded-2xl bg-mint-wash border border-mint/40 px-5 py-3.5">
+        <span class="w-6 h-6 rounded-full bg-mint grid place-items-center shrink-0">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#04120D" stroke-width="3.2"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <span class="text-[14px] font-medium text-mint-deep" x-text="flashMsg"></span>
+        <button type="button" x-on:click="jump()" class="ml-auto text-[12.5px] font-semibold text-mint-deep hover:underline">Jump to the brief ↓</button>
+      </div>
     </div>
   </section>
 
@@ -184,6 +197,9 @@ document.addEventListener('alpine:init', () => {
     busy: false,
     refinable: hasBrief,
     instruction: '',
+    flash: false,
+    flashMsg: '',
+    startedAt: 0,
 
     init() {
       window.addEventListener('brief-generate', (e) => this.generate(e.detail));
@@ -203,11 +219,13 @@ document.addEventListener('alpine:init', () => {
 
     async generate(formData) {
       this.busy = true;
-      // keep the form in view, then reveal the result where it already sits
+      this.flash = false;
+      this.startedAt = performance.now();
+      // show the work happening
+      this.$nextTick(() => this.scrollTo(this.$refs.loading));
       try {
         const data = await this.send('{{ route('brief-builder.generate') }}', formData, true);
-        this.paint(data);
-        window.qg.toast(data.meta.source === 'ai' ? 'Brief written by ' + data.meta.model : 'Brief ready.');
+        this.paint(data, 'Brief ready');
       } catch (e) {
         window.qg.toast('Could not build that brief — check the form and try again.');
       }
@@ -219,29 +237,45 @@ document.addEventListener('alpine:init', () => {
       this.busy = true;
       try {
         const data = await this.send('{{ route('brief-builder.refine') }}', { instruction: this.instruction }, false);
-        this.paint(data);
         this.instruction = '';
-        window.qg.toast(data.meta.refine_error || 'Brief updated.');
+        this.paint(data, 'Brief updated');
       } catch (e) {
         window.qg.toast('Refine failed — try again.');
       }
       this.busy = false;
     },
 
-    paint(data) {
+    paint(data, verb) {
       const host = this.$refs.result;
       host.innerHTML = data.html;
       this.refinable = !!data.meta.refinable;
+
+      const secs = ((performance.now() - this.startedAt) / 1000).toFixed(1);
+      const who  = data.meta.source === 'ai' ? ' by ' + data.meta.model : '';
+      this.flashMsg = `${verb} in ${secs}s${who} — hooks, beat sheet, spec and matched freelancers below.`;
+      this.flash = true;
+
       this.$nextTick(() => {
         host.querySelectorAll('.reveal, .reveal-s, .reveal-l').forEach(el => el.classList.add('in'));
-        const top = host.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: 'smooth' });
+        this.scrollTo(host);
+        window.qg.toast(verb + ' in ' + secs + 's');
       });
+      setTimeout(() => this.flash = false, 9000);
     },
+
+    /* smooth scroll that clears the sticky header */
+    scrollTo(el) {
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - 84;
+      window.scrollTo({ top, behavior: 'smooth' });
+    },
+
+    jump() { this.scrollTo(this.$refs.result); },
 
     async reset() {
       this.$refs.result.innerHTML = '';
       this.refinable = false;
+      this.flash = false;
       try { await this.send('{{ route('brief-builder.reset') }}', {}, false); } catch (e) {}
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
