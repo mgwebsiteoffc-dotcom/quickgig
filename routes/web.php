@@ -53,12 +53,12 @@ Route::get('/enterprise',   [PageController::class, 'enterprise'])->name('enterp
 Route::get('/about',        [PageController::class, 'about'])->name('about');
 Route::get('/faq',          [PageController::class, 'faq'])->name('faq');
 Route::get('/contact',      [PageController::class, 'contact'])->name('contact');
-Route::post('/contact',     [PageController::class, 'storeLead'])->name('leads.store');
+Route::post('/contact',     [PageController::class, 'storeLead'])->middleware('throttle:6,1')->name('leads.store');
 
 /* ── Free tool: brief builder ── */
 Route::get('/brief-builder',        [BriefBuilderController::class, 'show'])->name('brief-builder');
-Route::post('/brief-builder',       [BriefBuilderController::class, 'generate'])->name('brief-builder.generate');
-Route::post('/brief-builder/refine', [BriefBuilderController::class, 'refine'])->name('brief-builder.refine');
+Route::post('/brief-builder',       [BriefBuilderController::class, 'generate'])->middleware('throttle:12,1')->name('brief-builder.generate');
+Route::post('/brief-builder/refine', [BriefBuilderController::class, 'refine'])->middleware('throttle:20,1')->name('brief-builder.refine');
 Route::post('/brief-builder/reset',  [BriefBuilderController::class, 'reset'])->name('brief-builder.reset');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
@@ -67,9 +67,15 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 /* ── Auth ── */
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1')->name('login.post');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:6,1')->name('register.post');
+
+    /* Password reset */
+    Route::get('/forgot-password', [AuthController::class, 'showForgot'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->middleware('throttle:6,1')->name('password.email');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:6,1')->name('password.update');
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -143,7 +149,7 @@ Route::get('/health', fn () => response()->json([
 ]));
 
 /* ── Admin ── */
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,admin,manager,support,finance'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,admin,manager,support,finance', 'audit'])->group(function () {
     Route::get('/', [AdminDash::class, 'index'])->name('dashboard');
 
     Route::get('/orders', [AdminOrder::class, 'index'])->name('orders.index');

@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password as PasswordBroker;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Creator;
@@ -38,11 +41,23 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        $throttle = 'login:' . Str::lower($credentials['email']) . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttle, 5)) {
+            throw ValidationException::withMessages([
+                'email' => 'Too many attempts. Try again in ' . RateLimiter::availableIn($throttle) . ' seconds.',
+            ]);
+        }
+
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+            RateLimiter::hit($throttle, 300);
+
             return back()
                 ->withErrors(['email' => 'That email and password combination is not correct.'])
                 ->onlyInput('email');
         }
+
+        RateLimiter::clear($throttle);
 
         $user = Auth::user();
 
@@ -160,6 +175,83 @@ class AuthController extends Controller
             : 'Welcome aboard. Complete your profile to get verified and start receiving gigs.';
 
         return redirect()->to($this->homeFor($user->fresh()))->with('toast', $message);
+    }
+
+    /* ───────────────────────── PASSWORD RESET ───────────────────────── */
+
+    public function showForgot()
+    {
+        return view('auth.forgot', [
+            'seo' => [
+                'title'       => 'Reset your password — Quick GIGS',
+                'description' => 'Send yourself a secure link to choose a new Quick GIGS password.',
+                'canonical'   => url('/forgot-password'),
+                'noindex'     => true,
+            ],
+        ]);
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate(['email' => ['required', 'email']]);
+
+        $throttle = 'reset:' . Str::lower($request->input('email')) . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttle, 3)) {
+            throw ValidationException::withMessages([
+                'email' => 'Too many reset requests. Try again in ' . RateLimiter::availableIn($throttle) . ' seconds.',
+            ]);
+        }
+
+        RateLimiter::hit($throttle, 900);
+
+        try {
+            PasswordBroker::sendResetLink($request->only('email'));
+        } catch (\Throwable $e) {
+            report($e);   // SMTP down must not reveal anything or 500 the page
+        }
+
+        // Deliberately identical whether or not the address exists.
+        return back()->with('toast', 'If that email is registered, a reset link is on its way.');
+    }
+
+    public function showReset(Request $request, string $token)
+    {
+        return view('auth.reset', [
+            'token' => $token,
+            'email' => (string) $request->query('email'),
+            'seo'   => [
+                'title'       => 'Choose a new password — Quick GIGS',
+                'description' => 'Set a new password for your Quick GIGS account.',
+                'canonical'   => url('/reset-password'),
+                'noindex'     => true,
+            ],
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token'    => ['required'],
+            'email'    => ['required', 'email'],
+            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
+        ]);
+
+        $status = PasswordBroker::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password'       => Hash::make($password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+            }
+        );
+
+        if ($status !== PasswordBroker::PASSWORD_RESET) {
+            return back()->withErrors(['email' => __($status)])->onlyInput('email');
+        }
+
+        return redirect()->route('login')->with('toast', 'Password updated. Log in with your new password.');
     }
 
     /* ───────────────────────── LOGOUT ───────────────────────── */

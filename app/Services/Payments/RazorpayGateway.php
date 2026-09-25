@@ -138,6 +138,31 @@ class RazorpayGateway
         ]);
     }
 
+    /** Read a payout back from RazorpayX so the ledger can be reconciled. */
+    public function fetchPayout(string $payoutId): array
+    {
+        if (! $this->payoutsEnabled()) {
+            throw new RuntimeException('RazorpayX is not configured — add the funding account number in Settings.');
+        }
+
+        return $this->request('get', '/payouts/' . $payoutId);
+    }
+
+    /**
+     * RazorpayX payout state → our ledger status.
+     * Reversals and cancellations come back as money returned to the funding
+     * account, so they belong in "failed" where finance can retry them.
+     */
+    public function mapPayoutStatus(?string $state): string
+    {
+        return match (strtolower((string) $state)) {
+            'processed'                                          => 'paid',
+            'reversed', 'cancelled', 'rejected', 'failed'        => 'failed',
+            'queued', 'pending', 'processing', 'scheduled'       => 'processing',
+            default                                              => 'processing',
+        };
+    }
+
     /** Release from escrow. Refunds are real; payouts need RazorpayX and are recorded as intents. */
     public function refund(Order $order, ?int $amount = null): array
     {

@@ -26,7 +26,7 @@
       <div>
         <div class="flex items-center justify-between">
           <label class="label" for="password">Password</label>
-          <a href="#" class="text-[11.5px] text-mut hover:text-ink mb-[7px]">Forgot?</a>
+          <a href="{{ route('password.request') }}" class="text-[11.5px] text-mut hover:text-ink mb-[7px]">Forgot?</a>
         </div>
         <input id="password" name="password" type="password" required autocomplete="current-password" class="field" placeholder="••••••••">
       </div>

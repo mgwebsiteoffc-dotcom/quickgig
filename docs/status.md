@@ -33,27 +33,45 @@ Last reviewed: 25 September 2026.
   encryption, provider selection, the brief engine, match ranking and the skill library.
   Run with `php artisan test` (or `vendor/bin/phpunit`).
 
+* **Payout reconciliation** — `RazorpayGateway::fetchPayout()` + a state map (`processed` → paid,
+  `reversed|cancelled|rejected|failed` → failed, everything else stays processing). `App\Jobs\ReconcilePayout`
+  re-checks a payout with a widening backoff (5 min → 4 h, ten rounds) until it settles, writes the UTR or the
+  failure reason back to the ledger and emails the freelancer on success. `php artisan payouts:reconcile`
+  (`--sync`, `--dry-run`) sweeps everything still in flight; scheduled every 30 minutes.
+* **Scheduler + worker** — `routes/console.php` now drives everything from the single
+  `* * * * * php artisan schedule:run` cron: payout reconciliation, a `queue:work --stop-when-empty --max-time=55`
+  pass every minute (no supervisor needed on shared hosting), `subscriptions:roll` at 00:10 to zero used credits
+  and advance `renews_on`, `skills:recount` at 02:00, and weekly failed-job pruning.
+* **Auth hardening (partial)** — working password reset (`/forgot-password`, `/reset-password/{token}`, two new
+  pages in the existing site style, identical response whether or not the address exists), per-email+IP login
+  throttling (5 tries / 5 min) plus route throttles on login, register, reset, the public brief builder and the
+  contact form, and an `audit_logs` table recording every state-changing admin request (actor, role, route,
+  scrubbed payload, status, IP) via the `audit` middleware. Secrets are masked before they are stored.
+* **Test coverage** — three new suites: payout reconciliation (7), task board + marketplace filters (16),
+  brief-builder endpoints + admin CRUD + audit trail (15).
+
 ## Pending — ordered by how much it matters
 
 ### 1. Payout execution against a real bank
-The ledger, queue and RazorpayX call are built, but nothing has been run against live RazorpayX credentials,
-and there is no reconciliation job that polls payout status or handles partial failures and reversals.
+Reconciliation is built and covered by tests against faked RazorpayX responses, but nothing has yet been run
+against live RazorpayX credentials with real money, and there is no partial-payout or bulk-transfer handling.
 
 ### 2. File delivery
 Deliveries are a URL in a text field. Real uploads (S3 or local disk), virus scanning, expiring links and
 version history are not built. The QA gate therefore scores a description of the file, not the file.
 
 ### 3. Test coverage gaps
-The suite covers money, auth and the engines. Still untested: the task board, the brief-builder HTTP
-endpoints, admin CRUD screens and the marketplace filters.
+The board, marketplace, brief-builder and admin CRUD suites are written but **have never been executed** — no
+PHP runtime was available in the environment they were authored in. Run `php artisan test` and expect small
+fixture corrections. Still untested beyond that: the order messaging thread and the creator studio.
 
 ### 4. Queue + scheduler in production
-`QUEUE_CONNECTION=database` with no worker documented beyond a cron line, and no scheduled jobs (SLA checks,
-credit resets on renewal date, digest emails, skill usage recount).
+Scheduled and documented, but not yet verified on the Hostinger box: the cron entry has to be added in hPanel
+and `payouts.log` watched for a cycle. SLA-breach checks and digest emails are still not written.
 
 ### 5. Auth hardening
-No email verification, password reset is a dead link, no 2FA for admins, no rate limiting on login or the
-public brief builder, no audit log of admin actions.
+Remaining: email verification on signup, 2FA for admin accounts, and a UI for reading the new `audit_logs`
+table (rows are written, nothing displays them yet).
 
 ### 6. Multi-currency and tax
 Everything is INR and GST is mentioned but not calculated. Invoice PDFs are not generated.
