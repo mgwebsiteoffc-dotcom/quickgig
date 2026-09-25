@@ -32,7 +32,7 @@
       </div>
 
       <span class="rounded-full px-3.5 py-1.5 text-[12px] font-semibold
-        {{ $released ? 'bg-lime/15 text-lime' : ($order->status === 'review' ? 'bg-violet/15 text-violet-soft' : 'bg-violet/15 text-violet-soft') }}">
+        {{ $released ? 'bg-mint-wash text-mint-deep' : ($order->status === 'review' ? 'bg-mint-wash text-mint-deep' : 'bg-mint-wash text-mint-deep') }}">
         {{ $released ? 'Completed' : ($order->status === 'review' ? 'Waiting for your approval' : 'In production') }}
       </span>
     </div>
@@ -44,14 +44,14 @@
         <div class="glass rounded-3xl p-6 sm:p-7"
              x-data="orderPipeline({ progress: {{ $progress }}, status: @js($order->status), released: {{ $released ? 'true' : 'false' }}, payout: {{ $payout }}, creator: @js($order->creator->name ?? 'A verified pro'), uid: @js($order->uid) })">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">
-              <span class="w-1.5 h-1.5 rounded-full transition-colors" :class="released ? 'bg-lime' : 'bg-violet pulse-dot text-violet'"></span>
+            <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-faint">
+              <span class="w-1.5 h-1.5 rounded-full transition-colors" :class="released ? 'bg-mint' : 'bg-mint pulse-dot text-mint-deep'"></span>
               Live pipeline
             </div>
             <div class="text-[12px] font-mono text-mut"><span x-text="progress"></span>% complete</div>
           </div>
 
-          <div class="mt-4 h-1.5 rounded-full bg-white/8 overflow-hidden">
+          <div class="mt-4 h-1.5 rounded-full bg-tint overflow-hidden">
             <div class="h-full btn-grad transition-all duration-700 ease-out" :style="`width:${Math.max(5, progress)}%`"></div>
           </div>
 
@@ -60,11 +60,11 @@
               <div class="flex gap-4 transition-all duration-500" :class="i <= current ? 'opacity-100' : 'opacity-40'">
                 <div class="flex flex-col items-center">
                   <div class="w-8 h-8 rounded-xl grid place-items-center shrink-0 transition-all duration-500"
-                       :class="i < current ? 'bg-lime/20 text-lime' : (i === current ? 'btn-grad text-white scale-110' : 'bg-white/6 text-white/35')">
+                       :class="i < current ? 'bg-mint-wash text-mint-deep' : (i === current ? 'btn-grad text-white scale-110' : 'bg-tint text-faint')">
                     <template x-if="i < current"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></template>
                     <template x-if="i >= current"><span class="text-[11px] font-mono" x-text="i + 1"></span></template>
                   </div>
-                  <div x-show="i < steps.length - 1" class="w-px flex-1 my-1 transition-colors duration-500" :class="i < current ? 'bg-lime/35' : 'bg-white/10'"></div>
+                  <div x-show="i < steps.length - 1" class="w-px flex-1 my-1 transition-colors duration-500" :class="i < current ? 'bg-mint/35' : 'bg-tint'"></div>
                 </div>
                 <div class="pb-1">
                   <div class="text-[14.5px] font-medium" x-text="s.label"></div>
@@ -75,7 +75,7 @@
           </div>
 
           {{-- actions: everything happens here, no page change --}}
-          <div class="mt-7 pt-6 border-t border-white/8 flex flex-wrap items-center gap-3">
+          <div class="mt-7 pt-6 border-t border-line flex flex-wrap items-center gap-3">
             <template x-if="!released">
               <div class="flex flex-wrap gap-3">
                 <button x-show="status === 'review'" x-cloak x-on:click="approve()" :disabled="busy"
@@ -84,7 +84,7 @@
                   <span x-show="busy" x-cloak>Releasing…</span>
                 </button>
                 <button x-on:click="advance()" :disabled="busy"
-                        class="h-11 px-5 rounded-xl glass btn-ghost font-medium text-[13.5px] hover:border-white/30 disabled:opacity-60">
+                        class="h-11 px-5 rounded-xl glass btn-ghost font-medium text-[13.5px] hover:border-line disabled:opacity-60">
                   <span x-show="!busy">▸ Advance demo pipeline</span>
                   <span x-show="busy" x-cloak>Working…</span>
                 </button>
@@ -92,7 +92,7 @@
             </template>
 
             <template x-if="released">
-              <div class="flex items-center gap-2.5 text-[13.5px] text-lime animate-popIn">
+              <div class="flex items-center gap-2.5 text-[13.5px] text-mint-deep animate-popIn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>
                 Escrow released — ₹<span x-text="payout.toLocaleString('en-IN')"></span> paid to <span x-text="creator"></span>.
               </div>
@@ -102,18 +102,18 @@
 
         {{-- brief --}}
         <div class="glass rounded-3xl p-6 sm:p-7">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">The brief</div>
-          <p class="mt-3.5 text-[14.5px] leading-7 text-white/80 whitespace-pre-line">{{ $order->brief }}</p>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">The brief</div>
+          <p class="mt-3.5 text-[14.5px] leading-7 text-body whitespace-pre-line">{{ $order->brief }}</p>
         </div>
 
         {{-- chat --}}
         <div class="glass rounded-3xl p-6 sm:p-7">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Messages</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Messages</div>
 
           <div class="mt-4 space-y-3 max-h-[320px] overflow-y-auto">
             <div class="flex gap-3">
               <img src="{{ $order->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-8 h-8 rounded-full object-cover shrink-0" alt="">
-              <div class="rounded-2xl rounded-tl-sm bg-white/6 px-4 py-2.5 text-[13.5px] max-w-[80%]">
+              <div class="rounded-2xl rounded-tl-sm bg-tint px-4 py-2.5 text-[13.5px] max-w-[80%]">
                 Hi! I have the brief — starting now. I'll share the first cut before the deadline.
               </div>
             </div>
@@ -121,12 +121,12 @@
             @foreach($thread as $m)
               @if($m['from'] === 'you')
                 <div class="flex gap-3 justify-end">
-                  <div class="rounded-2xl rounded-tr-sm bg-violet/25 border border-violet/25 px-4 py-2.5 text-[13.5px] max-w-[80%]">{{ $m['text'] }}</div>
+                  <div class="rounded-2xl rounded-tr-sm bg-mint/25 border border-mint px-4 py-2.5 text-[13.5px] max-w-[80%]">{{ $m['text'] }}</div>
                 </div>
               @else
                 <div class="flex gap-3">
                   <img src="{{ $order->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-8 h-8 rounded-full object-cover shrink-0" alt="">
-                  <div class="rounded-2xl rounded-tl-sm bg-white/6 px-4 py-2.5 text-[13.5px] max-w-[80%]">{{ $m['text'] }}</div>
+                  <div class="rounded-2xl rounded-tl-sm bg-tint px-4 py-2.5 text-[13.5px] max-w-[80%]">{{ $m['text'] }}</div>
                 </div>
               @endif
             @endforeach
@@ -143,14 +143,14 @@
       {{-- summary --}}
       <aside class="space-y-5 lg:sticky lg:top-24">
         <div class="glass-strong rounded-3xl p-6">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Payment</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Payment</div>
           <div class="mt-4 space-y-2.5 text-[13.5px]">
             <div class="flex justify-between"><span class="text-mut">Gig total</span><span class="font-mono">₹{{ number_format($order->total) }}</span></div>
             <div class="flex justify-between"><span class="text-mut">Platform fee</span><span class="font-mono">₹{{ number_format($order->fee) }}</span></div>
-            <div class="flex justify-between"><span class="text-mut">Freelancer payout</span><span class="font-mono text-lime">₹{{ number_format($payout) }}</span></div>
-            <div class="pt-3 mt-3 border-t border-white/8 flex justify-between items-center">
+            <div class="flex justify-between"><span class="text-mut">Freelancer payout</span><span class="font-mono text-mint-deep">₹{{ number_format($payout) }}</span></div>
+            <div class="pt-3 mt-3 border-t border-line flex justify-between items-center">
               <span class="text-mut">Escrow</span>
-              <span class="text-[12px] font-semibold rounded-full px-2.5 py-1 {{ $released ? 'bg-lime/15 text-lime' : 'bg-violet/15 text-violet-soft' }}">
+              <span class="text-[12px] font-semibold rounded-full px-2.5 py-1 {{ $released ? 'bg-mint-wash text-mint-deep' : 'bg-mint-wash text-mint-deep' }}">
                 {{ $released ? 'Released' : 'Held' }}
               </span>
             </div>
@@ -159,11 +159,11 @@
 
         @if($order->creator)
           <div class="glass rounded-3xl p-6">
-            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Your freelancer</div>
+            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Your freelancer</div>
             <div class="mt-4 flex items-center gap-3">
-              <img src="{{ $order->creator->avatarUrl() }}" class="w-12 h-12 rounded-2xl object-cover border border-white/12" alt="">
+              <img src="{{ $order->creator->avatarUrl() }}" class="w-12 h-12 rounded-2xl object-cover border border-line" alt="">
               <div class="min-w-0">
-                <a href="{{ route('creator.public', $order->creator->id) }}" class="text-[14.5px] font-semibold hover:text-violet-soft transition">{{ $order->creator->name }}</a>
+                <a href="{{ route('creator.public', $order->creator->id) }}" class="text-[14.5px] font-semibold hover:text-mint-deep transition">{{ $order->creator->name }}</a>
                 <div class="text-[12px] text-mut truncate">{{ $order->creator->handle }} · {{ number_format((float) $order->creator->rating, 1) }} ★</div>
               </div>
             </div>
@@ -171,7 +171,7 @@
         @endif
 
         <div class="glass rounded-3xl p-6">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Order details</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Order details</div>
           <div class="mt-4 space-y-2.5 text-[13px]">
             <div class="flex justify-between"><span class="text-mut">Workspace</span><span class="truncate max-w-[55%] text-right">{{ $order->company->name ?? '—' }}</span></div>
             <div class="flex justify-between"><span class="text-mut">Speed lane</span><span>{{ $order->turnaround }}</span></div>

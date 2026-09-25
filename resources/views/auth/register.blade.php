@@ -15,13 +15,13 @@
       <div class="mt-7 grid grid-cols-2 gap-2.5">
         <button type="button" x-on:click="type='business'"
                 class="rounded-2xl p-4 text-left border transition"
-                :class="type==='business' ? 'border-violet bg-violet/12' : 'border-white/10 bg-white/3 hover:border-white/25'">
+                :class="type==='business' ? 'border-mint bg-mint-wash' : 'border-line bg-tint hover:border-line'">
           <div class="text-[14px] font-semibold">I need work done</div>
           <div class="text-[12px] text-mut mt-0.5">Hire verified freelancers</div>
         </button>
         <button type="button" x-on:click="type='creator'"
                 class="rounded-2xl p-4 text-left border transition"
-                :class="type==='creator' ? 'border-violet bg-violet/10' : 'border-white/10 bg-white/3 hover:border-white/25'">
+                :class="type==='creator' ? 'border-mint bg-mint-wash' : 'border-line bg-tint hover:border-line'">
           <div class="text-[14px] font-semibold">I'm a freelancer</div>
           <div class="text-[12px] text-mut mt-0.5">Get matched to gigs</div>
         </button>
@@ -62,13 +62,13 @@
             <input id="email" name="email" type="email" value="{{ old('email') }}" required class="field" placeholder="you@company.com">
           </div>
           <div>
-            <label class="label" for="phone">Phone <span class="normal-case tracking-normal text-white/30">(optional)</span></label>
+            <label class="label" for="phone">Phone <span class="normal-case tracking-normal text-faint">(optional)</span></label>
             <input id="phone" name="phone" value="{{ old('phone') }}" class="field" placeholder="+91 98765 43210">
           </div>
         </div>
 
         <div x-show="type==='creator'" x-cloak>
-          <label class="label" for="skills">Your skills <span class="normal-case tracking-normal text-white/30">(comma separated)</span></label>
+          <label class="label" for="skills">Your skills <span class="normal-case tracking-normal text-faint">(comma separated)</span></label>
           <input id="skills" name="skills" value="{{ old('skills') }}" class="field" placeholder="Reels, Retention editing, Captions">
         </div>
 
@@ -84,11 +84,11 @@
         </div>
 
         <label class="flex items-start gap-3 text-[13px] text-mut leading-5">
-          <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }} class="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 accent-violet shrink-0">
+          <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }} class="mt-0.5 w-4 h-4 rounded border-line bg-tint accent-violet shrink-0">
           <span>I agree to the Quick GIGS terms of service and escrow policy.</span>
         </label>
 
-        <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-violet/20">
+        <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">
           <span x-show="type==='business'">Create account & post a gig</span>
           <span x-show="type==='creator'" x-cloak>Create freelancer account</span>
         </button>
@@ -102,7 +102,7 @@
     {{-- side panel --}}
     <aside class="order-1 lg:order-2 lg:sticky lg:top-24">
       <div class="glass-strong rounded-3xl p-7 ring-glow">
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">What you get</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">What you get</div>
         <ul class="mt-5 space-y-4">
           @foreach([
             ['Matched in minutes', 'Our engine ranks verified pros by skill, speed and rating — no bidding, no proposals.'],
@@ -111,7 +111,7 @@
             ['Flat 10% platform fee', 'Freelancers keep 90%. No connects, no listing fees, no subscriptions.'],
           ] as [$title, $body])
             <li class="flex gap-3.5">
-              <span class="w-6 h-6 rounded-lg bg-violet/18 grid place-items-center shrink-0 mt-0.5">
+              <span class="w-6 h-6 rounded-lg bg-mint-wash grid place-items-center shrink-0 mt-0.5">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
               </span>
               <span>
@@ -122,10 +122,10 @@
           @endforeach
         </ul>
 
-        <div class="mt-7 pt-6 border-t border-white/10 flex items-center gap-4">
+        <div class="mt-7 pt-6 border-t border-line flex items-center gap-4">
           <div class="flex -space-x-2.5">
             @foreach([5,12,9,15] as $i)
-              <img src="https://i.pravatar.cc/80?img={{ $i }}" class="w-8 h-8 rounded-full border-2 border-ink object-cover" alt="">
+              <img src="https://i.pravatar.cc/80?img={{ $i }}" class="w-8 h-8 rounded-full border-2 border-white object-cover" alt="">
             @endforeach
           </div>
           <div class="text-[12.5px] text-mut leading-tight">

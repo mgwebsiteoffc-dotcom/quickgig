@@ -22,7 +22,7 @@
 <section class="pt-16 pb-14">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[720px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">The engine</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">The engine</div>
       <h1 class="mt-4 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">
         Automation you can <span class="grad-text">audit</span>.
       </h1>
@@ -39,7 +39,7 @@
         ['03', 'Revision translator', 'Vague feedback becomes timestamped editor instructions.'],
       ] as [$n, $t, $b])
         <a href="#m{{ $n }}" class="reveal glass rounded-3xl p-6 card-hover">
-          <div class="font-mono text-[12px] text-violet-soft">{{ $n }}</div>
+          <div class="font-mono text-[12px] text-mint-deep">{{ $n }}</div>
           <div class="mt-3 text-[16px] font-semibold">{{ $t }}</div>
           <div class="mt-2 text-[13px] leading-6 text-mut">{{ $b }}</div>
         </a>
@@ -49,11 +49,11 @@
 </section>
 
 {{-- ── 01 · MATCH SCORE EXPLORER ── --}}
-<section id="m01" class="py-16 border-y border-white/8 scroll-mt-20">
+<section id="m01" class="py-16 border-y border-line scroll-mt-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8" x-data="matchLab(@js($matchData), @js($weights))">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div class="max-w-[620px]">
-        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Module 01</div>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Module 01</div>
         <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Explainable matching</h2>
         <p class="mt-4 text-[15px] leading-7 text-mut">
           These are real freelancers from the live marketplace, scored right now against a sample brief
@@ -61,13 +61,13 @@
           this is the same maths the platform runs when it assigns your gig.
         </p>
       </div>
-      <button x-on:click="reset()" class="h-11 px-5 rounded-xl glass text-[13.5px] font-medium hover:border-white/30 transition">Reset weights</button>
+      <button x-on:click="reset()" class="h-11 px-5 rounded-xl glass text-[13.5px] font-medium hover:border-line transition">Reset weights</button>
     </div>
 
     <div class="mt-10 grid lg:grid-cols-[320px_1fr] gap-6 items-start">
       {{-- weights --}}
       <div class="glass rounded-3xl p-6 lg:sticky lg:top-24">
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">What matters to you</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">What matters to you</div>
         <div class="mt-5 space-y-5">
           <template x-for="(w, key) in weights" :key="key">
             <div>
@@ -80,8 +80,8 @@
             </div>
           </template>
         </div>
-        <div class="mt-6 pt-5 border-t border-white/8 text-[12.5px] text-mut leading-6">
-          Total weight <span class="font-mono text-white/80" x-text="totalWeight"></span>. Scores are normalised,
+        <div class="mt-6 pt-5 border-t border-line text-[12.5px] text-mut leading-6">
+          Total weight <span class="font-mono text-body" x-text="totalWeight"></span>. Scores are normalised,
           so you can weight one factor to zero and the ranking still works.
         </div>
       </div>
@@ -92,8 +92,8 @@
           <div class="glass rounded-3xl p-5 sm:p-6" :class="i === 0 ? 'ring-glow' : ''">
             <div class="flex flex-wrap items-center gap-4">
               <div class="relative">
-                <img :src="m.img" class="w-12 h-12 rounded-2xl object-cover border border-white/12" alt="">
-                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-ink" :class="m.online ? 'bg-lime' : 'bg-amber-400'"></span>
+                <img :src="m.img" class="w-12 h-12 rounded-2xl object-cover border border-line" alt="">
+                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white" :class="m.online ? 'bg-mint' : 'bg-amber-400'"></span>
               </div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-2">
@@ -112,10 +112,10 @@
               <template x-for="f in m.factors" :key="f.label">
                 <div>
                   <div class="flex items-center justify-between text-[12px]">
-                    <span class="text-white/70" x-text="f.label"></span>
+                    <span class="text-body" x-text="f.label"></span>
                     <span class="font-mono text-mut" x-text="Math.round(f.pct * 100) + '%'"></span>
                   </div>
-                  <div class="mt-1.5 h-1.5 rounded-full bg-white/8 overflow-hidden">
+                  <div class="mt-1.5 h-1.5 rounded-full bg-tint overflow-hidden">
                     <div class="h-full btn-grad transition-all duration-500" :style="`width:${f.pct * 100}%`"></div>
                   </div>
                   <div class="mt-1 text-[11.5px] text-mut leading-snug" x-text="f.reason"></div>
@@ -138,7 +138,7 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8" x-data="qaGate()">
     <div class="grid lg:grid-cols-[0.95fr_1.05fr] gap-10 items-start">
       <div>
-        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Module 02</div>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Module 02</div>
         <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">The quality gate</h2>
         <p class="mt-4 text-[15px] leading-7 text-mut">
           A delivery cannot reach your inbox until it passes six automated checks derived from your brief.
@@ -147,7 +147,7 @@
         </p>
 
         <div class="mt-7 glass rounded-3xl p-5">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">What this replaces</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">What this replaces</div>
           <ul class="mt-3.5 space-y-2.5 text-[13.5px] text-mut">
             <li>• A reviewer watching every file by hand (slow, inconsistent)</li>
             <li>• You discovering a 4:5 export when you needed 9:16</li>
@@ -155,7 +155,7 @@
           </ul>
         </div>
 
-        <button x-on:click="run()" class="mt-7 h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2 shadow-lg shadow-violet/20">
+        <button x-on:click="run()" class="mt-7 h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2 shadow-lg shadow-ink/10">
           <span x-show="!running && !done">Run the gate on a sample delivery</span>
           <span x-show="running" x-cloak>Checking…</span>
           <span x-show="done" x-cloak>Run again</span>
@@ -164,17 +164,17 @@
 
       <div class="glass-strong rounded-3xl p-6 sm:p-7">
         <div class="flex items-center justify-between">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">quick-gigs://qa/QC-4821</div>
-          <div class="text-[12px] font-mono" :class="done ? (passed ? 'text-lime' : 'text-amber-300') : 'text-mut'"
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">quick-gigs://qa/QC-4821</div>
+          <div class="text-[12px] font-mono" :class="done ? (passed ? 'text-mint-deep' : 'text-amber-300') : 'text-mut'"
                x-text="done ? (passed ? 'PASSED' : 'BOUNCED') : (running ? 'RUNNING' : 'IDLE')"></div>
         </div>
 
         <div class="mt-5 space-y-2.5">
           <template x-for="(c, i) in checks" :key="c.name">
             <div class="flex items-start gap-3 rounded-2xl border px-4 py-3 transition-all duration-300"
-                 :class="c.state === 'pass' ? 'border-lime/25 bg-lime/6' : (c.state === 'fail' ? 'border-amber-400/35 bg-amber-400/8' : 'border-white/8 bg-white/3')">
+                 :class="c.state === 'pass' ? 'border-mint/35 bg-mint/6' : (c.state === 'fail' ? 'border-amber-400/35 bg-amber-400/8' : 'border-line bg-tint')">
               <div class="w-6 h-6 rounded-lg grid place-items-center shrink-0 mt-0.5"
-                   :class="c.state === 'pass' ? 'bg-lime/20 text-lime' : (c.state === 'fail' ? 'bg-amber-400/20 text-amber-300' : 'bg-white/8 text-white/30')">
+                   :class="c.state === 'pass' ? 'bg-mint-wash text-mint-deep' : (c.state === 'fail' ? 'bg-amber-400/20 text-amber-300' : 'bg-tint text-faint')">
                 <template x-if="c.state === 'pass'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></template>
                 <template x-if="c.state === 'fail'"><span class="text-[12px] font-bold">!</span></template>
                 <template x-if="c.state === 'idle'"><span class="text-[11px] font-mono" x-text="i+1"></span></template>
@@ -190,14 +190,14 @@
 
         <div x-show="done && !passed" x-cloak x-transition class="mt-5 rounded-2xl border border-amber-400/30 bg-amber-400/8 p-5">
           <div class="text-[13px] font-semibold text-amber-200">Bounced to the freelancer automatically</div>
-          <p class="mt-1.5 text-[13px] leading-6 text-white/75">
+          <p class="mt-1.5 text-[13px] leading-6 text-body">
             Caption coverage came back at 82%. The freelancer got the failing timestamps and a 40-minute window to
             re-upload before the SLA clock is affected. You were never interrupted.
           </p>
         </div>
 
-        <div x-show="done && passed" x-cloak x-transition class="mt-5 rounded-2xl border border-lime/25 bg-lime/8 p-5">
-          <div class="text-[13px] font-semibold text-lime">All six checks passed — delivery released to the buyer</div>
+        <div x-show="done && passed" x-cloak x-transition class="mt-5 rounded-2xl border border-mint/35 bg-mint/8 p-5">
+          <div class="text-[13px] font-semibold text-mint-deep">All six checks passed — delivery released to the buyer</div>
         </div>
       </div>
     </div>
@@ -205,10 +205,10 @@
 </section>
 
 {{-- ── 03 · REVISION TRANSLATOR ── --}}
-<section id="m03" class="py-16 border-y border-white/8 scroll-mt-20">
+<section id="m03" class="py-16 border-y border-line scroll-mt-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8" x-data="revisionLab()">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Module 03</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Module 03</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Revision translator</h2>
       <p class="mt-4 text-[15px] leading-7 text-mut">
         Type feedback the way you actually say it. We turn it into instructions an editor can execute
@@ -225,14 +225,14 @@
         <div class="mt-4 flex flex-wrap gap-2">
           <template x-for="s in samples" :key="s">
             <button type="button" x-on:click="text = s; translate()"
-                    class="rounded-full border border-white/10 px-3 py-1.5 text-[12px] text-mut hover:text-white hover:border-violet/50 transition"
+                    class="rounded-full border border-line px-3 py-1.5 text-[12px] text-mut hover:text-white hover:border-mint transition"
                     x-text="s"></button>
           </template>
         </div>
       </div>
 
       <div class="glass-strong rounded-3xl p-6 min-h-[240px]">
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Editor-ready notes</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Editor-ready notes</div>
 
         <div x-show="notes.length === 0" x-cloak class="mt-6 text-[13.5px] text-mut">
           Notes will appear here as you type. Try one of the sample phrases.
@@ -241,15 +241,15 @@
         <ol class="mt-5 space-y-3">
           <template x-for="(n, i) in notes" :key="i">
             <li class="flex gap-3">
-              <span class="font-mono text-[11.5px] text-violet-soft shrink-0 mt-0.5" x-text="n.t"></span>
-              <span class="text-[13.5px] leading-6 text-white/85" x-text="n.do"></span>
+              <span class="font-mono text-[11.5px] text-mint-deep shrink-0 mt-0.5" x-text="n.t"></span>
+              <span class="text-[13.5px] leading-6 text-body" x-text="n.do"></span>
             </li>
           </template>
         </ol>
 
-        <div x-show="notes.length" x-cloak class="mt-6 pt-5 border-t border-white/8 flex items-center justify-between gap-4">
+        <div x-show="notes.length" x-cloak class="mt-6 pt-5 border-t border-line flex items-center justify-between gap-4">
           <div class="text-[12.5px] text-mut">Sent to the freelancer with the delivery timeline attached.</div>
-          <span class="text-[11.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1 shrink-0">Round 1 of 2 free</span>
+          <span class="text-[11.5px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2.5 py-1 shrink-0">Round 1 of 2 free</span>
         </div>
       </div>
     </div>
@@ -261,7 +261,7 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="grid lg:grid-cols-[0.8fr_1.2fr] gap-10">
       <div>
-        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Straight answers</div>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Straight answers</div>
         <h2 class="mt-3 font-display text-[28px] sm:text-[34px] font-semibold leading-[1.1]">What the engine is — and is not.</h2>
       </div>
       <div class="space-y-4">

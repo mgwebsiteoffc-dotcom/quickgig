@@ -22,6 +22,7 @@ class BlogController extends Controller
             ->paginate(9)->withQueryString();
 
         $categories = BlogCategory::withCount('blogs')->get();
+        $faqs = \App\Models\Faq::published()->ordered()->limit(6)->get();
         $featured = Blog::published()->featured()->orderByDesc('published_at')->limit(3)->get();
 
         // SEO for blog listing
@@ -32,7 +33,7 @@ class BlogController extends Controller
             'image' => url('/og-blog.jpg'),
         ];
 
-        return view('blogs.index', compact('blogs','categories','featured','seo','q','cat'));
+        return view('blogs.index', compact('blogs','categories','featured','seo','q','cat','faqs'));
     }
 
     public function show(string $slug)
@@ -62,6 +63,8 @@ class BlogController extends Controller
             ['name'=>$blog->title,'url'=>$blog->canonical()],
         ];
 
-        return view('blogs.show', compact('blog','related','seo','breadcrumbs'));
+        $faqs = \App\Models\Faq::published()->ordered()->limit(5)->get();
+
+        return view('blogs.show', compact('blog','related','seo','breadcrumbs','faqs'));
     }
 }

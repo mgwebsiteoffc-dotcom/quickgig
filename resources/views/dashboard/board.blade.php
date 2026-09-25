@@ -2,17 +2,17 @@
 
 @php
   $tone = [
-    'queued'     => ['dot' => 'bg-white/35',  'ring' => 'border-white/12',  'text' => 'text-mut'],
-    'assigned'   => ['dot' => 'bg-violet',    'ring' => 'border-violet/35', 'text' => 'text-violet-soft'],
-    'production' => ['dot' => 'bg-pink',      'ring' => 'border-pink/35',   'text' => 'text-violet-soft'],
-    'review'     => ['dot' => 'bg-amber',     'ring' => 'border-amber/35',  'text' => 'text-amber-soft'],
-    'done'       => ['dot' => 'bg-lime',      'ring' => 'border-lime/35',   'text' => 'text-lime'],
+    'queued'     => ['dot' => 'bg-white/35',  'ring' => 'border-line',  'text' => 'text-mut'],
+    'assigned'   => ['dot' => 'bg-mint',    'ring' => 'border-mint', 'text' => 'text-mint-deep'],
+    'production' => ['dot' => 'bg-pink',      'ring' => 'border-pink/35',   'text' => 'text-mint-deep'],
+    'review'     => ['dot' => 'bg-amber',     'ring' => 'border-amber/35',  'text' => 'text-amber'],
+    'done'       => ['dot' => 'bg-mint',      'ring' => 'border-mint/35',   'text' => 'text-mint-deep'],
   ];
   $priorityTone = [
-    'urgent' => 'bg-pink/18 text-violet-soft',
-    'high'   => 'bg-amber/18 text-amber-soft',
-    'normal' => 'bg-white/8 text-mut',
-    'low'    => 'bg-violet/15 text-violet-soft',
+    'urgent' => 'bg-pink/10 text-mint-deep',
+    'high'   => 'bg-amber/10 text-amber',
+    'normal' => 'bg-tint text-mut',
+    'low'    => 'bg-mint-wash text-mint-deep',
   ];
 @endphp
 
@@ -24,7 +24,7 @@
     <div class="flex flex-wrap items-start justify-between gap-5">
       <div>
         <div class="flex items-center gap-3">
-          <img src="{{ $company->logoUrl() }}" class="w-10 h-10 rounded-xl object-cover border border-white/12" alt="">
+          <img src="{{ $company->logoUrl() }}" class="w-10 h-10 rounded-xl object-cover border border-line" alt="">
           <div>
             <h1 class="font-display text-[26px] font-semibold leading-tight">Task board</h1>
             <div class="text-[13px] text-mut mt-0.5">{{ $company->name }} · queue the work, we assign the specialist</div>
@@ -34,9 +34,9 @@
 
       <div class="flex flex-wrap items-center gap-2.5">
         <div class="glass rounded-2xl px-4 py-2.5">
-          <div class="text-[10.5px] font-semibold tracking-[.12em] uppercase text-white/40">{{ $company->tier()['label'] }} plan</div>
+          <div class="text-[10.5px] font-semibold tracking-[.12em] uppercase text-faint">{{ $company->tier()['label'] }} plan</div>
           <div class="mt-0.5 flex items-center gap-2">
-            <div class="w-24 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            <div class="w-24 h-1.5 rounded-full bg-tint overflow-hidden">
               <div class="h-full btn-grad" style="width: {{ $company->monthly_credits ? min(100, round($company->credits_used / max(1,$company->monthly_credits) * 100)) : 0 }}%"></div>
             </div>
             <span class="text-[12px] font-mono">{{ $company->credits_used }}/{{ $company->monthly_credits ?: '∞' }}</span>
@@ -54,13 +54,13 @@
     {{-- stats --}}
     <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
       @foreach([
-        ['Open tasks', $counts['open'], 'in the queue or in progress', 'from-violet/14'],
-        ['Overdue', $counts['overdue'], 'past the requested date', 'from-violet/10'],
+        ['Open tasks', $counts['open'], 'in the queue or in progress', '/14'],
+        ['Overdue', $counts['overdue'], 'past the requested date', '/10'],
         ['Delivered', $counts['done'], 'all time', 'from-lime/14'],
         ['Credits left', $company->creditsLeft(), 'renews ' . ($company->renews_on?->format('d M') ?? '—'), 'from-amber/12'],
       ] as [$label, $value, $hint, $grad])
-        <div class="glass rounded-2xl p-4 bg-gradient-to-br {{ $grad }} to-transparent">
-          <div class="text-[10.5px] font-semibold tracking-[.12em] uppercase text-white/45">{{ $label }}</div>
+        <div class="glass rounded-2xl p-4 {{ $grad }} to-transparent">
+          <div class="text-[10.5px] font-semibold tracking-[.12em] uppercase text-faint">{{ $label }}</div>
           <div class="mt-1.5 font-display text-[26px] font-semibold">{{ $value }}</div>
           <div class="text-[11.5px] text-mut">{{ $hint }}</div>
         </div>
@@ -70,7 +70,7 @@
     {{-- composer (inline, no reload) --}}
     <div x-show="composing" x-cloak x-transition.duration.300ms class="mt-5 glass-strong rounded-3xl p-5 sm:p-6">
       <div class="flex items-center justify-between">
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">New task</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">New task</div>
         <button x-on:click="composing = false" class="text-[12.5px] text-mut hover:text-white">Close ✕</button>
       </div>
 
@@ -83,7 +83,7 @@
 
         <div class="grid sm:grid-cols-4 gap-3">
           <div class="sm:col-span-2">
-            <label class="label" for="title">Title <span class="normal-case tracking-normal text-white/30">(optional if described above)</span></label>
+            <label class="label" for="title">Title <span class="normal-case tracking-normal text-faint">(optional if described above)</span></label>
             <input id="title" x-model="form.title" class="field" placeholder="Diwali offer reel">
           </div>
           <div>
@@ -102,7 +102,7 @@
 
         <div class="grid sm:grid-cols-4 gap-3">
           <div class="sm:col-span-2">
-            <label class="label" for="brief">Brief <span class="normal-case tracking-normal text-white/30">(optional)</span></label>
+            <label class="label" for="brief">Brief <span class="normal-case tracking-normal text-faint">(optional)</span></label>
             <input id="brief" x-model="form.brief" class="field" placeholder="Hook in 2s, captions, 30 seconds, upbeat">
           </div>
           <div>
@@ -127,13 +127,13 @@
     {{-- board --}}
     <div class="mt-6 grid lg:grid-cols-5 gap-4 items-start">
       @foreach($columns as $key => $label)
-        <div class="rounded-3xl border {{ $tone[$key]['ring'] }} bg-white/[0.025] p-3" x-data>
+        <div class="rounded-3xl border {{ $tone[$key]['ring'] }} bg-tint p-3" x-data>
           <div class="flex items-center justify-between px-2 py-1.5">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full {{ $tone[$key]['dot'] }}"></span>
               <span class="text-[12.5px] font-semibold {{ $tone[$key]['text'] }}">{{ $label }}</span>
             </div>
-            <span class="text-[11.5px] font-mono text-white/35" x-text="count('{{ $key }}')">{{ ($tasks[$key] ?? collect())->count() }}</span>
+            <span class="text-[11.5px] font-mono text-faint" x-text="count('{{ $key }}')">{{ ($tasks[$key] ?? collect())->count() }}</span>
           </div>
 
           <div class="mt-2 space-y-2.5 min-h-[80px]" data-column="{{ $key }}">
@@ -142,7 +142,7 @@
                    x-show="!isHidden({{ $task->id }})" x-data="{ open:false }" id="task-{{ $task->id }}">
                 <div class="flex items-start justify-between gap-2">
                   <span class="text-[10px] font-semibold tracking-wider uppercase rounded-full px-2 py-0.5 {{ $priorityTone[$task->priority] }}">{{ $task->priorityLabel() }}</span>
-                  <span class="text-[10.5px] font-mono text-white/30">{{ $task->uid }}</span>
+                  <span class="text-[10.5px] font-mono text-faint">{{ $task->uid }}</span>
                 </div>
 
                 <div class="mt-2.5 text-[13.5px] font-medium leading-snug">{{ $task->title }}</div>
@@ -151,9 +151,9 @@
                 @endif
 
                 <div class="mt-3 flex items-center gap-2.5 text-[11px] text-mut">
-                  <span class="rounded-md bg-white/6 px-1.5 py-0.5">{{ $task->category }}</span>
+                  <span class="rounded-md bg-tint px-1.5 py-0.5">{{ $task->category }}</span>
                   @if($task->due_on)
-                    <span class="inline-flex items-center gap-1 {{ $task->isOverdue() ? 'text-violet-soft' : '' }}">
+                    <span class="inline-flex items-center gap-1 {{ $task->isOverdue() ? 'text-mint-deep' : '' }}">
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
                       {{ $task->due_on->format('d M') }}
                     </span>
@@ -172,10 +172,10 @@
                   @endif
                 </div>
 
-                <div class="mt-3 pt-3 border-t border-white/8 flex items-center justify-between">
+                <div class="mt-3 pt-3 border-t border-line flex items-center justify-between">
                   @if($task->creator)
                     <div class="flex items-center gap-2 min-w-0">
-                      <img src="{{ $task->creator->avatarUrl() }}" class="w-6 h-6 rounded-full object-cover border border-white/15" alt="">
+                      <img src="{{ $task->creator->avatarUrl() }}" class="w-6 h-6 rounded-full object-cover border border-line" alt="">
                       <span class="text-[11.5px] text-mut truncate">{{ $task->creator->name }}</span>
                     </div>
                   @else
@@ -185,31 +185,31 @@
                   <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     @if($key !== 'done')
                       <button x-on:click="move({{ $task->id }}, '{{ $key }}', 1)" title="Move forward"
-                              class="w-7 h-7 rounded-lg bg-white/8 hover:bg-white/15 grid place-items-center transition">
+                              class="w-7 h-7 rounded-lg bg-tint hover:bg-tint grid place-items-center transition">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                       </button>
                     @endif
                     @if(!$task->order_id && $key !== 'done')
                       <button x-on:click="convert({{ $task->id }})" title="Create escrow order"
-                              class="w-7 h-7 rounded-lg bg-violet/20 hover:bg-violet/35 grid place-items-center transition">
+                              class="w-7 h-7 rounded-lg bg-mint-wash hover:bg-mint/35 grid place-items-center transition">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                       </button>
                     @endif
                     @if($task->order)
                       <a href="{{ route('orders.show', $task->order->uid) }}" title="Open order"
-                         class="w-7 h-7 rounded-lg bg-lime/20 hover:bg-lime/35 grid place-items-center transition">
+                         class="w-7 h-7 rounded-lg bg-mint-wash hover:bg-mint/35 grid place-items-center transition">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg>
                       </a>
                     @endif
                     <button x-on:click="remove({{ $task->id }})" title="Delete"
-                            class="w-7 h-7 rounded-lg bg-white/8 hover:bg-pink/30 grid place-items-center transition">
+                            class="w-7 h-7 rounded-lg bg-tint hover:bg-pink/30 grid place-items-center transition">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
                     </button>
                   </div>
                 </div>
               </div>
             @empty
-              <div class="rounded-2xl border border-dashed border-white/10 px-3 py-6 text-center text-[11.5px] text-mut">
+              <div class="rounded-2xl border border-dashed border-line px-3 py-6 text-center text-[11.5px] text-mut">
                 Nothing here
               </div>
             @endforelse
@@ -218,27 +218,27 @@
             <template x-for="t in added.filter(t => t.status === '{{ $key }}')" :key="t.id">
               <div class="glass rounded-2xl p-3.5 animate-popIn">
                 <div class="flex items-start justify-between gap-2">
-                  <span class="text-[10px] font-semibold tracking-wider uppercase rounded-full px-2 py-0.5 bg-white/8 text-mut" x-text="t.priority"></span>
-                  <span class="text-[10.5px] font-mono text-white/30" x-text="t.uid"></span>
+                  <span class="text-[10px] font-semibold tracking-wider uppercase rounded-full px-2 py-0.5 bg-tint text-mut" x-text="t.priority"></span>
+                  <span class="text-[10.5px] font-mono text-faint" x-text="t.uid"></span>
                 </div>
                 <div class="mt-2.5 text-[13.5px] font-medium leading-snug" x-text="t.title"></div>
                 <p class="mt-1.5 text-[12px] leading-5 text-mut line-clamp-2" x-text="t.brief"></p>
                 <div class="mt-3 flex items-center gap-2.5 text-[11px] text-mut">
-                  <span class="rounded-md bg-white/6 px-1.5 py-0.5" x-text="t.category"></span>
+                  <span class="rounded-md bg-tint px-1.5 py-0.5" x-text="t.category"></span>
                   <span x-show="t.due_label" x-text="t.due_label"></span>
                 </div>
-                <div class="mt-3 pt-3 border-t border-white/8 flex items-center justify-between">
+                <div class="mt-3 pt-3 border-t border-line flex items-center justify-between">
                   <div class="flex items-center gap-2 min-w-0">
                     <template x-if="t.creator">
-                      <img :src="t.creator.img" class="w-6 h-6 rounded-full object-cover border border-white/15" alt="">
+                      <img :src="t.creator.img" class="w-6 h-6 rounded-full object-cover border border-line" alt="">
                     </template>
                     <span class="text-[11.5px] text-mut truncate" x-text="t.creator ? t.creator.name : 'Matching…'"></span>
                   </div>
                   <div class="flex items-center gap-1">
-                    <button x-on:click="move(t.id, t.status, 1)" class="w-7 h-7 rounded-lg bg-white/8 hover:bg-white/15 grid place-items-center transition">
+                    <button x-on:click="move(t.id, t.status, 1)" class="w-7 h-7 rounded-lg bg-tint hover:bg-tint grid place-items-center transition">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                     </button>
-                    <button x-on:click="convert(t.id)" class="w-7 h-7 rounded-lg bg-violet/20 hover:bg-violet/35 grid place-items-center transition">
+                    <button x-on:click="convert(t.id)" class="w-7 h-7 rounded-lg bg-mint-wash hover:bg-mint/35 grid place-items-center transition">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     </button>
                   </div>

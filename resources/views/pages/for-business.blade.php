@@ -4,12 +4,13 @@
 
 {{-- ═══════════════ HERO ═══════════════ --}}
 <section class="pt-14 pb-16 relative overflow-hidden">
-  <div class="absolute inset-0 -z-10 bg-gradient-to-br from-violet/[0.08] to-transparent"></div>
+  <div class="absolute inset-0 -z-10 bg-transparent"></div>
   <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-center">
     <div class="max-w-[760px] reveal-l">
       <div class="inline-flex items-center gap-2.5 glass rounded-full pl-2 pr-3.5 py-1.5 text-[12px] font-medium">
         <span class="btn-grad text-white text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full">For business</span>
-        <span class="text-white/75">Task board · team seats · one invoice</span>
+        <span class="text-body">Task board · team seats · one invoice</span>
       </div>
 
       <h1 class="mt-6 font-display text-[40px] sm:text-[56px] leading-[1.03] font-semibold">
@@ -22,19 +23,22 @@
       </p>
 
       <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href="#demo-form" class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2 shadow-xl shadow-violet/20">
+        <a href="#demo-form" class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2 shadow-xl shadow-ink/10">
           Book a 20-minute demo
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a href="{{ route('register') }}?type=business" class="h-12 px-6 rounded-xl glass btn-ghost font-medium text-[14.5px] inline-flex items-center hover:border-white/30">Start free — no card</a>
+        <a href="{{ route('register') }}?type=business" class="h-12 px-6 rounded-xl glass btn-ghost font-medium text-[14.5px] inline-flex items-center hover:border-line">Start free — no card</a>
       </div>
 
-      <div class="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-[13px] text-mut">
+      <div class="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-[13px] text-faint">
         <span>✓ Tasks start in minutes</span>
         <span>✓ Escrow on every order</span>
         <span>✓ Cancel any month</span>
       </div>
     </div>
+
+      <img src="{{ asset('img/iso-board.png') }}" alt="Tasks moving across a board" class="reveal-s w-full max-w-[520px] mx-auto">
+    </div>{{-- /hero grid --}}
 
     {{-- live board preview — a real, working mock, not a screenshot --}}
     <div class="mt-14 reveal-s" x-data="boardDemo()" x-intersect.once="play()">
@@ -42,14 +46,14 @@
         <div class="flex items-center justify-between px-1 pb-3">
           <div class="flex items-center gap-2.5">
             <span class="flex gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-white/25"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-white/25"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-white/25"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-tint"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-tint"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-tint"></span>
             </span>
             <span class="text-[12.5px] text-mut">Avante Studio · task board</span>
           </div>
           <div class="flex items-center gap-2 text-[11.5px] text-mut">
-            <span class="w-1.5 h-1.5 rounded-full bg-lime pulse-dot text-lime"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-mint pulse-dot text-mint-deep"></span>
             <span x-text="statusLine"></span>
           </div>
         </div>
@@ -59,19 +63,19 @@
             <div class="rounded-2xl border p-2.5" :class="col.ring">
               <div class="flex items-center justify-between px-1.5 py-1">
                 <span class="text-[11.5px] font-semibold" :class="col.text" x-text="col.label"></span>
-                <span class="text-[11px] font-mono text-white/30" x-text="cards.filter(c => c.col === col.key).length"></span>
+                <span class="text-[11px] font-mono text-faint" x-text="cards.filter(c => c.col === col.key).length"></span>
               </div>
               <div class="mt-1.5 space-y-2 min-h-[120px]">
                 <template x-for="card in cards.filter(c => c.col === col.key)" :key="card.id">
                   <div class="glass rounded-xl p-3 transition-all duration-500 animate-popIn">
                     <div class="flex items-center justify-between">
                       <span class="text-[9.5px] font-semibold tracking-wider uppercase rounded-full px-1.5 py-0.5" :class="card.tone" x-text="card.priority"></span>
-                      <span class="text-[10px] font-mono text-white/25" x-text="card.uid"></span>
+                      <span class="text-[10px] font-mono text-faint" x-text="card.uid"></span>
                     </div>
                     <div class="mt-2 text-[12.5px] font-medium leading-snug" x-text="card.title"></div>
                     <div class="mt-2.5 flex items-center justify-between">
                       <div class="flex items-center gap-1.5">
-                        <img :src="card.img" class="w-5 h-5 rounded-full object-cover border border-white/15" alt="">
+                        <img :src="card.img" class="w-5 h-5 rounded-full object-cover border border-line" alt="">
                         <span class="text-[10.5px] text-mut" x-text="card.who"></span>
                       </div>
                       <span class="text-[10.5px] font-mono text-mut" x-text="card.due"></span>
@@ -92,7 +96,7 @@
 <section class="band-light py-24">
   <div class="max-w-shell mx-auto px-5 lg:px-8" x-data="hireCalc()">
     <div class="max-w-[640px] reveal">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-deep">The maths</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">The maths</div>
       <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1] text-deep">Why spend months hiring for work that ships this week?</h2>
       <p class="mt-4 text-[15px] leading-7 text-mut">Tick the roles you would otherwise hire. The comparison updates live.</p>
     </div>
@@ -100,11 +104,11 @@
     <div class="mt-12 grid lg:grid-cols-2 gap-5 items-start">
       {{-- hiring --}}
       <div class="glass rounded-3xl p-7">
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Traditional hiring</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Traditional hiring</div>
         <div class="mt-5 space-y-2.5">
           <template x-for="role in roles" :key="role.name">
-            <label class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 px-4 py-3 cursor-pointer transition"
-                   :class="role.on ? 'bg-pink/6 border-violet/30' : 'hover:border-white/25'">
+            <label class="flex items-center justify-between gap-4 rounded-2xl border border-line px-4 py-3 cursor-pointer transition"
+                   :class="role.on ? 'bg-pink/6 border-mint' : 'hover:border-line'">
               <span class="flex items-center gap-3">
                 <input type="checkbox" x-model="role.on" class="w-4 h-4 rounded accent-violet">
                 <span class="text-[13.5px] font-medium text-deep" x-text="role.name"></span>
@@ -112,13 +116,13 @@
               <span class="text-[13px] font-mono text-mut" x-text="'₹' + role.cost.toLocaleString('en-IN') + '/mo'"></span>
             </label>
           </template>
-          <div class="flex items-center justify-between rounded-2xl border border-white/10 px-4 py-3">
+          <div class="flex items-center justify-between rounded-2xl border border-line px-4 py-3">
             <span class="text-[13.5px] text-mut">Management, tools and downtime</span>
             <span class="text-[13px] font-mono text-mut">₹18,000/mo</span>
           </div>
         </div>
 
-        <div class="mt-6 pt-5 border-t border-white/10 flex items-end justify-between">
+        <div class="mt-6 pt-5 border-t border-line flex items-end justify-between">
           <div>
             <div class="text-[12px] text-mut">Monthly cost</div>
             <div class="font-display text-[34px] font-semibold text-deep" x-text="'₹' + hiring.toLocaleString('en-IN')"></div>
@@ -130,7 +134,7 @@
       {{-- quick gigs --}}
       <div class="glass-strong rounded-3xl p-7 ring-glow-pink relative">
         <span class="absolute -top-3 left-7 btn-grad text-white text-[10.5px] font-bold tracking-wider uppercase px-3 py-1 rounded-full shadow-lg">With Quick GIGS</span>
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45 mt-1">Subscription</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint mt-1">Subscription</div>
 
         <ol class="mt-5 space-y-3">
           @foreach([
@@ -148,15 +152,15 @@
           @endforeach
         </ol>
 
-        <div class="mt-6 pt-5 border-t border-white/10 flex items-end justify-between">
+        <div class="mt-6 pt-5 border-t border-line flex items-end justify-between">
           <div>
             <div class="text-[12px] text-mut">Starting at</div>
-            <div class="font-display text-[34px] font-semibold text-violet-deep">₹24,999<span class="text-[15px] text-mut">/mo</span></div>
+            <div class="font-display text-[34px] font-semibold text-mint-deep">₹24,999<span class="text-[15px] text-mut">/mo</span></div>
           </div>
           <div class="text-right text-[12.5px] text-mut">Time to first delivery<br><span class="text-deep font-medium">3 hours</span></div>
         </div>
 
-        <div class="mt-5 rounded-2xl bg-gradient-to-br from-lime/15 to-transparent border border-lime/25 p-4">
+        <div class="mt-5 rounded-2xl bg-mint-wash border border-mint/35 p-4">
           <div class="text-[12.5px] text-mut">You keep</div>
           <div class="font-display text-[26px] font-semibold text-[#15803D]" x-text="'₹' + saved.toLocaleString('en-IN') + ' every month'"></div>
         </div>
@@ -169,16 +173,16 @@
 <section class="py-24">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px] reveal">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">One platform</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">One platform</div>
       <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1]">Every creative task your team requests.</h2>
       <p class="mt-4 text-[15px] leading-7 text-mut">Pick a category when you create the task — the engine matches a specialist who does exactly that.</p>
     </div>
 
     <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       @foreach($categories as $i => [$name, $desc, $grad])
-        <div class="reveal-s rounded-3xl p-5 bg-gradient-to-br {{ $grad }} text-white shadow-lg hover:-translate-y-1.5 transition-transform duration-300" data-delay="{{ $i * 60 }}">
+        <div class="reveal-s rounded-3xl p-5 {{ $grad }} text-white shadow-lg hover:-translate-y-1.5 transition-transform duration-300" data-delay="{{ $i * 60 }}">
           <div class="font-display text-[17px] font-semibold">{{ $name }}</div>
-          <div class="mt-1.5 text-[12.5px] text-white/80">{{ $desc }}</div>
+          <div class="mt-1.5 text-[12.5px] text-body">{{ $desc }}</div>
         </div>
       @endforeach
     </div>
@@ -189,7 +193,7 @@
 <section class="band-lav py-24">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px] reveal">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-deep">The workspace</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">The workspace</div>
       <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1] text-deep">Everything your team needs, nothing it doesn't.</h2>
     </div>
 
@@ -203,7 +207,7 @@
         ['One invoice', 'GST-compliant, consolidated monthly, with a per-task breakdown your finance team will accept.'],
       ] as $i => [$t, $b])
         <div class="reveal glass rounded-3xl p-6 card-hover" data-delay="{{ $i * 70 }}">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-violet to-violet-deep grid place-items-center text-white shadow-lg">
+          <div class="w-10 h-10 rounded-2xl bg-ink grid place-items-center text-white shadow-lg">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
           </div>
           <div class="mt-4 text-[16px] font-semibold text-deep">{{ $t }}</div>
@@ -218,7 +222,7 @@
 <section class="py-24">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="text-center max-w-[620px] mx-auto reveal">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Business plans</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Business plans</div>
       <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1]">Pick an allowance. Overflow stays at list price.</h2>
       <p class="mt-4 text-[15px] leading-7 text-mut">Each plan includes monthly task credits, team seats and a delivery SLA. Cancel or switch any month.</p>
     </div>
@@ -230,7 +234,7 @@
           @if($featured)
             <span class="absolute -top-3 left-7 btn-grad text-white text-[10.5px] font-bold tracking-wider uppercase px-3 py-1 rounded-full shadow-lg">Most teams pick this</span>
           @endif
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">{{ $t['label'] }}</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">{{ $t['label'] }}</div>
           <div class="mt-4 flex items-baseline gap-1.5">
             <span class="font-display text-[36px] font-semibold tracking-tight">₹{{ number_format($t['price']) }}</span>
             <span class="text-[13px] text-mut">/ month</span>
@@ -247,12 +251,12 @@
             ] as $f)
               <li class="flex gap-2.5 text-[13.5px] leading-5">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ $featured ? '#FF4D8D' : '#7C5CFF' }}" stroke-width="2.6" class="shrink-0 mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
-                <span class="text-white/80">{{ $f }}</span>
+                <span class="text-body">{{ $f }}</span>
               </li>
             @endforeach
           </ul>
 
-          <a href="#demo-form" class="mt-7 h-12 rounded-xl grid place-items-center font-semibold text-[14px] transition {{ $featured ? 'btn-grad shadow-lg shadow-violet/20' : 'glass btn-ghost hover:border-white/30' }}">
+          <a href="#demo-form" class="mt-7 h-12 rounded-xl grid place-items-center font-semibold text-[14px] transition {{ $featured ? 'btn-grad shadow-lg shadow-ink/10' : 'glass btn-ghost hover:border-line' }}">
             Talk to us about {{ $t['label'] }}
           </a>
         </div>
@@ -260,7 +264,7 @@
     </div>
 
     <div class="mt-6 text-center text-[13px] text-mut">
-      Not ready to commit? <a href="{{ route('marketplace') }}" class="text-violet-soft hover:text-white transition">Order single gigs from ₹1,299</a> — the board works on pay-as-you-go too.
+      Not ready to commit? <a href="{{ route('marketplace') }}" class="text-mint-deep hover:text-white transition">Order single gigs from ₹1,299</a> — the board works on pay-as-you-go too.
     </div>
   </div>
 </section>
@@ -269,7 +273,7 @@
 <section id="demo-form" class="band-light py-24 scroll-mt-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[1fr_1fr] gap-12 items-start">
     <div>
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-deep">Questions teams ask</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Questions teams ask</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[36px] font-semibold leading-[1.1] text-deep">Before you book the call.</h2>
 
       <div class="mt-8 space-y-3" x-data="{ open: 0 }">
@@ -284,7 +288,7 @@
           <div class="glass rounded-2xl overflow-hidden">
             <button type="button" x-on:click="open = open === {{ $i }} ? -1 : {{ $i }}" class="w-full flex items-center justify-between gap-5 p-5 text-left">
               <span class="text-[14.5px] font-medium text-deep">{{ $q }}</span>
-              <span class="w-7 h-7 rounded-full grid place-items-center shrink-0 transition-all duration-300" :class="open === {{ $i }} ? 'btn-grad text-white rotate-180' : 'bg-deep/6 text-mut'">
+              <span class="w-7 h-7 rounded-full grid place-items-center shrink-0 transition-all duration-300" :class="open === {{ $i }} ? 'btn-grad text-white rotate-180' : 'bg-tint text-mut'">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
               </span>
             </button>
@@ -297,7 +301,7 @@
     </div>
 
     <div class="glass-strong rounded-3xl p-6 sm:p-8 ring-glow lg:sticky lg:top-24">
-      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Book a demo</div>
+      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Book a demo</div>
       <h3 class="mt-2 font-display text-[22px] font-semibold text-deep">See the board with your own tasks in it</h3>
       <p class="mt-2 text-[13.5px] leading-6 text-mut">Twenty minutes. We set up your workspace live, queue two real tasks and you keep the output either way.</p>
 
@@ -339,7 +343,7 @@
           <textarea id="b_message" name="message" rows="3" class="field" placeholder="Weekly reels for two brands, plus thumbnails and a monthly AI ad.">{{ old('message') }}</textarea>
         </div>
 
-        <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-violet/20">Book the demo</button>
+        <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Book the demo</button>
         <div class="text-center text-[11.5px] text-mut">One reply from a human, within a working day.</div>
       </form>
     </div>
@@ -365,17 +369,17 @@ document.addEventListener('alpine:init', () => {
   Alpine.data('boardDemo', () => ({
     statusLine: 'idle',
     columns: [
-      { key: 'queued',     label: 'Queued',        ring: 'border-white/12',  text: 'text-mut' },
-      { key: 'assigned',   label: 'Assigned',      ring: 'border-violet/30', text: 'text-violet-soft' },
-      { key: 'production', label: 'In production', ring: 'border-violet/30',   text: 'text-violet-soft' },
-      { key: 'done',       label: 'Delivered',     ring: 'border-lime/30',   text: 'text-lime' },
+      { key: 'queued',     label: 'Queued',        ring: 'border-line',  text: 'text-mut' },
+      { key: 'assigned',   label: 'Assigned',      ring: 'border-mint', text: 'text-mint-deep' },
+      { key: 'production', label: 'In production', ring: 'border-mint',   text: 'text-mint-deep' },
+      { key: 'done',       label: 'Delivered',     ring: 'border-mint/35',   text: 'text-mint-deep' },
     ],
     cards: [
-      { id: 1, uid: 'T-7K2A', col: 'queued',     title: 'Diwali campaign — hero reel',   who: 'Matching…',    img: 'https://i.pravatar.cc/60?img=5',  due: '2 Oct', priority: 'Urgent', tone: 'bg-pink/20 text-violet-soft' },
-      { id: 2, uid: 'T-M31C', col: 'queued',     title: 'Amazon A+ banner set',          who: 'Matching…',    img: 'https://i.pravatar.cc/60?img=9',  due: '4 Oct', priority: 'Normal', tone: 'bg-white/10 text-mut' },
-      { id: 3, uid: 'T-B84P', col: 'assigned',   title: 'UGC testimonial — protein bar', who: 'Riya M.',      img: 'https://i.pravatar.cc/60?img=32', due: '1 Oct', priority: 'High',   tone: 'bg-amber/20 text-amber-soft' },
-      { id: 4, uid: 'T-Q19X', col: 'production', title: 'Podcast — 5 vertical shorts',   who: 'Rahul V.',     img: 'https://i.pravatar.cc/60?img=12', due: '3 Oct', priority: 'High',   tone: 'bg-amber/20 text-amber-soft' },
-      { id: 5, uid: 'T-D55L', col: 'done',       title: 'AI product ad — serum',         who: 'Priya S.',     img: 'https://i.pravatar.cc/60?img=5',  due: 'Sent',  priority: 'Normal', tone: 'bg-white/10 text-mut' },
+      { id: 1, uid: 'T-7K2A', col: 'queued',     title: 'Diwali campaign — hero reel',   who: 'Matching…',    img: 'https://i.pravatar.cc/60?img=5',  due: '2 Oct', priority: 'Urgent', tone: 'bg-pink/10 text-mint-deep' },
+      { id: 2, uid: 'T-M31C', col: 'queued',     title: 'Amazon A+ banner set',          who: 'Matching…',    img: 'https://i.pravatar.cc/60?img=9',  due: '4 Oct', priority: 'Normal', tone: 'bg-tint text-mut' },
+      { id: 3, uid: 'T-B84P', col: 'assigned',   title: 'UGC testimonial — protein bar', who: 'Riya M.',      img: 'https://i.pravatar.cc/60?img=32', due: '1 Oct', priority: 'High',   tone: 'bg-amber/10 text-amber' },
+      { id: 4, uid: 'T-Q19X', col: 'production', title: 'Podcast — 5 vertical shorts',   who: 'Rahul V.',     img: 'https://i.pravatar.cc/60?img=12', due: '3 Oct', priority: 'High',   tone: 'bg-amber/10 text-amber' },
+      { id: 5, uid: 'T-D55L', col: 'done',       title: 'AI product ad — serum',         who: 'Priya S.',     img: 'https://i.pravatar.cc/60?img=5',  due: 'Sent',  priority: 'Normal', tone: 'bg-tint text-mut' },
     ],
     play() {
       const flow = ['queued', 'assigned', 'production', 'done'];

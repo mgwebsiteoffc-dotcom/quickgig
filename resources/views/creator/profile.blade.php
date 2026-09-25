@@ -15,15 +15,15 @@
     <form method="POST" action="{{ route('creator.profile.update') }}" enctype="multipart/form-data" class="mt-7 glass rounded-3xl p-6 sm:p-7">
       @csrf
 
-      <div class="flex flex-wrap items-center gap-5 pb-6 border-b border-white/8">
-        <img src="{{ $creator->avatarUrl() }}" class="w-16 h-16 rounded-2xl object-cover border border-white/12" alt="">
+      <div class="flex flex-wrap items-center gap-5 pb-6 border-b border-line">
+        <img src="{{ $creator->avatarUrl() }}" class="w-16 h-16 rounded-2xl object-cover border border-line" alt="">
         <div class="flex-1 min-w-[220px]">
           <label class="label" for="avatar">Profile photo</label>
-          <input id="avatar" type="file" name="avatar" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:text-[12.5px]">
+          <input id="avatar" type="file" name="avatar" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-tint file:text-white file:text-[12.5px]">
         </div>
         <div class="flex-1 min-w-[220px]">
           <label class="label" for="cover">Cover image</label>
-          <input id="cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:text-[12.5px]">
+          <input id="cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-tint file:text-white file:text-[12.5px]">
         </div>
       </div>
 
@@ -61,7 +61,7 @@
           <input id="price_from" name="price_from" type="number" min="0" value="{{ old('price_from', $creator->price_from) }}" class="field font-mono">
         </div>
         <div>
-          <label class="label" for="skills">Skills <span class="normal-case tracking-normal text-white/30">(comma separated)</span></label>
+          <label class="label" for="skills">Skills <span class="normal-case tracking-normal text-faint">(comma separated)</span></label>
           <input id="skills" name="skills" value="{{ old('skills', is_array($creator->skills) ? implode(', ', $creator->skills) : $creator->skills) }}" placeholder="Reels, Retention editing, Captions" class="field">
         </div>
         <div>
@@ -103,7 +103,7 @@
       </div>
 
       <label class="mt-5 flex items-center gap-3 text-[13.5px] text-mut">
-        <input type="checkbox" name="barter_available" value="1" @checked(old('barter_available', $creator->barter_available)) class="w-4 h-4 rounded border-white/20 bg-white/5 accent-violet">
+        <input type="checkbox" name="barter_available" value="1" @checked(old('barter_available', $creator->barter_available)) class="w-4 h-4 rounded border-line bg-tint accent-violet">
         Open to barter collaborations
       </label>
 
@@ -119,7 +119,7 @@
 
       <div class="mt-5 grid sm:grid-cols-3 gap-4">
         @forelse($portfolio as $item)
-          <div class="rounded-2xl border border-white/10 overflow-hidden">
+          <div class="rounded-2xl border border-line overflow-hidden">
             <img src="{{ $item->cover && filter_var($item->cover, FILTER_VALIDATE_URL) ? $item->cover : ($item->cover ? asset('storage/'.$item->cover) : 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=500&q=80') }}" class="h-[110px] w-full object-cover" alt="">
             <div class="p-3.5">
               <div class="text-[13px] font-medium line-clamp-1">{{ $item->title }}</div>
@@ -133,13 +133,13 @@
             </div>
           </div>
         @empty
-          <div class="sm:col-span-3 rounded-2xl border border-dashed border-white/12 p-8 text-center text-[13.5px] text-mut">
+          <div class="sm:col-span-3 rounded-2xl border border-dashed border-line p-8 text-center text-[13.5px] text-mut">
             No portfolio items yet — add your best three pieces below.
           </div>
         @endforelse
       </div>
 
-      <form method="POST" action="{{ route('creator.portfolio.store') }}" enctype="multipart/form-data" class="mt-6 pt-6 border-t border-white/8 grid sm:grid-cols-2 gap-4">
+      <form method="POST" action="{{ route('creator.portfolio.store') }}" enctype="multipart/form-data" class="mt-6 pt-6 border-t border-line grid sm:grid-cols-2 gap-4">
         @csrf
         <div>
           <label class="label" for="p_title">Title *</label>
@@ -155,10 +155,10 @@
         </div>
         <div>
           <label class="label" for="p_cover">Cover image</label>
-          <input id="p_cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:text-[12.5px]">
+          <input id="p_cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-tint file:text-white file:text-[12.5px]">
         </div>
         <div class="sm:col-span-2">
-          <button class="h-12 px-6 rounded-xl glass font-medium text-[14px] hover:border-white/30 transition">Add portfolio item</button>
+          <button class="h-12 px-6 rounded-xl glass font-medium text-[14px] hover:border-line transition">Add portfolio item</button>
         </div>
       </form>
     </div>

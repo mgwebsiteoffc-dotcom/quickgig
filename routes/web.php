@@ -50,6 +50,7 @@ Route::get('/for-business', [PageController::class, 'forBusiness'])->name('for-b
 Route::get('/compare',      [PageController::class, 'compare'])->name('compare');
 Route::get('/enterprise',   [PageController::class, 'enterprise'])->name('enterprise');
 Route::get('/about',        [PageController::class, 'about'])->name('about');
+Route::get('/faq',          [PageController::class, 'faq'])->name('faq');
 Route::get('/contact',      [PageController::class, 'contact'])->name('contact');
 Route::post('/contact',     [PageController::class, 'storeLead'])->name('leads.store');
 

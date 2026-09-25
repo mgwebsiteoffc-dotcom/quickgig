@@ -5,7 +5,7 @@
 <section class="pt-16 pb-12">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[720px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Compare</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Compare</div>
       <h1 class="mt-4 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">
         Four ways to get content made. <span class="grad-text">Here they are side by side.</span>
       </h1>
@@ -25,8 +25,8 @@
       <div class="overflow-x-auto">
         <table class="w-full min-w-[900px] text-left">
           <thead>
-            <tr class="border-b border-white/10 bg-white/3">
-              <th class="p-5 text-[11px] font-semibold tracking-[.14em] uppercase text-white/45 w-[220px]"></th>
+            <tr class="border-b border-line bg-tint">
+              <th class="p-5 text-[11px] font-semibold tracking-[.14em] uppercase text-faint w-[220px]"></th>
               @foreach($comparison['columns'] as $i => $col)
                 <th class="p-5 text-[13.5px] font-semibold {{ $i === 0 ? 'text-white' : 'text-mut' }}">
                   @if($i === 0)
@@ -44,10 +44,10 @@
           </thead>
           <tbody>
             @foreach($comparison['rows'] as $row)
-              <tr class="border-b border-white/6 last:border-0 hover:bg-white/[0.02] transition">
+              <tr class="border-b border-line last:border-0 hover:bg-tint transition">
                 @foreach($row as $i => $cell)
                   <td class="p-5 align-top text-[13.5px] leading-6
-                    {{ $i === 0 ? 'text-white/60 font-medium' : ($i === 1 ? 'text-white' : 'text-mut') }}">
+                    {{ $i === 0 ? 'text-faint font-medium' : ($i === 1 ? 'text-white' : 'text-mut') }}">
                     @if($i === 1)
                       <span class="inline-flex items-start gap-2">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A3E635" stroke-width="2.6" class="shrink-0 mt-1"><path d="M20 6 9 17l-5-5"/></svg>
@@ -74,7 +74,7 @@
 <section class="py-16">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Why teams switch</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Why teams switch</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Three differences that change the week.</h2>
     </div>
 
@@ -85,12 +85,12 @@
         ['Bad deliveries never reach you', 'Six automated checks run before hand-off. A 4:5 export, missing captions or unlicensed music bounces back to the freelancer automatically — you only see work that already matches the spec.', 'See the QA gate', route('ai').'#m02'],
       ] as $i => [$t, $b, $cta, $href])
         <div class="reveal glass rounded-3xl p-7 sm:p-8 grid lg:grid-cols-[80px_1fr_180px] gap-6 items-center card-hover">
-          <div class="font-display text-[42px] font-semibold text-white/10">0{{ $i + 1 }}</div>
+          <div class="font-display text-[42px] font-semibold text-ink/10">0{{ $i + 1 }}</div>
           <div>
             <div class="font-display text-[20px] font-semibold">{{ $t }}</div>
             <p class="mt-2.5 text-[14.5px] leading-7 text-mut">{{ $b }}</p>
           </div>
-          <a href="{{ $href }}" class="h-11 px-5 rounded-xl glass inline-flex items-center justify-center text-[13px] font-medium hover:border-violet/50 transition">{{ $cta }} →</a>
+          <a href="{{ $href }}" class="h-11 px-5 rounded-xl glass inline-flex items-center justify-center text-[13px] font-medium hover:border-mint transition">{{ $cta }} →</a>
         </div>
       @endforeach
     </div>
@@ -98,10 +98,10 @@
 </section>
 
 {{-- ── honesty section ── --}}
-<section class="py-16 border-y border-white/8">
+<section class="py-16 border-y border-line">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[0.85fr_1.15fr] gap-10">
     <div>
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Straight talk</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Straight talk</div>
       <h2 class="mt-3 font-display text-[28px] sm:text-[34px] font-semibold leading-[1.1]">When we are not the right choice.</h2>
       <p class="mt-4 text-[15px] leading-7 text-mut">
         Sales pages that pretend to win every scenario are not useful. Three cases where you should pick something else.

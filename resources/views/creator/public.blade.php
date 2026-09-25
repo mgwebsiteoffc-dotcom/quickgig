@@ -20,7 +20,7 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8">
 
     <div class="glass rounded-3xl overflow-hidden">
-      <div class="h-[160px] sm:h-[200px] bg-gradient-to-br from-violet/25 to-violet/5 relative">
+      <div class="h-[160px] sm:h-[200px] bg-tint relative">
         @if($c->cover)
           <img src="{{ filter_var($c->cover, FILTER_VALIDATE_URL) ? $c->cover : asset('storage/'.$c->cover) }}" class="w-full h-full object-cover opacity-70" alt="">
         @endif
@@ -28,16 +28,16 @@
 
       <div class="p-6 sm:p-8 -mt-14">
         <div class="flex flex-wrap items-end gap-5">
-          <img src="{{ $c->avatarUrl() }}" class="w-24 h-24 rounded-3xl object-cover border-4 border-ink" alt="{{ $c->name }}">
+          <img src="{{ $c->avatarUrl() }}" class="w-24 h-24 rounded-3xl object-cover border-4 border-white" alt="{{ $c->name }}">
           <div class="flex-1 min-w-[240px]">
             <h1 class="font-display text-[28px] font-semibold flex items-center gap-2.5">
               {{ $c->name }}
-              @if($c->is_verified)<span class="text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1">Verified</span>@endif
+              @if($c->is_verified)<span class="text-[10.5px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2.5 py-1">Verified</span>@endif
             </h1>
             <div class="text-[13.5px] text-mut mt-1">{{ $c->handle }} · {{ $c->headline }}</div>
           </div>
           <div class="flex items-center gap-2.5">
-            <span class="text-[12px] font-semibold rounded-full px-3 py-1.5 {{ $c->is_available ? 'bg-lime/15 text-lime' : 'bg-amber-400/15 text-amber-300' }}">
+            <span class="text-[12px] font-semibold rounded-full px-3 py-1.5 {{ $c->is_available ? 'bg-mint-wash text-mint-deep' : 'bg-amber-400/15 text-amber-300' }}">
               {{ $c->is_available ? 'Available now' : 'Busy — free soon' }}
             </span>
             <a href="{{ route('marketplace', ['q' => ltrim($c->handle, '@')]) }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">See gigs</a>
@@ -50,7 +50,7 @@
 
         <div class="mt-6 flex flex-wrap gap-2">
           @foreach((array) ($c->skills ?? []) as $skill)
-            <span class="text-[12px] rounded-full border border-white/10 px-3 py-1.5 text-mut">{{ $skill }}</span>
+            <span class="text-[12px] rounded-full border border-line px-3 py-1.5 text-mut">{{ $skill }}</span>
           @endforeach
         </div>
 
@@ -61,7 +61,7 @@
             ['Response', ($c->response_minutes ?: 8).' min'],
             ['From', '₹'.number_format($c->price_from)],
           ] as [$k, $v])
-            <div class="rounded-2xl border border-white/8 bg-white/3 px-4 py-3.5">
+            <div class="rounded-2xl border border-line bg-tint px-4 py-3.5">
               <div class="text-[11px] text-mut">{{ $k }}</div>
               <div class="font-display text-[19px] font-semibold mt-0.5">{{ $v }}</div>
             </div>

@@ -7,7 +7,7 @@
     <div class="max-w-[720px]">
       <div class="inline-flex items-center gap-2.5 glass rounded-full pl-2 pr-3.5 py-1.5 text-[12px] font-medium">
         <span class="btn-grad text-ink text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full">Free tool</span>
-        <span class="text-white/75">No account, no card, no email wall</span>
+        <span class="text-body">No account, no card, no email wall</span>
       </div>
       <h1 class="mt-5 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">
         One line in.<br><span class="grad-text">A production brief</span> out.
@@ -35,7 +35,7 @@
 
       <div class="grid lg:grid-cols-[1.25fr_1fr] gap-8">
         <div>
-          <label class="label" for="idea">What do you need? <span class="normal-case tracking-normal text-white/30">one sentence</span></label>
+          <label class="label" for="idea">What do you need? <span class="normal-case tracking-normal text-faint">one sentence</span></label>
           <textarea id="idea" name="idea" rows="3" required class="field"
                     placeholder="A reel announcing our ₹999 protein bar launch, founder on camera, shot at the factory">{{ old('idea', $input['idea'] ?? '') }}</textarea>
 
@@ -44,7 +44,7 @@
             <div class="grid sm:grid-cols-3 gap-2.5">
               @foreach($formats as $key => $f)
                 <label class="rounded-2xl p-3.5 border cursor-pointer transition block"
-                       :class="format === '{{ $key }}' ? 'border-violet bg-violet/12' : 'border-white/10 bg-white/3 hover:border-white/25'">
+                       :class="format === '{{ $key }}' ? 'border-mint bg-mint-wash' : 'border-line bg-tint hover:border-line'">
                   <input type="radio" name="format" value="{{ $key }}" x-model="format" class="sr-only">
                   <div class="text-[13.5px] font-semibold">{{ $f['label'] }}</div>
                   <div class="text-[11.5px] text-mut mt-0.5">from ₹{{ number_format($f['price']) }} · {{ $f['length'] }}</div>
@@ -54,7 +54,7 @@
           </div>
 
           <div class="mt-5">
-            <label class="label" for="audience">Who is it for? <span class="normal-case tracking-normal text-white/30">optional</span></label>
+            <label class="label" for="audience">Who is it for? <span class="normal-case tracking-normal text-faint">optional</span></label>
             <input id="audience" name="audience" value="{{ old('audience', $input['audience'] ?? '') }}" class="field"
                    placeholder="gym-goers in metros who buy supplements online">
           </div>
@@ -84,7 +84,7 @@
             <div class="space-y-2">
               @foreach(['express' => 'Express · 3 hours (+60%)', 'standard' => 'Standard · 24 hours', 'relaxed' => 'Relaxed · 48 hours (−15%)'] as $key => $label)
                 <label class="flex items-center gap-3 rounded-2xl px-4 py-3 border cursor-pointer transition"
-                       :class="urgency === '{{ $key }}' ? 'border-violet bg-violet/10' : 'border-white/10 bg-white/3 hover:border-white/25'">
+                       :class="urgency === '{{ $key }}' ? 'border-mint bg-mint-wash' : 'border-line bg-tint hover:border-line'">
                   <input type="radio" name="urgency" value="{{ $key }}" x-model="urgency" class="accent-cyan">
                   <span class="text-[13.5px] font-medium">{{ $label }}</span>
                 </label>
@@ -92,7 +92,7 @@
             </div>
           </div>
 
-          <button type="submit" class="w-full py-3.5 rounded-xl btn-grad font-semibold text-[15px] shadow-lg shadow-violet/20">
+          <button type="submit" class="w-full py-3.5 rounded-xl btn-grad font-semibold text-[15px] shadow-lg shadow-ink/10">
             Generate my brief →
           </button>
           <div class="text-center text-[11.5px] text-mut">Runs instantly. Nothing is stored against your name.</div>

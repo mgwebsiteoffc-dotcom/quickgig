@@ -5,7 +5,7 @@
 <section class="pt-16 pb-12">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[720px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">About</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">About</div>
       <h1 class="mt-4 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">
         We got tired of the <span class="grad-text">waiting</span>.
       </h1>
@@ -41,7 +41,7 @@
 <section class="band-lav py-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Principles</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Principles</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Four rules we build against.</h2>
     </div>
 
@@ -53,7 +53,7 @@
         ['Say the uncomfortable part', 'Our comparison page lists three cases where you should hire someone else. Trust is worth more than a conversion.'],
       ] as $i => [$t, $b])
         <div class="reveal glass rounded-3xl p-7 card-hover" style="transition-delay: {{ $i * 60 }}ms">
-          <div class="font-display text-[34px] font-semibold text-white/8">0{{ $i + 1 }}</div>
+          <div class="font-display text-[34px] font-semibold text-ink/[0.08]">0{{ $i + 1 }}</div>
           <div class="mt-3 text-[17px] font-semibold">{{ $t }}</div>
           <p class="mt-2 text-[14px] leading-7 text-mut">{{ $b }}</p>
         </div>
@@ -66,7 +66,7 @@
 <section class="py-16">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[0.8fr_1.2fr] gap-10">
     <div>
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">So far</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">So far</div>
       <h2 class="mt-3 font-display text-[28px] sm:text-[34px] font-semibold leading-[1.1]">A short history.</h2>
     </div>
 
@@ -79,10 +79,10 @@
         <div class="flex gap-5">
           <div class="flex flex-col items-center">
             <span class="w-3 h-3 rounded-full btn-grad mt-1.5"></span>
-            @if(!$loop->last)<span class="w-px flex-1 bg-white/12 my-2"></span>@endif
+            @if(!$loop->last)<span class="w-px flex-1 bg-tint my-2"></span>@endif
           </div>
           <div class="pb-2">
-            <div class="font-mono text-[12px] text-violet-soft">{{ $year }}</div>
+            <div class="font-mono text-[12px] text-mint-deep">{{ $year }}</div>
             <div class="mt-1 text-[17px] font-semibold">{{ $t }}</div>
             <p class="mt-1.5 text-[14px] leading-7 text-mut max-w-[560px]">{{ $b }}</p>
           </div>

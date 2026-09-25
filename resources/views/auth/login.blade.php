@@ -32,11 +32,11 @@
       </div>
 
       <label class="flex items-center gap-2.5 text-[13.5px] text-mut">
-        <input type="checkbox" name="remember" value="1" class="w-4 h-4 rounded border-white/20 bg-white/5 accent-violet">
+        <input type="checkbox" name="remember" value="1" class="w-4 h-4 rounded border-line bg-tint accent-violet">
         Keep me logged in
       </label>
 
-      <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-violet/20">Log in</button>
+      <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Log in</button>
 
       <div class="text-center text-[13.5px] text-mut">
         New to Quick GIGS? <a href="{{ route('register') }}" class="text-white font-medium hover:underline">Create a free account</a>
@@ -45,7 +45,7 @@
 
     {{-- demo accounts --}}
     <div x-data="{ fill(e,p){ document.getElementById('email').value=e; document.getElementById('password').value=p; } }" class="mt-5 glass rounded-3xl p-5">
-      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Demo accounts — tap to fill</div>
+      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Demo accounts — tap to fill</div>
       <div class="mt-3 space-y-2">
         @foreach([
           ['label' => 'Business', 'email' => 'business@quickgigs.in', 'pass' => 'Business@123'],
@@ -53,13 +53,13 @@
           ['label' => 'Admin',    'email' => 'admin@quickgigs.in',    'pass' => 'Admin@12345'],
         ] as $d)
           <button type="button" x-on:click="fill(@js($d['email']), @js($d['pass']))"
-                  class="w-full flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/3 px-4 py-2.5 hover:border-violet/45 transition text-left">
-            <span class="text-[12.5px] font-mono text-white/75 truncate">{{ $d['email'] }}</span>
-            <span class="text-[11px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1 shrink-0">{{ $d['label'] }}</span>
+                  class="w-full flex items-center justify-between gap-3 rounded-2xl border border-line bg-tint px-4 py-2.5 hover:border-mint transition text-left">
+            <span class="text-[12.5px] font-mono text-body truncate">{{ $d['email'] }}</span>
+            <span class="text-[11px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2.5 py-1 shrink-0">{{ $d['label'] }}</span>
           </button>
         @endforeach
       </div>
-      <div class="mt-3 text-[11.5px] text-mut">Seeded by <span class="font-mono text-white/60">php artisan migrate --seed</span>.</div>
+      <div class="mt-3 text-[11.5px] text-mut">Seeded by <span class="font-mono text-faint">php artisan migrate --seed</span>.</div>
     </div>
   </div>
 </section>

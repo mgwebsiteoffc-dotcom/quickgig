@@ -5,7 +5,7 @@
 <section class="pt-16 pb-12">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-start">
     <div>
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">For teams</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">For teams</div>
       <h1 class="mt-4 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">
         Always-on content, <span class="grad-text">without the headcount</span>.
       </h1>
@@ -34,7 +34,7 @@
     {{-- lead form --}}
     <aside class="lg:sticky lg:top-24">
       <div class="glass-strong rounded-3xl p-6 sm:p-7 ring-glow">
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Talk to us</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Talk to us</div>
         <h2 class="mt-2 font-display text-[22px] font-semibold">Get a pod proposal in one working day</h2>
 
         @if($errors->any())
@@ -79,7 +79,7 @@
             <textarea id="e_message" name="message" rows="3" class="field" placeholder="Weekly reels for two brands, plus thumbnails and a monthly AI ad.">{{ old('message') }}</textarea>
           </div>
 
-          <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-violet/20">Request a pod proposal</button>
+          <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Request a pod proposal</button>
           <div class="text-center text-[11.5px] text-mut">No sales sequence. One reply from a human.</div>
         </form>
       </div>
@@ -91,7 +91,7 @@
 <section class="band-light py-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Operating model</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Operating model</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">How a pod runs.</h2>
     </div>
 
@@ -103,7 +103,7 @@
         ['Monthly', 'Review + invoice', 'Delivery report, QA pass-rate, spend by format, and a single GST invoice.'],
       ] as $i => [$when, $t, $b])
         <div class="reveal glass rounded-3xl p-6" style="transition-delay: {{ $i * 70 }}ms">
-          <div class="font-mono text-[11.5px] text-violet-soft">{{ $when }}</div>
+          <div class="font-mono text-[11.5px] text-mint-deep">{{ $when }}</div>
           <div class="mt-2.5 text-[16px] font-semibold">{{ $t }}</div>
           <p class="mt-2 text-[13px] leading-6 text-mut">{{ $b }}</p>
         </div>
@@ -116,7 +116,7 @@
 <section class="py-16">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[0.9fr_1.1fr] gap-10">
     <div>
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Controls</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Controls</div>
       <h2 class="mt-3 font-display text-[28px] sm:text-[34px] font-semibold leading-[1.1]">Things procurement will ask about.</h2>
     </div>
     <div class="grid sm:grid-cols-2 gap-4">

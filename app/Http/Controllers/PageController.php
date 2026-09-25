@@ -149,14 +149,14 @@ class PageController extends Controller
         return view('pages.for-business', [
             'tiers' => \App\Models\Company::TIERS,
             'categories' => [
-                ['Video editing',   'Social cuts, ads, YouTube',        'from-violet to-violet-deep'],
-                ['Graphic design',  'Posts, banners, packaging',        'from-violet to-violet-deep'],
-                ['AI content',      'Product images, AI video ads',     'from-violet to-violet-deep'],
-                ['Motion graphics', 'Explainers, animated logos',       'from-violet to-violet-deep'],
-                ['Presentations',   'Pitch decks, sales one-pagers',    'from-violet to-violet-deep'],
-                ['Branding',        'Logos, identity, guidelines',      'from-violet to-violet-deep'],
-                ['UI design',       'Apps, SaaS screens, landing pages','from-violet to-violet-deep'],
-                ['UGC & influencer','Freelancers on camera, testimonials', 'from-violet to-violet-deep'],
+                ['Video editing',   'Social cuts, ads, YouTube',        'bg-ink'],
+                ['Graphic design',  'Posts, banners, packaging',        'bg-ink'],
+                ['AI content',      'Product images, AI video ads',     'bg-ink'],
+                ['Motion graphics', 'Explainers, animated logos',       'bg-ink'],
+                ['Presentations',   'Pitch decks, sales one-pagers',    'bg-ink'],
+                ['Branding',        'Logos, identity, guidelines',      'bg-ink'],
+                ['UI design',       'Apps, SaaS screens, landing pages','bg-ink'],
+                ['UGC & influencer','Freelancers on camera, testimonials', 'bg-ink'],
             ],
             'seo' => [
                 'title'       => 'Quick GIGS for Business — your creative team on a subscription',
@@ -200,6 +200,22 @@ class PageController extends Controller
                 'title'       => 'About Quick GIGS — the marketplace that removes the waiting',
                 'description' => 'Quick GIGS is building the fastest honest way to get creative work made: generated briefs, explainable matching, escrow payments and automated quality checks.',
                 'canonical'   => route('about'),
+            ],
+        ]);
+    }
+
+    /** Every published answer, grouped — also emits FAQPage structured data. */
+    public function faq()
+    {
+        $faqs = \App\Models\Faq::published()->ordered()->get();
+
+        return view('pages.faq', [
+            'faqs'   => $faqs,
+            'groups' => $faqs->groupBy(fn ($f) => $f->category ?: 'General'),
+            'seo' => [
+                'title'       => 'FAQ — how Quick GIGS works, pricing, escrow and payouts',
+                'description' => 'Answers on matching, delivery speed, revisions, escrow, refunds, pricing, GST invoices and freelancer payouts on Quick GIGS.',
+                'canonical'   => route('faq'),
             ],
         ]);
     }

@@ -4,14 +4,14 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
         <div class="flex flex-wrap items-center gap-2.5">
-          <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Your brief</div>
+          <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Your brief</div>
           @if(($meta['source'] ?? 'rules') === 'ai')
-            <span class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-violet-soft"></span>
+            <span class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2.5 py-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-mint-soft"></span>
               Written by {{ $meta['model'] }}@if($meta['latency_ms']) · {{ $meta['latency_ms'] }} ms @endif
             </span>
           @else
-            <span class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold rounded-full bg-white/8 text-mut px-2.5 py-1">
+            <span class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold rounded-full bg-tint text-mut px-2.5 py-1">
               <span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Rule-based engine
             </span>
           @endif
@@ -19,16 +19,16 @@
         <h2 class="mt-2 font-display text-[28px] sm:text-[34px] font-semibold">{{ $brief['title'] }}</h2>
       </div>
       <div class="flex flex-wrap gap-2.5">
-        <button x-on:click="copy(@js(session('brief.draft')))" class="h-11 px-5 rounded-xl glass text-[13.5px] font-medium hover:border-white/30 transition">
-          <span x-show="!copied">Copy brief</span><span x-show="copied" x-cloak class="text-lime">Copied ✓</span>
+        <button x-on:click="copy(@js(session('brief.draft')))" class="h-11 px-5 rounded-xl glass text-[13.5px] font-medium hover:border-line transition">
+          <span x-show="!copied">Copy brief</span><span x-show="copied" x-cloak class="text-mint-deep">Copied ✓</span>
         </button>
-        <button type="button" x-on:click="$dispatch('brief-reset')" class="h-11 px-5 rounded-xl glass btn-ghost text-[13.5px] font-medium hover:border-white/30">Start over</button>
+        <button type="button" x-on:click="$dispatch('brief-reset')" class="h-11 px-5 rounded-xl glass btn-ghost text-[13.5px] font-medium hover:border-line">Start over</button>
       </div>
     </div>
 
     @if(!empty($meta['error']))
-      <div class="mt-5 rounded-2xl border border-white/10 bg-white/3 px-4 py-3 text-[12.5px] text-mut">
-        Model unavailable — showing the deterministic brief. <span class="text-white/60">{{ $meta['error'] }}</span>
+      <div class="mt-5 rounded-2xl border border-line bg-tint px-4 py-3 text-[12.5px] text-mut">
+        Model unavailable — showing the deterministic brief. <span class="text-faint">{{ $meta['error'] }}</span>
       </div>
     @endif
     @if(!empty($meta['refine_error']))
@@ -40,11 +40,11 @@
       {{-- left: the brief --}}
       <div class="space-y-5">
         <div class="glass rounded-3xl p-6 sm:p-7">
-          <p class="text-[15px] leading-7 text-white/85">{{ $brief['summary'] }}</p>
+          <p class="text-[15px] leading-7 text-body">{{ $brief['summary'] }}</p>
           <div class="mt-5 grid sm:grid-cols-3 gap-4">
             @foreach([['Objective', $brief['objective']], ['Audience', $brief['audience']], ['Tone', $brief['tone']]] as [$k, $v])
-              <div class="rounded-2xl border border-white/8 bg-white/3 px-4 py-3.5">
-                <div class="text-[11px] font-semibold tracking-[.12em] uppercase text-white/40">{{ $k }}</div>
+              <div class="rounded-2xl border border-line bg-tint px-4 py-3.5">
+                <div class="text-[11px] font-semibold tracking-[.12em] uppercase text-faint">{{ $k }}</div>
                 <div class="text-[13px] leading-6 text-mut mt-1">{{ $v }}</div>
               </div>
             @endforeach
@@ -59,7 +59,7 @@
           </div>
           <div class="mt-4 space-y-2.5">
             @foreach($brief['hooks'] as $i => $hook)
-              <div class="flex gap-3.5 rounded-2xl border border-white/8 bg-white/3 p-4">
+              <div class="flex gap-3.5 rounded-2xl border border-line bg-tint p-4">
                 <span class="w-7 h-7 rounded-lg btn-grad grid place-items-center text-[12px] font-bold text-ink shrink-0">{{ $i + 1 }}</span>
                 <span class="text-[14.5px] leading-6">{{ $hook }}</span>
               </div>
@@ -75,11 +75,11 @@
               <div class="flex gap-4">
                 <div class="flex flex-col items-center">
                   <span class="w-2.5 h-2.5 rounded-full btn-grad mt-2"></span>
-                  @if(!$loop->last)<span class="w-px flex-1 bg-white/12 my-1"></span>@endif
+                  @if(!$loop->last)<span class="w-px flex-1 bg-tint my-1"></span>@endif
                 </div>
                 <div class="pb-1">
-                  <div class="font-mono text-[12px] text-violet-soft">{{ $beat['t'] }}</div>
-                  <div class="text-[14px] leading-6 text-white/85 mt-0.5">{{ $beat['what'] }}</div>
+                  <div class="font-mono text-[12px] text-mint-deep">{{ $beat['t'] }}</div>
+                  <div class="text-[14px] leading-6 text-body mt-0.5">{{ $beat['what'] }}</div>
                 </div>
               </div>
             @endforeach
@@ -104,7 +104,7 @@
               @foreach($brief['spec'] as $k => $v)
                 <div class="flex justify-between gap-4 text-[13px]">
                   <dt class="text-mut shrink-0">{{ $k }}</dt>
-                  <dd class="text-right text-white/80">{{ $v }}</dd>
+                  <dd class="text-right text-body">{{ $v }}</dd>
                 </div>
               @endforeach
             </dl>
@@ -116,16 +116,16 @@
             <h3 class="font-display text-[17px] font-semibold text-rose-200">Do not</h3>
             <ul class="mt-4 space-y-2.5">
               @foreach($brief['avoid'] as $a)
-                <li class="text-[13px] leading-6 text-white/70">— {{ $a }}</li>
+                <li class="text-[13px] leading-6 text-body">— {{ $a }}</li>
               @endforeach
             </ul>
           </div>
 
-          <div class="rounded-3xl p-6 border border-cyan/20 bg-violet/5">
-            <h3 class="font-display text-[17px] font-semibold text-violet-soft">QA gate on delivery</h3>
+          <div class="rounded-3xl p-6 border border-cyan/20 bg-mint/5">
+            <h3 class="font-display text-[17px] font-semibold text-mint-deep">QA gate on delivery</h3>
             <ul class="mt-4 space-y-2.5">
               @foreach($brief['qa_gate'] as $g)
-                <li class="text-[13px] leading-6 text-white/70"><span class="font-medium text-white/90">{{ $g['check'] }}</span> — {{ $g['detail'] }}</li>
+                <li class="text-[13px] leading-6 text-body"><span class="font-medium text-white/90">{{ $g['check'] }}</span> — {{ $g['detail'] }}</li>
               @endforeach
             </ul>
           </div>
@@ -135,7 +135,7 @@
       {{-- right: act on it --}}
       <aside class="space-y-5 lg:sticky lg:top-24">
         <div class="glass-strong rounded-3xl p-6 ring-glow">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Suggested order</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Suggested order</div>
           <div class="mt-3 flex items-baseline justify-between">
             <span class="font-display text-[30px] font-semibold">₹{{ number_format($brief['suggested']['price']) }}</span>
             <span class="text-[12.5px] text-mut">{{ $brief['suggested']['eta'] }}</span>
@@ -155,10 +155,10 @@
         {{-- confidence --}}
         <div class="glass rounded-3xl p-6">
           <div class="flex items-center justify-between">
-            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Brief strength</div>
+            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Brief strength</div>
             <div class="font-display text-[20px] font-semibold">{{ $brief['confidence']['score'] }}%</div>
           </div>
-          <div class="mt-3 h-1.5 rounded-full bg-white/8 overflow-hidden">
+          <div class="mt-3 h-1.5 rounded-full bg-tint overflow-hidden">
             <div class="h-full btn-grad" style="width: {{ $brief['confidence']['score'] }}%"></div>
           </div>
           <ul class="mt-4 space-y-2">
@@ -171,15 +171,15 @@
         {{-- matched freelancers --}}
         @if($matches->count())
           <div class="glass rounded-3xl p-6">
-            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Freelancers matched to this brief</div>
+            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Freelancers matched to this brief</div>
             <div class="mt-4 space-y-4">
               @foreach($matches as $m)
                 @php $c = $m['creator']; @endphp
-                <div class="rounded-2xl border border-white/8 bg-white/3 p-4">
+                <div class="rounded-2xl border border-line bg-tint p-4">
                   <div class="flex items-center gap-3">
-                    <img src="{{ $c->avatarUrl() }}" class="w-9 h-9 rounded-xl object-cover border border-white/12" alt="">
+                    <img src="{{ $c->avatarUrl() }}" class="w-9 h-9 rounded-xl object-cover border border-line" alt="">
                     <div class="min-w-0 flex-1">
-                      <a href="{{ route('creator.public', $c->id) }}" class="text-[13.5px] font-semibold hover:text-violet-soft transition">{{ $c->name }}</a>
+                      <a href="{{ route('creator.public', $c->id) }}" class="text-[13.5px] font-semibold hover:text-mint-deep transition">{{ $c->name }}</a>
                       <div class="text-[11.5px] text-mut truncate">{{ $m['headline'] }}</div>
                     </div>
                     <div class="text-right shrink-0">
@@ -190,7 +190,7 @@
                   <div class="mt-3 space-y-1.5">
                     @foreach(array_slice($m['breakdown'], 0, 3) as $b)
                       <div class="flex items-center gap-2">
-                        <div class="h-1 rounded-full bg-white/8 flex-1 overflow-hidden">
+                        <div class="h-1 rounded-full bg-tint flex-1 overflow-hidden">
                           <div class="h-full btn-grad" style="width: {{ $b['max'] ? round($b['points'] / $b['max'] * 100) : 0 }}%"></div>
                         </div>
                         <span class="text-[10.5px] text-mut w-[92px] shrink-0">{{ $b['label'] }}</span>

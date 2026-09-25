@@ -15,11 +15,11 @@
     <form method="POST" action="{{ route('business.profile.update') }}" enctype="multipart/form-data" class="mt-7 glass rounded-3xl p-6 sm:p-7">
       @csrf
 
-      <div class="flex flex-wrap items-center gap-5 pb-6 border-b border-white/8">
-        <img src="{{ $company->logoUrl() }}" class="w-16 h-16 rounded-2xl object-cover border border-white/12" alt="">
+      <div class="flex flex-wrap items-center gap-5 pb-6 border-b border-line">
+        <img src="{{ $company->logoUrl() }}" class="w-16 h-16 rounded-2xl object-cover border border-line" alt="">
         <div class="flex-1 min-w-[240px]">
           <label class="label" for="logo">Company logo</label>
-          <input id="logo" type="file" name="logo" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:text-[12.5px] file:font-medium">
+          <input id="logo" type="file" name="logo" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-tint file:text-white file:text-[12.5px] file:font-medium">
           <div class="mt-1.5 text-[11.5px] text-mut">PNG or JPG, up to 2 MB.</div>
         </div>
       </div>

@@ -1,15 +1,15 @@
 @extends('layouts.site')
 
 @section('content')
-<section class="pt-14 pb-10 border-b border-white/8">
+<section class="pt-14 pb-10 border-b border-line">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div class="max-w-[620px]">
-        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Marketplace</div>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Marketplace</div>
         <h1 class="mt-3 font-display text-[34px] sm:text-[42px] font-semibold leading-[1.08]">Fixed-price gigs, verified pros.</h1>
         <p class="mt-4 text-[15px] leading-7 text-mut">
           {{ number_format($totals['gigs']) }} live gigs · {{ number_format($totals['creators']) }} verified freelancers ·
-          <span class="text-lime">{{ number_format($totals['online']) }} online right now</span>
+          <span class="text-mint-deep">{{ number_format($totals['online']) }} online right now</span>
         </p>
       </div>
 
@@ -22,7 +22,7 @@
     <form method="GET" action="{{ route('marketplace') }}" class="mt-9 glass rounded-3xl p-4 sm:p-5">
       <div class="flex flex-col lg:flex-row gap-3">
         <div class="relative flex-1">
-          <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-white/35" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/></svg>
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-faint" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/></svg>
           <input name="q" value="{{ $filters['q'] }}" placeholder="Search gigs — reel editing, thumbnails, AI ads…" class="field pl-11">
         </div>
         <select name="sort" class="field lg:w-[210px]">
@@ -35,18 +35,18 @@
 
       <div class="mt-4 flex flex-wrap items-center gap-2">
         <a href="{{ route('marketplace', array_filter(['q' => $filters['q'], 'sort' => $filters['sort']])) }}"
-           class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === '' ? 'border-violet bg-violet/15 text-white' : 'border-white/10 text-mut hover:text-white hover:border-white/25' }}">
+           class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === '' ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-white hover:border-line' }}">
           All categories
         </a>
         @foreach($categories as $cat => $count)
           <a href="{{ route('marketplace', array_filter(['q' => $filters['q'], 'sort' => $filters['sort'], 'category' => $cat])) }}"
-             class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === $cat ? 'border-violet bg-violet/15 text-white' : 'border-white/10 text-mut hover:text-white hover:border-white/25' }}">
+             class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === $cat ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-white hover:border-line' }}">
             {{ $cat }} <span class="opacity-50">{{ $count }}</span>
           </a>
         @endforeach
 
         <label class="ml-auto flex items-center gap-2 text-[12.5px] text-mut cursor-pointer">
-          <input type="checkbox" name="fast" value="1" @checked($filters['fast']) onchange="this.form.submit()" class="w-4 h-4 rounded border-white/20 bg-white/5 accent-violet">
+          <input type="checkbox" name="fast" value="1" @checked($filters['fast']) onchange="this.form.submit()" class="w-4 h-4 rounded border-line bg-tint accent-violet">
           24-hour delivery only
         </label>
       </div>
@@ -81,7 +81,7 @@
 
               <div class="p-5 flex-1 flex flex-col">
                 <div class="flex items-center gap-2.5">
-                  <img src="{{ $gig->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-6 h-6 rounded-full object-cover border border-white/12" alt="">
+                  <img src="{{ $gig->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-6 h-6 rounded-full object-cover border border-line" alt="">
                   <span class="text-[12px] text-mut truncate">{{ $gig->creator->name ?? 'Quick GIGS pro' }}</span>
                   @if($gig->creator?->is_verified)
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="#22D3EE" class="shrink-0"><path d="M12 2l2.4 1.8 3-.3 1 2.8 2.6 1.5-1 2.9 1 2.9-2.6 1.5-1 2.8-3-.3L12 22l-2.4-1.8-3 .3-1-2.8L3 16.2l1-2.9-1-2.9 2.6-1.5 1-2.8 3 .3z" opacity=".25"/><path d="M10.6 15.4 7.8 12.6l1.2-1.2 1.6 1.6 4-4 1.2 1.2z"/></svg>
@@ -129,18 +129,18 @@
     {{-- sidebar --}}
     <aside class="space-y-5 lg:sticky lg:top-24">
       <div class="glass rounded-3xl p-5">
-        <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">
-          <span class="w-1.5 h-1.5 rounded-full bg-lime pulse-dot text-lime"></span> Available now
+        <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-faint">
+          <span class="w-1.5 h-1.5 rounded-full bg-mint pulse-dot text-mint-deep"></span> Available now
         </div>
         <div class="mt-4 space-y-3.5">
           @forelse($availableNow as $c)
             <a href="{{ route('creator.public', $c->id) }}" class="flex items-center gap-3 group">
-              <img src="{{ $c->avatarUrl() }}" class="w-9 h-9 rounded-xl object-cover border border-white/12" alt="">
+              <img src="{{ $c->avatarUrl() }}" class="w-9 h-9 rounded-xl object-cover border border-line" alt="">
               <div class="min-w-0 flex-1">
-                <div class="text-[13px] font-medium truncate group-hover:text-violet-soft transition">{{ $c->name }}</div>
+                <div class="text-[13px] font-medium truncate group-hover:text-mint-deep transition">{{ $c->name }}</div>
                 <div class="text-[11.5px] text-mut truncate">{{ $c->headline ?: $c->handle }}</div>
               </div>
-              <span class="text-[11.5px] font-mono text-white/60 shrink-0">₹{{ number_format($c->price_from) }}</span>
+              <span class="text-[11.5px] font-mono text-faint shrink-0">₹{{ number_format($c->price_from) }}</span>
             </a>
           @empty
             <div class="text-[13px] text-mut">No freelancers online right now.</div>
@@ -149,20 +149,20 @@
       </div>
 
       <div class="glass rounded-3xl p-5">
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">How buying works</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">How buying works</div>
         <ol class="mt-4 space-y-3">
           @foreach(['Pick a gig and a speed lane', 'Pay into escrow — nothing is released yet', 'Track production live and chat', 'Approve to release the payout'] as $i => $line)
             <li class="flex gap-3 text-[13px] leading-5">
-              <span class="w-5 h-5 rounded-md bg-white/6 grid place-items-center text-[10.5px] font-mono shrink-0">{{ $i+1 }}</span>
+              <span class="w-5 h-5 rounded-md bg-tint grid place-items-center text-[10.5px] font-mono shrink-0">{{ $i+1 }}</span>
               <span class="text-mut">{{ $line }}</span>
             </li>
           @endforeach
         </ol>
       </div>
 
-      <div class="rounded-3xl p-5 bg-gradient-to-br from-violet/14 to-violet/5 border border-white/10">
+      <div class="rounded-3xl p-5 bg-tint border border-line">
         <div class="text-[14.5px] font-semibold">Need something custom?</div>
-        <p class="mt-1.5 text-[13px] leading-5 text-white/70">Describe it once — we match a pro in minutes.</p>
+        <p class="mt-1.5 text-[13px] leading-5 text-body">Describe it once — we match a pro in minutes.</p>
         <a href="{{ route('register') }}?type=business" class="mt-4 h-10 rounded-xl btn-grad grid place-items-center text-[13.5px] font-semibold">Post a brief</a>
       </div>
     </aside>

@@ -21,7 +21,7 @@
     <nav class="flex items-center gap-2 text-[12.5px] text-mut">
       <a href="{{ route('blog.index') }}" class="hover:text-white">Insights</a>
       <span class="opacity-40">/</span>
-      <span class="text-white/70">{{ $blog->category->name ?? 'Post' }}</span>
+      <span class="text-body">{{ $blog->category->name ?? 'Post' }}</span>
     </nav>
 
     <h1 class="mt-5 font-display text-[32px] sm:text-[42px] font-semibold leading-[1.08]">{{ $blog->title }}</h1>
@@ -38,18 +38,18 @@
     </div>
 
     @if($blog->excerpt)
-      <p class="mt-7 glass rounded-2xl p-5 text-[15px] leading-7 text-white/80">{{ $blog->excerpt }}</p>
+      <p class="mt-7 glass rounded-2xl p-5 text-[15px] leading-7 text-body">{{ $blog->excerpt }}</p>
     @endif
 
     @if($blog->cover)
-      <img src="{{ filter_var($blog->cover, FILTER_VALIDATE_URL) ? $blog->cover : asset('storage/'.$blog->cover) }}" alt="{{ $blog->cover_alt ?: $blog->title }}" class="mt-7 w-full h-[300px] sm:h-[380px] object-cover rounded-3xl border border-white/10">
+      <img src="{{ filter_var($blog->cover, FILTER_VALIDATE_URL) ? $blog->cover : asset('storage/'.$blog->cover) }}" alt="{{ $blog->cover_alt ?: $blog->title }}" class="mt-7 w-full h-[300px] sm:h-[380px] object-cover rounded-3xl border border-line">
     @endif
 
     <div class="article mt-8" id="speakable">{!! $blog->content !!}</div>
 
     @if(!empty($blog->faq_json) && is_array($blog->faq_json))
       <div class="mt-10 glass rounded-3xl p-6">
-        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Quick answers</div>
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Quick answers</div>
         <div class="mt-4 space-y-4">
           @foreach($blog->faq_json as $f)
             <div>
@@ -70,6 +70,26 @@
         <a href="{{ route('register') }}?type=business" class="h-11 px-5 rounded-xl glass inline-flex items-center text-[13.5px] font-medium">Create free account</a>
       </div>
     </div>
+
+    @if(isset($faqs) && $faqs->count())
+      <div class="mt-12" x-data="{ open: -1 }">
+        <h2 class="font-display text-[20px] font-semibold">Common questions</h2>
+        <div class="mt-4 space-y-2.5">
+          @foreach($faqs as $i => $f)
+            <div class="glass rounded-2xl overflow-hidden">
+              <button type="button" x-on:click="open = open === {{ $i }} ? -1 : {{ $i }}" class="w-full flex items-center justify-between gap-4 p-4 text-left">
+                <span class="text-[14px] font-medium">{{ $f->question }}</span>
+                <span class="w-6 h-6 rounded-full grid place-items-center shrink-0 transition" :class="open === {{ $i }} ? 'bg-mint text-ink rotate-180' : 'bg-tint text-faint'">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div x-show="open === {{ $i }}" x-collapse x-cloak><div class="px-4 pb-4 text-[13.5px] leading-6 text-body">{{ $f->answer }}</div></div>
+            </div>
+          @endforeach
+        </div>
+        <a href="{{ route('faq') }}" class="mt-4 inline-block text-[13px] font-medium text-mint-deep hover:underline">See all answers →</a>
+      </div>
+    @endif
 
     @if($related->count())
       <h2 class="mt-14 font-display text-[22px] font-semibold">Read next</h2>

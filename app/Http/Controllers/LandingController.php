@@ -21,6 +21,7 @@ class LandingController extends Controller
         $stats = [
             'match_time'      => '4 min 12 sec',
             'online_creators' => '1,284',
+            'gig_count'       => \App\Models\Service::where('is_active', true)->count() ?: 19,
         ];
 
         // Product differentiators — each links to the page that proves it.

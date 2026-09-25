@@ -7,14 +7,14 @@
     <div class="flex flex-wrap items-center justify-between gap-5">
       <div class="flex items-center gap-4">
         <div class="relative">
-          <img src="{{ $creator->avatarUrl() }}" class="w-12 h-12 rounded-2xl object-cover border border-white/12" alt="">
-          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-ink {{ $creator->is_available ? 'bg-lime' : 'bg-amber-400' }}"></span>
+          <img src="{{ $creator->avatarUrl() }}" class="w-12 h-12 rounded-2xl object-cover border border-line" alt="">
+          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white {{ $creator->is_available ? 'bg-mint' : 'bg-amber-400' }}"></span>
         </div>
         <div>
           <h1 class="font-display text-[26px] sm:text-[30px] font-semibold leading-tight flex items-center gap-2">
             {{ $creator->name }}
             @if($creator->is_verified)
-              <span class="text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2 py-0.5">Verified</span>
+              <span class="text-[10.5px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2 py-0.5">Verified</span>
             @else
               <span class="text-[10.5px] font-semibold rounded-full bg-amber-400/15 text-amber-300 px-2 py-0.5">Pending review</span>
             @endif
@@ -26,8 +26,8 @@
       <div class="flex gap-2.5">
         <form method="POST" action="{{ route('creator.availability') }}">
           @csrf
-          <button class="h-11 px-5 rounded-xl glass inline-flex items-center gap-2.5 text-[13.5px] font-medium hover:border-white/25 transition">
-            <span class="w-2 h-2 rounded-full {{ $creator->is_available ? 'bg-lime' : 'bg-amber-400' }}"></span>
+          <button class="h-11 px-5 rounded-xl glass inline-flex items-center gap-2.5 text-[13.5px] font-medium hover:border-line transition">
+            <span class="w-2 h-2 rounded-full {{ $creator->is_available ? 'bg-mint' : 'bg-amber-400' }}"></span>
             {{ $creator->is_available ? 'Available for gigs' : 'Marked busy' }}
           </button>
         </form>
@@ -44,7 +44,7 @@
         ['Rating', $stats['rating'].' ★', ($creator->reviews_count ?: 0).' reviews'],
       ] as [$label, $value, $hint])
         <div class="glass rounded-3xl p-5">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">{{ $label }}</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">{{ $label }}</div>
           <div class="mt-2.5 font-display text-[28px] font-semibold tracking-tight">{{ $value }}</div>
           <div class="text-[12px] text-mut mt-0.5">{{ $hint }}</div>
         </div>
@@ -57,14 +57,14 @@
         <h2 class="font-display text-[19px] font-semibold">Assigned gigs</h2>
 
         @forelse($orders as $o)
-          <div class="mt-4 rounded-2xl border border-white/8 bg-white/3 p-4">
+          <div class="mt-4 rounded-2xl border border-line bg-tint p-4">
             <div class="flex flex-wrap items-center gap-4">
               <div class="min-w-0 flex-1">
                 <div class="text-[14px] font-medium truncate">{{ $o->service->title ?? 'Custom gig' }}</div>
                 <div class="text-[12px] text-mut mt-0.5 font-mono">{{ $o->uid }} · {{ $o->company->name ?? 'Client' }} · {{ $o->turnaround }}</div>
               </div>
               <span class="text-[11.5px] font-semibold rounded-full px-2.5 py-1 shrink-0
-                {{ $o->status === 'delivered' ? 'bg-lime/15 text-lime' : ($o->status === 'review' ? 'bg-violet/15 text-violet-soft' : 'bg-violet/15 text-violet-soft') }}">
+                {{ $o->status === 'delivered' ? 'bg-mint-wash text-mint-deep' : ($o->status === 'review' ? 'bg-mint-wash text-mint-deep' : 'bg-mint-wash text-mint-deep') }}">
                 {{ ucfirst($o->status) }}
               </span>
               <div class="text-right shrink-0">
@@ -84,7 +84,7 @@
             @endif
           </div>
         @empty
-          <div class="mt-5 rounded-2xl border border-dashed border-white/12 p-10 text-center">
+          <div class="mt-5 rounded-2xl border border-dashed border-line p-10 text-center">
             <div class="font-display text-[17px] font-semibold">No gigs assigned yet</div>
             <p class="mt-1.5 text-[13.5px] text-mut">Complete your profile and stay available — the matching engine prioritises verified, online creators.</p>
             <a href="{{ route('creator.profile') }}" class="mt-5 inline-flex h-11 px-5 rounded-xl btn-grad items-center text-[13.5px] font-semibold">Complete profile</a>
@@ -94,7 +94,7 @@
 
       <aside class="space-y-5">
         <div class="glass rounded-3xl p-5">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Profile strength</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Profile strength</div>
           @php
             $checks = [
               'Avatar uploaded'  => (bool) $creator->avatar,
@@ -110,11 +110,11 @@
             <span class="font-display text-[26px] font-semibold">{{ $pct }}%</span>
             <span class="text-[12px] text-mut">{{ $done }} of {{ count($checks) }} complete</span>
           </div>
-          <div class="mt-3 h-1.5 rounded-full bg-white/8 overflow-hidden"><div class="h-full btn-grad" style="width: {{ max(4, $pct) }}%"></div></div>
+          <div class="mt-3 h-1.5 rounded-full bg-tint overflow-hidden"><div class="h-full btn-grad" style="width: {{ max(4, $pct) }}%"></div></div>
           <ul class="mt-4 space-y-2">
             @foreach($checks as $label => $ok)
-              <li class="flex items-center gap-2.5 text-[13px] {{ $ok ? 'text-mut' : 'text-white/80' }}">
-                <span class="w-4 h-4 rounded-md grid place-items-center shrink-0 {{ $ok ? 'bg-lime/18 text-lime' : 'bg-white/8 text-white/30' }}">
+              <li class="flex items-center gap-2.5 text-[13px] {{ $ok ? 'text-mut' : 'text-body' }}">
+                <span class="w-4 h-4 rounded-md grid place-items-center shrink-0 {{ $ok ? 'bg-mint-wash text-mint-deep' : 'bg-tint text-faint' }}">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4"><path d="M20 6 9 17l-5-5"/></svg>
                 </span>
                 {{ $label }}
@@ -124,11 +124,11 @@
         </div>
 
         <div class="glass rounded-3xl p-5">
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Payouts</div>
+          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Payouts</div>
           <div class="mt-3 text-[13px] text-mut leading-6">
-            Escrow is released to <span class="font-mono text-white/80">{{ $creator->upi_id ?: 'your UPI ID' }}</span> as soon as the client approves. Payouts usually land within minutes.
+            Escrow is released to <span class="font-mono text-body">{{ $creator->upi_id ?: 'your UPI ID' }}</span> as soon as the client approves. Payouts usually land within minutes.
           </div>
-          <a href="{{ route('creator.profile') }}" class="mt-4 h-10 rounded-xl glass grid place-items-center text-[13px] font-medium hover:border-white/25 transition">Update payout details</a>
+          <a href="{{ route('creator.profile') }}" class="mt-4 h-10 rounded-xl glass grid place-items-center text-[13px] font-medium hover:border-line transition">Update payout details</a>
         </div>
       </aside>
     </div>

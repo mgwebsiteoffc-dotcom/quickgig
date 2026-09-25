@@ -51,7 +51,7 @@ Extra staff logins: `manager@quickgigs.in` / `Manager@123`, `support@quickgigs.i
 
 | Area | Route | Notes |
 |---|---|---|
-| Landing | `/` | Hero with a live order pipeline, how it works, **interactive demo simulation**, marketplace preview, creators, pricing (pay-per-gig / retainer toggle), testimonials, FAQ, CTA. |
+| Landing | `/` | Hero that **generates a real brief in under a second** in front of the visitor (local composer, timed on screen), isometric artwork, how it works, **interactive demo simulation**, marketplace preview, creators, pricing (pay-per-gig / retainer toggle), testimonials, FAQ, CTA. |
 | Marketplace | `/marketplace` | Real search, category filters, sort, 24-hour filter, pagination, "available now" rail. |
 | Gig detail | `/gigs/{id}` | Speed lanes (express / standard / relaxed) with live price + fee split, brief form, creator card, related gigs. |
 | Sign up | `/register` | One flow, two account types (business or creator). Creates the user **and** the company/creator profile, then logs you in. |
@@ -62,7 +62,8 @@ Extra staff logins: `manager@quickgigs.in` / `Manager@123`, `support@quickgigs.i
 | Order tracking | `/orders/{uid}` | Five-stage pipeline, **Advance demo pipeline** button, approve-and-release escrow, messages. |
 | Creator studio | `/creator` | Availability toggle, assigned gigs, deliver flow, earnings, profile-strength meter. |
 | Profiles | `/business/profile`, `/creator/profile`, `/creators/{id}` | Editable and persisted, with portfolio CRUD for creators. |
-| Insights | `/blog`, `/blog/{slug}` | Article + FAQ JSON-LD, categories, search. |
+| Insights | `/blog`, `/blog/{slug}` | Article + FAQ JSON-LD, categories, search, and a Quick answers accordion on both the index and every post. |
+| FAQ | `/faq` | Every published answer grouped by category, with FAQPage structured data. |
 | Admin | `/admin` | Orders, creators, companies, **leads**, services, blogs, FAQs, users & roles, payouts, settings. |
 | SEO | `/sitemap.xml`, `/robots.txt` | Organization, FAQPage, BreadcrumbList and BlogPosting JSON-LD via `components/seo.blade.php`. |
 
@@ -167,16 +168,27 @@ always gets a brief.
 
 ## Design system
 
-* One brand accent (`#5B3DF5` indigo) on neutral surfaces. Green, amber and red appear only as
-  status — availability, warnings, overdue — never decoration.
-* Dark sections alternate with light cream/grey bands (`.band-light`, `.band-lav`); the same markup
-  works in both because the band flips glass surfaces, muted text, borders and form fields.
+* **Black, white and one mint accent** (`#00C48C`). White is the default surface, near-black
+  (`#0A0A0B`) carries type and the few deliberately dark bands, mint marks the AI moments, links and
+  success states. Amber and rose appear only as warning/danger status.
+* Light by default; `.band-dark` opts a section into black (hero demo, delivered strip, newsletter,
+  final CTA, footer) and re-tones glass, muted text, borders, inputs and buttons inside it.
+* **Isometric line illustrations** in `public/img/iso-*.png` (hero, brief, match, deliver, board) —
+  monochrome with a single mint accent, matching the flat-vector look of the rest of the UI.
+* Semantic text/surface helpers instead of theme-specific opacity classes: `.text-body`,
+  `.text-faint`, `.bg-tint`, `.border-line`.
 * Catalogue cards follow quick-commerce conventions: image-led, MRP strike-through, “% off” badge,
   delivery chip and rating — colour comes from the thumbnails, not the chrome.
 * Type: **Space Grotesk** for display, **Inter** for body — semibold headings instead of heavy black weights.
 * Shared shell: `resources/views/layouts/site.blade.php` with `partials/nav` (four links + one CTA) and `partials/footer`.
 
 ---
+
+## Competitor audit
+
+`docs/competitor-audit.md` captures the September 2026 review of Unjob.ai (incl. business.unjob.ai),
+Elyvato and the wider field (Fiverr, Upwork, Superside, Design Pickle, Awesomic, Contra, Toptal) —
+their models, design language, weaknesses, and the gaps Quick GIGS targets.
 
 ## Deployment notes
 
