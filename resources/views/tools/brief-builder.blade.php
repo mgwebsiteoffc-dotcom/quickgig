@@ -109,7 +109,19 @@
 
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Your brief</div>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Your brief</div>
+          @if(($meta['source'] ?? 'rules') === 'ai')
+            <span class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-violet-soft"></span>
+              Written by {{ $meta['model'] }}@if($meta['latency_ms']) · {{ $meta['latency_ms'] }} ms @endif
+            </span>
+          @else
+            <span class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold rounded-full bg-white/8 text-mut px-2.5 py-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-white/40"></span> Rule-based engine
+            </span>
+          @endif
+        </div>
         <h2 class="mt-2 font-display text-[28px] sm:text-[34px] font-semibold">{{ $brief['title'] }}</h2>
       </div>
       <div class="flex flex-wrap gap-2.5">
@@ -121,6 +133,30 @@
         </form>
       </div>
     </div>
+
+    @if(!empty($meta['error']))
+      <div class="mt-5 rounded-2xl border border-white/10 bg-white/3 px-4 py-3 text-[12.5px] text-mut">
+        Model unavailable — showing the deterministic brief. <span class="text-white/60">{{ $meta['error'] }}</span>
+      </div>
+    @endif
+    @if(!empty($meta['refine_error']))
+      <div class="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/8 px-4 py-3 text-[12.5px] text-amber-200">{{ $meta['refine_error'] }}</div>
+    @endif
+
+    @if(!empty($meta['refinable']))
+      <form method="POST" action="{{ route('brief-builder.refine') }}" class="mt-6 glass rounded-3xl p-4 sm:p-5">
+        @csrf
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1">
+            <label class="label" for="instruction">Not quite right? Tell it what to change</label>
+            <input id="instruction" name="instruction" required maxlength="300" class="field"
+                   placeholder="Make the hooks shorter and mention the ₹999 price in beat two">
+          </div>
+          <button class="sm:self-end h-12 px-6 rounded-xl btn-grad font-semibold text-[14px] shrink-0">Refine brief</button>
+        </div>
+        <div class="mt-2.5 text-[11.5px] text-mut">Continues the same conversation — the model keeps the reasoning from the first pass.</div>
+      </form>
+    @endif
 
     <div class="mt-8 grid lg:grid-cols-[1fr_360px] gap-6 items-start">
 

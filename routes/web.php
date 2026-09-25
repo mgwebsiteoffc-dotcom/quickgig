@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\BriefBuilderController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CreatorController;
@@ -53,7 +54,8 @@ Route::post('/contact',     [PageController::class, 'storeLead'])->name('leads.s
 /* ── Free tool: brief builder ── */
 Route::get('/brief-builder',        [BriefBuilderController::class, 'show'])->name('brief-builder');
 Route::post('/brief-builder',       [BriefBuilderController::class, 'generate'])->name('brief-builder.generate');
-Route::post('/brief-builder/reset', [BriefBuilderController::class, 'reset'])->name('brief-builder.reset');
+Route::post('/brief-builder/refine', [BriefBuilderController::class, 'refine'])->name('brief-builder.refine');
+Route::post('/brief-builder/reset',  [BriefBuilderController::class, 'reset'])->name('brief-builder.reset');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
@@ -79,6 +81,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/business/switch', [BusinessController::class, 'switch'])->name('business.switch');
     Route::get('/business/profile', [BusinessController::class, 'profile'])->name('business.profile');
     Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->name('business.profile.update');
+
+    /* ── Natural-language task capture (also a JSON endpoint) ── */
+    Route::post('/tasks/parse',  [TaskController::class, 'parse'])->name('tasks.parse');
+    Route::post('/tasks/refine', [TaskController::class, 'refine'])->name('tasks.refine');
+    Route::post('/tasks/clear',  [TaskController::class, 'clear'])->name('tasks.clear');
 
     /* ── Orders ── */
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');

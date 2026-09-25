@@ -34,6 +34,96 @@
       @endforeach
     </div>
 
+    {{-- ── natural-language task capture ── --}}
+    @php $task = session('task.state'); @endphp
+    <div class="mt-6 glass rounded-3xl p-6 sm:p-7">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <h2 class="font-display text-[19px] font-semibold">Describe a task</h2>
+            @if($task && ($task['source'] ?? '') === 'ai')
+              <span class="text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1">{{ $task['model'] }}</span>
+            @else
+              <span class="text-[10.5px] font-semibold rounded-full bg-white/8 text-mut px-2.5 py-1">Rule-based</span>
+            @endif
+          </div>
+          <p class="mt-1 text-[13px] text-mut">Plain English in, a structured task out — title, dates, description and client.</p>
+        </div>
+        @if($task)
+          <form method="POST" action="{{ route('tasks.clear') }}">@csrf
+            <button class="text-[12.5px] text-mut hover:text-white transition">Clear ✕</button>
+          </form>
+        @endif
+      </div>
+
+      <form method="POST" action="{{ route('tasks.parse') }}" class="mt-5 flex flex-col sm:flex-row gap-3">
+        @csrf
+        <input name="prompt" required maxlength="600" class="field flex-1"
+               value="{{ old('prompt') }}"
+               placeholder="create task to build a mobile app, delivery date is 29 aug 2026">
+        <button class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14px] shrink-0">Parse task</button>
+      </form>
+      @error('prompt')<div class="mt-2 text-[12.5px] text-rose-300">{{ $message }}</div>@enderror
+
+      @if($task)
+        <div class="mt-6 grid lg:grid-cols-[1fr_300px] gap-5 items-start">
+          <div class="rounded-2xl border border-white/10 bg-black/25 p-5">
+            <div class="grid sm:grid-cols-2 gap-4">
+              @foreach([
+                ['title', $task['title']],
+                ['client', $task['client'] ?: '—'],
+                ['start_date', $task['start_date']],
+                ['end_date', $task['end_date']],
+              ] as [$k, $v])
+                <div>
+                  <div class="text-[10.5px] font-mono text-white/40">{{ $k }}</div>
+                  <div class="text-[14px] font-medium mt-0.5">{{ $v }}</div>
+                </div>
+              @endforeach
+            </div>
+            <div class="mt-4 pt-4 border-t border-white/8">
+              <div class="text-[10.5px] font-mono text-white/40">description</div>
+              <p class="mt-1 text-[13.5px] leading-6 text-mut">{{ $task['description'] }}</p>
+            </div>
+
+            @if(!empty($task['warnings']))
+              <div class="mt-4 space-y-1.5">
+                @foreach($task['warnings'] as $w)
+                  <div class="flex gap-2 text-[12.5px] text-amber-200">
+                    <span class="shrink-0">!</span><span>{{ $w }}</span>
+                  </div>
+                @endforeach
+              </div>
+            @endif
+
+            @if(!empty($task['refine_error']))
+              <div class="mt-4 text-[12.5px] text-amber-200">{{ $task['refine_error'] }}</div>
+            @endif
+
+            <form method="POST" action="{{ route('tasks.refine') }}" class="mt-5 flex flex-col sm:flex-row gap-2.5">
+              @csrf
+              <input name="instruction" required maxlength="300" class="field flex-1" placeholder="Actually the deadline is 29 aug 2027 and the client is Nova Foods">
+              <button class="h-12 px-5 rounded-xl glass font-medium text-[13.5px] shrink-0 hover:border-white/30 transition">Refine</button>
+            </form>
+          </div>
+
+          <div class="space-y-3">
+            @if(!empty($task['gig_id']))
+              <a href="{{ route('gigs.show', $task['gig_id']) }}" class="h-12 rounded-xl btn-grad grid place-items-center font-semibold text-[14px]">Order the matching gig →</a>
+            @endif
+            <a href="{{ route('brief-builder') }}?idea={{ urlencode($task['title']) }}" class="h-12 rounded-xl glass grid place-items-center font-medium text-[13.5px] hover:border-white/30 transition">Write a full brief</a>
+            <div class="rounded-2xl border border-white/8 bg-white/3 p-4">
+              <div class="text-[10.5px] font-semibold tracking-[.12em] uppercase text-white/40">Same result as JSON</div>
+              <pre class="mt-2 text-[11px] leading-5 text-mut overflow-x-auto">POST /tasks/parse
+Accept: application/json
+
+{"prompt": "…"}</pre>
+            </div>
+          </div>
+        </div>
+      @endif
+    </div>
+
     <div class="mt-6 grid lg:grid-cols-[1fr_330px] gap-6 items-start">
 
       {{-- orders --}}

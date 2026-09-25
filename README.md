@@ -90,6 +90,62 @@ table and reviewed at `/admin/leads`.
 
 ---
 
+## AI (optional)
+
+Every AI feature has a deterministic engine behind it. Without a key the product works exactly as
+before — it just stops calling a model. With a key, the model writes and the deterministic result
+becomes the fallback and the validator.
+
+```env
+OPENROUTER_API_KEY=sk-or-...            # empty = deterministic mode
+OPENROUTER_MODEL="nvidia/nemotron-3.5-lightning:free"
+OPENROUTER_REASONING=true               # ask for reasoning and replay it on follow-ups
+OPENROUTER_TEMPERATURE=0.4
+OPENROUTER_MAX_TOKENS=1600
+OPENROUTER_TIMEOUT=45
+OPENROUTER_RETRIES=2                    # transport errors, 429 and 5xx only
+OPENROUTER_LOG=false
+```
+
+| Feature | With a key | Without a key |
+|---|---|---|
+| `/brief-builder` | Model rewrites title, summary, hooks, beats and "do not" — validated field by field, everything else (pricing, QA gate, confidence) stays rule-based | Full brief from `BriefComposer` |
+| Brief **Refine** box | Second call replays the assistant turn *including* `reasoning_details`, so the model continues its earlier reasoning | Box is hidden |
+| Dashboard **Describe a task** | Model returns `{title, start_date, end_date, description, client}` | Regex + Carbon parser returns the same shape |
+| `POST /tasks/parse` (JSON) | Same, as an API | Same, as an API |
+
+### Code map
+
+| File | Role |
+|---|---|
+| `app/Services/Ai/OpenRouterClient.php` | HTTP client. Returns `reasoning_details` untouched, exposes `assistantTurn()` for replaying it, `extractJson()` for fenced/prose-wrapped JSON. Every failure becomes `AiUnavailable`. |
+| `app/Services/Ai/BriefWriter.php` | Model-written briefs on top of `BriefComposer`, with per-field validation and merge. |
+| `app/Services/Ai/TaskParser.php` | Sentence → `{title, start_date, end_date, description, client}`, model-first with a Carbon/regex fallback. Flags past or inverted dates instead of silently rewriting them. |
+| `scripts/openrouter_reasoning_example.py` | The same reasoning round-trip in ~60 lines of Python. |
+
+### Verify it
+
+```bash
+php artisan ai:ping                       # model, latency, tokens, whether reasoning came back
+php artisan ai:task "create task to create mobile app, delivery date is 29 aug 2026"
+php artisan ai:task "..." --refine="Are you sure about the year?"   # reasoning continues
+php artisan ai:task "..." --json          # just the JSON object
+```
+
+```bash
+curl -X POST https://your-app.test/tasks/parse \
+  -H "Accept: application/json" -H "X-CSRF-TOKEN: ..." \
+  --data-urlencode 'prompt=5 instagram reels for client Nova Foods in 2 weeks'
+# {"task":{"title":"5 instagram reels","start_date":"…","end_date":"…","description":"…","client":"Nova Foods"},
+#  "meta":{"source":"rules","model":null,"error":null,"suggestion":"https://…/gigs/1"}}
+```
+
+Failure behaviour is tested against a mock provider: a 401 falls back on the first attempt, a 503 is
+retried then falls back, and a non-JSON completion falls back with the reason recorded — the user
+always gets a brief.
+
+---
+
 ## Design system
 
 * Dark, high-contrast UI with an aurora/grid backdrop, glass surfaces and a violet → cyan accent ramp.
