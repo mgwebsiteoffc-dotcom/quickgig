@@ -114,7 +114,7 @@ class LandingController extends Controller
                 ['id' => 'raw',      'label' => 'Raw project files',  'price' => 699],
                 ['id' => 'vertical', 'label' => 'Vertical + square',  'price' => 399],
             ],
-            'creators' => $people->take(4)->map(fn ($c) => [
+            'talent' => $people->take(4)->map(fn ($c) => [
                 'name'   => $c['name'],
                 'role'   => Str::limit($c['role'], 38),
                 'img'    => $c['img'],

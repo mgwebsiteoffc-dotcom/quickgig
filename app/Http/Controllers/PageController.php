@@ -15,14 +15,14 @@ class PageController extends Controller
     {
         return [
             [
-                'key' => 'brief', 'stage' => 'Stage 01', 'title' => 'Brief engine',
+                'key' => 'brief', 'stage' => 'Stage 01', 'title' => 'AI Brief Writer',
                 'time' => '40 seconds',
                 'body' => 'One line in, a production-ready brief out: objective, three hook options, a timed beat sheet, deliverables and the technical spec. Vague briefs are the number one cause of revisions — this removes them before a freelancer is even matched.',
                 'proof'=> 'Try it free, no signup',
                 'link' => 'brief-builder',
             ],
             [
-                'key' => 'match', 'stage' => 'Stage 02', 'title' => 'Explainable matching',
+                'key' => 'match', 'stage' => 'Stage 02', 'title' => 'AI Match Engine (explainable)',
                 'time' => '4 minutes',
                 'body' => 'Every available freelancer is scored on skill fit, live availability, on-time record, rating and budget fit. You see the score and the reasons behind it — not a black box that says "matched".',
                 'proof'=> 'Score breakdown on every match',
@@ -36,28 +36,28 @@ class PageController extends Controller
                 'link' => 'pricing',
             ],
             [
-                'key' => 'copilot', 'stage' => 'Stage 04', 'title' => 'Freelancer copilot',
+                'key' => 'copilot', 'stage' => 'Stage 04', 'title' => 'AI Copilot for the freelancer',
                 'time' => 'during production',
                 'body' => 'The assigned freelancer gets the beat sheet, shot list and reference frames generated from your brief, plus live spec checks while they work. Less guessing means fewer rounds.',
                 'proof'=> 'Shipped with every gig',
                 'link' => 'for-creators',
             ],
             [
-                'key' => 'qa', 'stage' => 'Stage 05', 'title' => 'Automated QA gate',
+                'key' => 'qa', 'stage' => 'Stage 05', 'title' => 'AI Quality Gate',
                 'time' => '90 seconds',
                 'body' => 'Before anything reaches you, the delivery is checked against the brief: hook timing, caption coverage, loudness, aspect ratio, resolution and licensing. Failed checks bounce back to the freelancer automatically.',
                 'proof'=> '6 checks per delivery',
                 'link' => 'ai',
             ],
             [
-                'key' => 'revision', 'stage' => 'Stage 06', 'title' => 'Revision translator',
+                'key' => 'revision', 'stage' => 'Stage 06', 'title' => 'AI Revision Translator',
                 'time' => 'seconds',
                 'body' => '"Make it punchier" becomes timestamped, actionable notes an editor can execute without a call. Two free revisions on every gig, and both sides see the same list.',
                 'proof'=> '2 free revisions included',
                 'link' => 'ai',
             ],
             [
-                'key' => 'repurpose', 'stage' => 'Stage 07', 'title' => 'Auto-repurpose',
+                'key' => 'repurpose', 'stage' => 'Stage 07', 'title' => 'AI Repurposer',
                 'time' => 'on approval',
                 'body' => 'One approved master forks into the formats you actually publish: vertical, square, 16:9 teaser, thumbnail frames and caption files — without re-briefing anybody.',
                 'proof'=> 'Up to 6 formats per master',

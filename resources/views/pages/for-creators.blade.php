@@ -23,7 +23,12 @@
         <a href="#earnings" class="h-12 px-6 rounded-xl glass font-medium text-[14.5px] inline-flex items-center hover:border-line transition">See what you would earn</a>
       </div>
 
-      <div class="mt-9 flex flex-wrap gap-x-8 gap-y-4">
+      <div class="mt-7 inline-flex flex-wrap items-center gap-2 rounded-2xl bg-mint-wash px-4 py-3">
+        <span class="text-[12px] font-semibold tracking-[.12em] uppercase text-mint-deep">Free to join</span>
+        <span class="text-[13px] text-body">₹0 to list · ₹0 to receive gigs · ₹0 connects · no subscription</span>
+      </div>
+
+      <div class="mt-7 flex flex-wrap gap-x-8 gap-y-4">
         @foreach([['90%', 'you keep'], ['₹0', 'to bid or list'], ['Instant', 'payout on approval']] as [$v, $l])
           <div>
             <div class="font-display text-[24px] font-semibold tracking-tight">{{ $v }}</div>

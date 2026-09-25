@@ -6,7 +6,9 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @include('components.seo', ['seo' => $seo ?? [], 'faqs' => $faqs ?? null, 'blog' => $blog ?? null, 'breadcrumbs' => $breadcrumbs ?? null])
 <script src="https://cdn.tailwindcss.com"></script>
+{{-- Alpine plugins must load before the core, or their directives are missing at init --}}
 <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

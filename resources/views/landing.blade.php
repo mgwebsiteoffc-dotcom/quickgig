@@ -9,7 +9,7 @@
     <div class="reveal-l">
       <div class="inline-flex items-center gap-2 border border-line rounded-full pl-1.5 pr-3 py-1.5 text-[12px] font-medium">
         <span class="bg-mint text-ink text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full">AI-first</span>
-        <span class="text-body">No forms. No calls. No waiting.</span>
+        <span class="text-body">AI writes the brief · AI matches the freelancer · humans do the work</span>
       </div>
 
       <h1 class="mt-4 font-display text-[32px] sm:text-[44px] leading-[1.05] font-semibold">
@@ -169,6 +169,59 @@
         <span>✓ No proposals to read</span>
         <span>✓ Money moves only on approval</span>
       </div>
+    </div>
+  </div>
+</section>
+
+{{-- ═══════════════ THE AI LAYER ═══════════════ --}}
+<section class="py-20">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-6 reveal">
+      <div class="max-w-[620px]">
+        <div class="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">
+          <span class="w-1.5 h-1.5 rounded-full bg-mint"></span> The AI layer
+        </div>
+        <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Six AI components. Every one of them named.</h2>
+        <p class="mt-4 text-[15px] leading-7 text-body">
+          "AI-powered" usually means a black box. Here is exactly what runs on your gig, in order, and
+          what each part is allowed to decide.
+        </p>
+      </div>
+      <a href="{{ route('ai') }}" class="h-11 px-5 rounded-xl border border-line inline-flex items-center gap-2 text-[13.5px] font-medium hover:border-ink/30 transition">
+        Open the engine
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      @foreach([
+        ['AI Brief Writer',        'BriefComposer',  '~1 second',  'Turns one sentence into hooks, a timed beat sheet, deliverables, technical spec and the QA gate the delivery will be scored against.', route('brief-builder'), 'Try it free'],
+        ['AI Match Engine',        'MatchEngine',    '~4 minutes', 'Scores every available freelancer on skill fit, availability, reliability, rating and budget — and shows the points behind each one.', route('ai'), 'See the scoring'],
+        ['AI Quality Gate',        'QA runner',      '90 seconds', 'Six automated checks per delivery: brief coverage, hook timing, aspect and length, caption cover, loudness and licensing.', route('ai') . '#m02', 'Run the gate'],
+        ['AI Revision Translator', 'Feedback rules', 'instant',    'Converts "make it punchier" into timestamped, executable notes so a second round actually lands.', route('ai') . '#m03', 'Try it live'],
+        ['AI Task Parser',         'TaskParser',     'instant',    'Reads "build a mobile app, delivery 29 Aug" and returns a structured task — title, dates, description, client — straight onto the board.', route('for-business'), 'See the board'],
+        ['AI Repurposer',          'Format forking', 'on approval','Forks one approved master into vertical, square, 16:9, thumbnail frames and caption files without a new brief.', route('how-it-works'), 'See the pipeline'],
+      ] as $i => [$name, $object, $speed, $body, $href, $cta])
+        <a href="{{ $href }}" class="reveal glass rounded-3xl p-6 card-hover group" data-delay="{{ $i * 60 }}">
+          <div class="flex items-start justify-between gap-3">
+            <span class="w-10 h-10 rounded-xl bg-mint-wash text-mint-deep grid place-items-center shrink-0">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+            </span>
+            <span class="text-[10.5px] font-mono text-faint">{{ $speed }}</span>
+          </div>
+          <div class="mt-4 font-display text-[16.5px] font-semibold group-hover:text-mint-deep transition">{{ $name }}</div>
+          <div class="mt-1 text-[11px] font-mono text-faint">{{ $object }}</div>
+          <p class="mt-2.5 text-[13.5px] leading-6 text-body">{{ $body }}</p>
+          <div class="mt-4 text-[12.5px] font-medium text-mint-deep">{{ $cta }} →</div>
+        </a>
+      @endforeach
+    </div>
+
+    <div class="mt-5 glass rounded-2xl p-5 text-[13px] leading-6 text-body">
+      <span class="font-semibold text-ink">Straight about the models:</span>
+      every component above runs on our own deterministic engines by default, so it is instant, free and
+      works offline. Connect an LLM key and the brief writer and task parser hand off to the model — the
+      output is validated against the same schema either way, and a human freelancer always does the work.
     </div>
   </div>
 </section>
@@ -702,6 +755,45 @@
   </div>
 </section>
 
+{{-- ═══════════════ FREE FOR FREELANCERS ═══════════════ --}}
+<section class="band-light py-16">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="glass rounded-3xl p-7 sm:p-9 grid lg:grid-cols-[1fr_auto] gap-8 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full bg-mint-wash text-mint-deep px-3 py-1 text-[11px] font-semibold tracking-[.12em] uppercase">
+          Free for freelancers &amp; creators
+        </div>
+        <h2 class="mt-4 font-display text-[26px] sm:text-[32px] font-semibold leading-[1.12]">
+          Joining costs nothing. Working costs nothing.
+        </h2>
+        <div class="mt-5 grid sm:grid-cols-4 gap-4">
+          @foreach([
+            ['₹0', 'to join or list'],
+            ['₹0', 'to receive gigs'],
+            ['₹0', 'connects or bids'],
+            ['90%', 'yours on every gig'],
+          ] as [$v, $l])
+            <div>
+              <div class="font-display text-[24px] font-semibold text-mint-deep">{{ $v }}</div>
+              <div class="text-[12.5px] text-faint mt-0.5">{{ $l }}</div>
+            </div>
+          @endforeach
+        </div>
+        <p class="mt-5 text-[13.5px] leading-6 text-body max-w-[620px]">
+          There is no subscription, no monthly fee and nothing to buy before you can work. The only
+          charge is a flat 10% platform fee, taken from a gig you have already been paid for — and the
+          payout lands the moment the client approves.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-2.5 shrink-0">
+        <a href="{{ route('register') }}?type=creator" class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14px] grid place-items-center">Join free</a>
+        <a href="{{ route('for-creators') }}" class="h-12 px-6 rounded-xl border border-line font-medium text-[14px] grid place-items-center hover:border-ink/30 transition">See earnings</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 {{-- ═══════════════ NEWSLETTER / LEAD BAND ═══════════════ --}}
 <section class="py-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
@@ -769,7 +861,6 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js" defer></script>
 <script>
 document.addEventListener('alpine:init', () => {
 
@@ -860,7 +951,7 @@ document.addEventListener('alpine:init', () => {
     speed: cfg.speeds[1].id,
     addons: [],
     running: false, done: false, stage: -1, work: 0, seconds: 0,
-    matched: cfg.freelancers[0],
+    matched: cfg.talent[0],
     _timers: [], _tick: null, _prog: null, _debounce: null,
 
     get cat()   { return this.cfg.categories.find(c => c.id === this.category); },
@@ -907,7 +998,7 @@ document.addEventListener('alpine:init', () => {
     run() {
       this.reset();
       this.running = true;
-      this.matched = this.cfg.freelancers[Math.floor(Math.random() * this.cfg.creators.length)];
+      this.matched = this.cfg.talent[Math.floor(Math.random() * this.cfg.talent.length)];
       this._tick = setInterval(() => this.seconds++, 1000);
 
       const at = (ms, fn) => this._timers.push(setTimeout(fn, ms));
