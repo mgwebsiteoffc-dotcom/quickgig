@@ -13,12 +13,12 @@
 <section class="py-14">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="relative overflow-hidden rounded-[32px] glass-strong px-7 sm:px-12 py-12 sm:py-14">
-      <div class="absolute -top-28 left-1/3 w-[34rem] h-[34rem] {{ $tone === 'cyan' ? 'bg-cyan/20' : 'bg-violet/25' }} blur-[120px] rounded-full -z-10"></div>
+      <div class="absolute -top-28 left-1/3 w-[34rem] h-[34rem] {{ $tone === 'cyan' ? 'bg-violet/20' : 'bg-violet/25' }} blur-[120px] rounded-full -z-10"></div>
 
       <div class="flex flex-col lg:flex-row lg:items-center gap-8 justify-between">
         <div class="max-w-[620px]">
           @if($eyebrow)
-            <div class="text-[11px] font-semibold tracking-[.16em] uppercase {{ $tone === 'cyan' ? 'text-cyan' : 'text-violet-soft' }}">{{ $eyebrow }}</div>
+            <div class="text-[11px] font-semibold tracking-[.16em] uppercase {{ $tone === 'cyan' ? 'text-violet-soft' : 'text-violet-soft' }}">{{ $eyebrow }}</div>
           @endif
           <h2 class="mt-3 font-display text-[28px] sm:text-[36px] font-semibold leading-[1.1]">{!! $title !!}</h2>
           @isset($body)

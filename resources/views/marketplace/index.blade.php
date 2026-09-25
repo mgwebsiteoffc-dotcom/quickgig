@@ -8,7 +8,7 @@
         <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Marketplace</div>
         <h1 class="mt-3 font-display text-[34px] sm:text-[42px] font-semibold leading-[1.08]">Fixed-price gigs, verified pros.</h1>
         <p class="mt-4 text-[15px] leading-7 text-mut">
-          {{ number_format($totals['gigs']) }} live gigs · {{ number_format($totals['creators']) }} verified creators ·
+          {{ number_format($totals['gigs']) }} live gigs · {{ number_format($totals['creators']) }} verified freelancers ·
           <span class="text-lime">{{ number_format($totals['online']) }} online right now</span>
         </p>
       </div>
@@ -93,8 +93,15 @@
 
                 <div class="mt-auto pt-4 flex items-end justify-between">
                   <div>
-                    <div class="text-[11px] text-mut">Starting at</div>
-                    <div class="font-display text-[19px] font-semibold">{{ $gig->displayPrice() }}</div>
+                    <div class="flex items-baseline gap-2">
+                      <span class="font-display text-[19px] font-semibold">{{ $gig->displayPrice() }}</span>
+                      @if($gig->compareAt())
+                        <span class="text-[12px] line-through price-strike text-mut">₹{{ number_format($gig->compareAt()) }}</span>
+                      @endif
+                    </div>
+                    @if($gig->discountPercent())
+                      <span class="mt-1 inline-block text-[10.5px] font-semibold px-1.5 py-0.5 rounded badge-off">{{ $gig->discountPercent() }}% off</span>
+                    @endif
                   </div>
                   <div class="text-[11.5px] text-mut text-right">
                     <div>{{ number_format((float) $gig->rating, 1) }} ★</div>
@@ -136,7 +143,7 @@
               <span class="text-[11.5px] font-mono text-white/60 shrink-0">₹{{ number_format($c->price_from) }}</span>
             </a>
           @empty
-            <div class="text-[13px] text-mut">No creators online right now.</div>
+            <div class="text-[13px] text-mut">No freelancers online right now.</div>
           @endforelse
         </div>
       </div>
@@ -153,7 +160,7 @@
         </ol>
       </div>
 
-      <div class="rounded-3xl p-5 bg-gradient-to-br from-violet/20 to-cyan/10 border border-white/10">
+      <div class="rounded-3xl p-5 bg-gradient-to-br from-violet/14 to-violet/5 border border-white/10">
         <div class="text-[14.5px] font-semibold">Need something custom?</div>
         <p class="mt-1.5 text-[13px] leading-5 text-white/70">Describe it once — we match a pro in minutes.</p>
         <a href="{{ route('register') }}?type=business" class="mt-4 h-10 rounded-xl btn-grad grid place-items-center text-[13.5px] font-semibold">Post a brief</a>

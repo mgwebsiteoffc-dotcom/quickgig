@@ -26,8 +26,8 @@ class LandingController extends Controller
         // Product differentiators — each links to the page that proves it.
         $usps = [
             [
-                'title' => 'Brief engine', 'tag' => 'Free tool', 'tagTone' => 'bg-cyan/15 text-cyan',
-                'body'  => 'One sentence becomes hooks, a timed beat sheet, deliverables and a spec — before a creator is even matched.',
+                'title' => 'Brief engine', 'tag' => 'Free tool', 'tagTone' => 'bg-violet/15 text-violet-soft',
+                'body'  => 'One sentence becomes hooks, a timed beat sheet, deliverables and a spec — before a freelancer is even matched.',
                 'cta'   => 'Write a brief', 'href' => route('brief-builder'),
                 'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16M4 10h16M4 15h9"/><circle cx="18" cy="17" r="4"/><path d="M18 15.5v3"/></svg>',
             ],
@@ -50,7 +50,7 @@ class LandingController extends Controller
                 'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1 1 21 11.5z"/></svg>',
             ],
             [
-                'title' => 'Auto-repurpose', 'tag' => '6 formats', 'tagTone' => 'bg-cyan/15 text-cyan',
+                'title' => 'Auto-repurpose', 'tag' => '6 formats', 'tagTone' => 'bg-violet/15 text-violet-soft',
                 'body'  => 'One approved master forks into vertical, square, 16:9, thumbnail frames and caption files automatically.',
                 'cta'   => 'See the pipeline', 'href' => route('how-it-works'),
                 'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><path d="M13 7h5a3 3 0 0 1 3 3M11 17H6a3 3 0 0 1-3-3"/></svg>',
@@ -81,7 +81,7 @@ class LandingController extends Controller
             ],
             [
                 'title' => 'We match the right pro',
-                'body'  => 'Our engine ranks verified creators on skill, live availability, on-time record and rating, then locks in the best fit.',
+                'body'  => 'Our engine ranks verified freelancers on skill, live availability, on-time record and rating, then locks in the best fit.',
                 'meta'  => 'Matched in minutes',
                 'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5 19 19M19 5l-2.5 2.5M7.5 16.5 5 19"/></svg>',
             ],
@@ -124,39 +124,39 @@ class LandingController extends Controller
         // Who we are actually built for — colour-coded segments.
         $audiences = [
             [
-                'label' => 'D2C brands', 'tone' => 'violet',
+                'label' => 'D2C brands', 'tone' => 'accent',
                 'body'  => 'Launch creatives, offer reels and product videos shipped the same week you plan them.',
                 'stat'  => '4.2×', 'statLabel' => 'more creatives per month',
                 'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M9 13h6"/></svg>',
             ],
             [
-                'label' => 'Agencies', 'tone' => 'pink',
+                'label' => 'Agencies', 'tone' => 'accent',
                 'body'  => 'Absorb client spikes without hiring. White-label delivery, one invoice, your brand on top.',
                 'stat'  => '0', 'statLabel' => 'new salaries needed',
                 'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6M7 11h.01M12 11h.01M17 11h.01"/></svg>',
             ],
             [
-                'label' => 'Founders & creators', 'tone' => 'amber',
+                'label' => 'Founders & solo teams', 'tone' => 'accent',
                 'body'  => 'You film it, we finish it. Hooks, captions and thumbnails without touching an editor.',
                 'stat'  => '3 h', 'statLabel' => 'from raw file to post',
                 'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>',
             ],
             [
-                'label' => 'Educators & coaches', 'tone' => 'teal',
+                'label' => 'Educators & coaches', 'tone' => 'accent',
                 'body'  => 'Turn one long lesson into a month of shorts, carousels and thumbnails.',
                 'stat'  => '18', 'statLabel' => 'assets from one recording',
                 'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5"/></svg>',
             ],
         ];
 
-        // Colourful browse tiles.
+        // Browse tiles — the whole freelancer catalogue, not just video.
         $categories = [
-            ['name' => 'Short-form reels',  'count' => '420 gigs', 'from' => '₹1,299', 'tone' => 'from-violet/90 to-violet-deep', 'q' => 'Reel'],
-            ['name' => 'Thumbnails',        'count' => '180 gigs', 'from' => '₹999',   'tone' => 'from-pink/90 to-pink',        'q' => 'Thumbnail'],
-            ['name' => 'UGC videos',        'count' => '260 gigs', 'from' => '₹3,999', 'tone' => 'from-amber/90 to-amber',      'q' => 'UGC Video'],
-            ['name' => 'AI video ads',      'count' => '95 gigs',  'from' => '₹6,499', 'tone' => 'from-teal/90 to-cyan',        'q' => 'AI Video'],
-            ['name' => 'Brand & design',    'count' => '140 gigs', 'from' => '₹7,499', 'tone' => 'from-violet/80 to-pink',      'q' => 'Bundle'],
-            ['name' => 'Podcast clips',     'count' => '75 gigs',  'from' => '₹4,499', 'tone' => 'from-cyan/80 to-violet',      'q' => 'Reel'],
+            ['name' => 'Video & editing',  'count' => '420 gigs', 'from' => '₹1,299', 'q' => 'Reel',       'icon' => 'M2 5h14v14H2zM16 11l6-4v10l-6-4'],
+            ['name' => 'Design & brand',   'count' => '310 gigs', 'from' => '₹999',   'q' => 'Thumbnail',  'icon' => 'M12 19l7-7-4-4-7 7v4zM3 21h6M5 3l2 4 4 2-4 2-2 4-2-4-4-2 4-2z'],
+            ['name' => 'Content & copy',   'count' => '190 gigs', 'from' => '₹899',   'q' => 'Writing',    'icon' => 'M4 5h16M4 10h16M4 15h10M4 20h7'],
+            ['name' => 'Web & app dev',    'count' => '165 gigs', 'from' => '₹4,999', 'q' => 'Development','icon' => 'm8 8-4 4 4 4M16 8l4 4-4 4M13 5l-2 14'],
+            ['name' => 'AI & automation',  'count' => '95 gigs',  'from' => '₹6,499', 'q' => 'AI Video',   'icon' => 'M12 3a4 4 0 0 1 4 4v1a4 4 0 0 1 0 8v1a4 4 0 0 1-8 0v-1a4 4 0 0 1 0-8V7a4 4 0 0 1 4-4zM12 3v18'],
+            ['name' => 'Marketing & UGC',  'count' => '260 gigs', 'from' => '₹3,999', 'q' => 'UGC Video',  'icon' => 'M3 11v2a1 1 0 0 0 1 1h3l4 4V6L7 10H4a1 1 0 0 0-1 1zM16 8a5 5 0 0 1 0 8'],
         ];
 
         // Recently delivered strip.
@@ -173,13 +173,13 @@ class LandingController extends Controller
             [
                 'slug' => 'starter', 'name' => 'Starter', 'price' => 1299, 'retainer' => 9999, 'unit' => '/ gig',
                 'tagline' => 'Thumbnails, edits and quick fixes.',
-                'features' => ['1-day delivery', '2 free revisions', 'Verified creator + chat', 'Escrow protection'],
+                'features' => ['1-day delivery', '2 free revisions', 'Verified freelancer + chat', 'Escrow protection'],
                 'cta' => 'Start at ₹1,299', 'featured' => false,
             ],
             [
                 'slug' => 'pro', 'name' => 'Pro', 'price' => 2499, 'retainer' => 24999, 'unit' => '/ gig',
                 'tagline' => 'Retention reels and UGC that convert.',
-                'features' => ['Express lane — from 3 hours', 'Priority AI matching', 'Live production tracking', 'Dedicated creator shortlist', 'Escrow protection'],
+                'features' => ['Express lane — from 3 hours', 'Priority AI matching', 'Live production tracking', 'Dedicated freelancer shortlist', 'Escrow protection'],
                 'cta' => 'Get matched now', 'featured' => true,
             ],
             [
@@ -191,9 +191,9 @@ class LandingController extends Controller
         ];
 
         $feeNotes = [
-            ['title' => '10% platform fee', 'body' => 'Creators keep 90% of every gig. No connects, no bidding credits, no listing fees.'],
-            ['title' => 'Escrow by default', 'body' => 'Funds are held the moment you order and released to the creator only after you approve.'],
-            ['title' => 'Free to post',      'body' => 'Posting briefs, browsing creators and getting matched costs nothing.'],
+            ['title' => '10% platform fee', 'body' => 'Freelancers keep 90% of every gig. No connects, no bidding credits, no listing fees.'],
+            ['title' => 'Escrow by default', 'body' => 'Funds are held the moment you order and released to the freelancer only after you approve.'],
+            ['title' => 'Free to post',      'body' => 'Posting briefs, browsing freelancers and getting matched costs nothing.'],
         ];
 
         $testimonials = [
@@ -203,12 +203,12 @@ class LandingController extends Controller
         ];
 
         $seo = [
-            'title'       => 'Quick GIGS — Hire verified creators in minutes, not weeks',
-            'description' => 'Quick GIGS matches your brief to a verified creator in minutes. Reels, thumbnails, AI ads and design with live tracking, flat pricing from ₹1,299 and escrow-protected payments.',
+            'title'       => 'Quick GIGS — Hire verified freelancers in minutes, not weeks',
+            'description' => 'Quick GIGS matches your brief to a verified freelancer in minutes. Reels, thumbnails, AI ads and design with live tracking, flat pricing from ₹1,299 and escrow-protected payments.',
             'canonical'   => url('/'),
             'image'       => url('/og-home.jpg'),
             'type'        => 'website',
-            'keywords'    => 'quick gigs, gig marketplace india, hire video editor, reel editing, thumbnail design, AI video ads, UGC creators, escrow freelance',
+            'keywords'    => 'quick gigs, gig marketplace india, hire video editor, reel editing, thumbnail design, AI video ads, UGC freelancers, escrow freelance',
         ];
 
         return view('landing', [
@@ -245,12 +245,12 @@ class LandingController extends Controller
         }
 
         return collect([
-            (object) ['question' => 'How is Quick GIGS different from a normal freelance site?', 'answer' => 'You never post a job and wait for proposals. You pick a fixed-price gig or post a brief, and our matching engine assigns a verified creator in minutes. Payment sits in escrow until you approve the delivery.'],
+            (object) ['question' => 'How is Quick GIGS different from a normal freelance site?', 'answer' => 'You never post a job and wait for proposals. You pick a fixed-price gig or post a brief, and our matching engine assigns a verified freelancer in minutes. Payment sits in escrow until you approve the delivery.'],
             (object) ['question' => 'How fast is delivery, really?', 'answer' => 'Express gigs start in minutes and land in about three hours. Standard reels and thumbnails are next-day. Team packs and AI ads take up to two days.'],
             (object) ['question' => 'What if I do not like the work?', 'answer' => 'Every gig includes two free revisions. If the delivery still misses the brief, raise a dispute before you approve and the escrow is refunded.'],
-            (object) ['question' => 'How are creators verified?', 'answer' => 'Every creator submits ID, portfolio and past client references. Our team reviews each profile manually and tracks on-time delivery, rating and response time after that.'],
-            (object) ['question' => 'What does it cost?', 'answer' => 'Gigs start at ₹1,299. The platform fee is a flat 10% — creators keep 90%. Posting briefs and browsing creators is free.'],
-            (object) ['question' => 'How do creators get paid?', 'answer' => 'The moment you approve a delivery, the escrow is released and paid out to the creator’s UPI or bank account, usually within minutes.'],
+            (object) ['question' => 'How are freelancers verified?', 'answer' => 'Every freelancer submits ID, portfolio and past client references. Our team reviews each profile manually and tracks on-time delivery, rating and response time after that.'],
+            (object) ['question' => 'What does it cost?', 'answer' => 'Gigs start at ₹1,299. The platform fee is a flat 10% — freelancers keep 90%. Posting briefs and browsing freelancers is free.'],
+            (object) ['question' => 'How do freelancers get paid?', 'answer' => 'The moment you approve a delivery, the escrow is released and paid out to the freelancer’s UPI or bank account, usually within minutes.'],
         ]);
     }
 
@@ -273,6 +273,8 @@ class LandingController extends Controller
                     'id'     => $s->id,
                     'title'  => $s->title,
                     'price'  => $s->displayPrice(),
+                    'mrp'    => $s->compareAt() ? '₹' . number_format($s->compareAt()) : null,
+                    'off'    => $s->discountPercent(),
                     'time'   => $s->delivery_days . ($s->delivery_days > 1 ? ' days' : ' day'),
                     'img'    => $s->coverUrl(),
                     'badge'  => $s->badge ?: $s->category,
@@ -288,11 +290,11 @@ class LandingController extends Controller
             ['id' => 1, 'title' => 'Talking-head reel with retention cuts', 'price' => '₹2,499', 'time' => '1 day',  'img' => 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=600&q=80', 'badge' => 'Best seller', 'rating' => '4.9', 'sold' => '5.1k sold'],
             ['id' => 2, 'title' => 'High-CTR thumbnail pack (3 variants)',  'price' => '₹1,299', 'time' => '1 day',  'img' => 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&q=80', 'badge' => 'Design',      'rating' => '4.8', 'sold' => '2.4k sold'],
             ['id' => 3, 'title' => 'AI-generated product ad, 30 seconds',   'price' => '₹6,499', 'time' => '2 days', 'img' => 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80', 'badge' => 'AI',          'rating' => '4.9', 'sold' => '420 sold'],
-            ['id' => 4, 'title' => 'UGC unboxing video by a real creator',  'price' => '₹3,999', 'time' => '1 day',  'img' => 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=600&q=80', 'badge' => 'UGC',         'rating' => '4.9', 'sold' => '860 sold'],
+            ['id' => 4, 'title' => 'UGC unboxing video by a real freelancer',  'price' => '₹3,999', 'time' => '1 day',  'img' => 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=600&q=80', 'badge' => 'UGC',         'rating' => '4.9', 'sold' => '860 sold'],
         ];
     }
 
-    /** Verified creators, DB-first with a demo fallback. */
+    /** Verified freelancers, DB-first with a demo fallback. */
     private function creators()
     {
         try {

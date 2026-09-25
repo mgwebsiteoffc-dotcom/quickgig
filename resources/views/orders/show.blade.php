@@ -4,7 +4,7 @@
 @php
   $steps = [
     ['key' => 'placed',   'label' => 'Order placed',        'at' => 5],
-    ['key' => 'matched',  'label' => 'Creator assigned',    'at' => 15],
+    ['key' => 'matched',  'label' => 'Freelancer assigned',    'at' => 15],
     ['key' => 'working',  'label' => 'In production',       'at' => 45],
     ['key' => 'review',   'label' => 'Delivered for review','at' => 100],
     ['key' => 'released', 'label' => 'Approved · escrow released', 'at' => 101],
@@ -32,7 +32,7 @@
       </div>
 
       <span class="rounded-full px-3.5 py-1.5 text-[12px] font-semibold
-        {{ $released ? 'bg-lime/15 text-lime' : ($order->status === 'review' ? 'bg-cyan/15 text-cyan' : 'bg-violet/15 text-violet-soft') }}">
+        {{ $released ? 'bg-lime/15 text-lime' : ($order->status === 'review' ? 'bg-violet/15 text-violet-soft' : 'bg-violet/15 text-violet-soft') }}">
         {{ $released ? 'Completed' : ($order->status === 'review' ? 'Waiting for your approval' : 'In production') }}
       </span>
     </div>
@@ -45,7 +45,7 @@
              x-data="orderPipeline({ progress: {{ $progress }}, status: @js($order->status), released: {{ $released ? 'true' : 'false' }}, payout: {{ $payout }}, creator: @js($order->creator->name ?? 'A verified pro'), uid: @js($order->uid) })">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">
-              <span class="w-1.5 h-1.5 rounded-full transition-colors" :class="released ? 'bg-lime' : 'bg-pink pulse-dot text-pink'"></span>
+              <span class="w-1.5 h-1.5 rounded-full transition-colors" :class="released ? 'bg-lime' : 'bg-violet pulse-dot text-violet'"></span>
               Live pipeline
             </div>
             <div class="text-[12px] font-mono text-mut"><span x-text="progress"></span>% complete</div>
@@ -134,7 +134,7 @@
 
           <form method="POST" action="{{ route('orders.message', $order->uid) }}" class="mt-4 flex gap-2.5">
             @csrf
-            <input name="message" required maxlength="500" class="field flex-1" placeholder="Send a note to the creator…">
+            <input name="message" required maxlength="500" class="field flex-1" placeholder="Send a note to the freelancer…">
             <button class="h-12 px-5 rounded-xl btn-grad font-semibold text-[13.5px] shrink-0">Send</button>
           </form>
         </div>
@@ -147,7 +147,7 @@
           <div class="mt-4 space-y-2.5 text-[13.5px]">
             <div class="flex justify-between"><span class="text-mut">Gig total</span><span class="font-mono">₹{{ number_format($order->total) }}</span></div>
             <div class="flex justify-between"><span class="text-mut">Platform fee</span><span class="font-mono">₹{{ number_format($order->fee) }}</span></div>
-            <div class="flex justify-between"><span class="text-mut">Creator payout</span><span class="font-mono text-lime">₹{{ number_format($payout) }}</span></div>
+            <div class="flex justify-between"><span class="text-mut">Freelancer payout</span><span class="font-mono text-lime">₹{{ number_format($payout) }}</span></div>
             <div class="pt-3 mt-3 border-t border-white/8 flex justify-between items-center">
               <span class="text-mut">Escrow</span>
               <span class="text-[12px] font-semibold rounded-full px-2.5 py-1 {{ $released ? 'bg-lime/15 text-lime' : 'bg-violet/15 text-violet-soft' }}">
@@ -159,7 +159,7 @@
 
         @if($order->creator)
           <div class="glass rounded-3xl p-6">
-            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Your creator</div>
+            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Your freelancer</div>
             <div class="mt-4 flex items-center gap-3">
               <img src="{{ $order->creator->avatarUrl() }}" class="w-12 h-12 rounded-2xl object-cover border border-white/12" alt="">
               <div class="min-w-0">
@@ -192,10 +192,10 @@ document.addEventListener('alpine:init', () => {
     busy: false,
     steps: [
       { label: 'Order placed',        detail: () => 'Brief received and queued for matching.' },
-      { label: 'Creator assigned',    detail: (c) => c.creator + ' accepted this gig.' },
+      { label: 'Freelancer assigned',    detail: (c) => c.creator + ' accepted this gig.' },
       { label: 'In production',       detail: () => 'Cutting, sound, captions and export.' },
       { label: 'Delivered for review',detail: (c) => (c.status === 'review' || c.released) ? 'Files are ready — review and approve.' : 'You will get a preview link here.' },
-      { label: 'Approved · escrow released', detail: (c) => c.released ? '₹' + c.payout.toLocaleString('en-IN') + ' paid out to the creator.' : 'Escrow releases the moment you approve.' },
+      { label: 'Approved · escrow released', detail: (c) => c.released ? '₹' + c.payout.toLocaleString('en-IN') + ' paid out to the freelancer.' : 'Escrow releases the moment you approve.' },
     ],
     get current() {
       if (this.released) return 4;

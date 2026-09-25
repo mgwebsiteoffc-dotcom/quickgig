@@ -4,7 +4,7 @@
 
 {{-- ═══════════════ HERO ═══════════════ --}}
 <section class="pt-14 pb-16 relative overflow-hidden">
-  <div class="absolute inset-0 -z-10 bg-gradient-to-br from-violet/[0.12] via-pink/[0.07] to-transparent"></div>
+  <div class="absolute inset-0 -z-10 bg-gradient-to-br from-violet/[0.08] to-transparent"></div>
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[760px] reveal-l">
       <div class="inline-flex items-center gap-2.5 glass rounded-full pl-2 pr-3.5 py-1.5 text-[12px] font-medium">
@@ -22,7 +22,7 @@
       </p>
 
       <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href="#demo-form" class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2 shadow-xl shadow-pink/20">
+        <a href="#demo-form" class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2 shadow-xl shadow-violet/20">
           Book a 20-minute demo
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
@@ -42,9 +42,9 @@
         <div class="flex items-center justify-between px-1 pb-3">
           <div class="flex items-center gap-2.5">
             <span class="flex gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-pink/70"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-amber/70"></span>
-              <span class="w-2.5 h-2.5 rounded-full bg-lime/70"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-white/25"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-white/25"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-white/25"></span>
             </span>
             <span class="text-[12.5px] text-mut">Avante Studio · task board</span>
           </div>
@@ -104,7 +104,7 @@
         <div class="mt-5 space-y-2.5">
           <template x-for="role in roles" :key="role.name">
             <label class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 px-4 py-3 cursor-pointer transition"
-                   :class="role.on ? 'bg-pink/6 border-pink/30' : 'hover:border-white/25'">
+                   :class="role.on ? 'bg-pink/6 border-violet/30' : 'hover:border-white/25'">
               <span class="flex items-center gap-3">
                 <input type="checkbox" x-model="role.on" class="w-4 h-4 rounded accent-violet">
                 <span class="text-[13.5px] font-medium text-deep" x-text="role.name"></span>
@@ -135,7 +135,7 @@
         <ol class="mt-5 space-y-3">
           @foreach([
             ['Queue the task', 'Anyone on your team, 30 seconds, from the board.'],
-            ['We assign the specialist', 'Scored match from the verified pool, within minutes.'],
+            ['We assign the specialist', 'Scored match from the verified talent pool, within minutes.'],
             ['Approve the delivery', 'QA gate runs first. Escrow releases only when you say so.'],
           ] as $i => [$t, $b])
             <li class="flex gap-3.5">
@@ -158,7 +158,7 @@
 
         <div class="mt-5 rounded-2xl bg-gradient-to-br from-lime/15 to-transparent border border-lime/25 p-4">
           <div class="text-[12.5px] text-mut">You keep</div>
-          <div class="font-display text-[26px] font-semibold text-[#3B7D12]" x-text="'₹' + saved.toLocaleString('en-IN') + ' every month'"></div>
+          <div class="font-display text-[26px] font-semibold text-[#15803D]" x-text="'₹' + saved.toLocaleString('en-IN') + ' every month'"></div>
         </div>
       </div>
     </div>
@@ -169,7 +169,7 @@
 <section class="py-24">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px] reveal">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-amber-soft">One platform</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">One platform</div>
       <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1]">Every creative task your team requests.</h2>
       <p class="mt-4 text-[15px] leading-7 text-mut">Pick a category when you create the task — the engine matches a specialist who does exactly that.</p>
     </div>
@@ -196,14 +196,14 @@
     <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       @foreach([
         ['Shared task board', 'Five columns from queued to delivered. Anyone with a seat can add work; priorities and due dates are visible to everyone.'],
-        ['Auto-assignment', 'Every new task is scored against the verified pool and assigned in minutes — with the reasons shown.'],
+        ['Auto-assignment', 'Every new task is scored against the verified talent pool and assigned in minutes — with the reasons shown.'],
         ['One-click escrow orders', 'Turn any board task into a funded order. Money is held until your approver signs off.'],
         ['Seats and approvals', 'Requesters raise tasks, one approver releases payment. Every action is attributed.'],
         ['Monthly credits', 'Your plan includes a task allowance. Overflow is charged at plain per-gig pricing — never a surprise retainer.'],
         ['One invoice', 'GST-compliant, consolidated monthly, with a per-task breakdown your finance team will accept.'],
       ] as $i => [$t, $b])
         <div class="reveal glass rounded-3xl p-6 card-hover" data-delay="{{ $i * 70 }}">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-violet to-pink grid place-items-center text-white shadow-lg">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-violet to-violet-deep grid place-items-center text-white shadow-lg">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
           </div>
           <div class="mt-4 text-[16px] font-semibold text-deep">{{ $t }}</div>
@@ -218,7 +218,7 @@
 <section class="py-24">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="text-center max-w-[620px] mx-auto reveal">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-teal">Business plans</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Business plans</div>
       <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1]">Pick an allowance. Overflow stays at list price.</h2>
       <p class="mt-4 text-[15px] leading-7 text-mut">Each plan includes monthly task credits, team seats and a delivery SLA. Cancel or switch any month.</p>
     </div>
@@ -242,7 +242,7 @@
               $t['credits'] . ' delivered tasks included',
               $t['seats'] . ' team seats with roles',
               $key === 'starter' ? 'Next-day SLA' : ($key === 'growth' ? 'Same-day SLA on priority tasks' : '3-hour express SLA'),
-              $key === 'scale' ? 'Dedicated creator pod + manager' : 'Auto-assignment from the verified pool',
+              $key === 'scale' ? 'Dedicated expert pod + manager' : 'Auto-assignment from the verified talent pool',
               'Escrow, QA gate and consolidated invoice',
             ] as $f)
               <li class="flex gap-2.5 text-[13.5px] leading-5">
@@ -252,7 +252,7 @@
             @endforeach
           </ul>
 
-          <a href="#demo-form" class="mt-7 h-12 rounded-xl grid place-items-center font-semibold text-[14px] transition {{ $featured ? 'btn-grad shadow-lg shadow-pink/25' : 'glass btn-ghost hover:border-white/30' }}">
+          <a href="#demo-form" class="mt-7 h-12 rounded-xl grid place-items-center font-semibold text-[14px] transition {{ $featured ? 'btn-grad shadow-lg shadow-violet/20' : 'glass btn-ghost hover:border-white/30' }}">
             Talk to us about {{ $t['label'] }}
           </a>
         </div>
@@ -260,7 +260,7 @@
     </div>
 
     <div class="mt-6 text-center text-[13px] text-mut">
-      Not ready to commit? <a href="{{ route('marketplace') }}" class="text-pink-soft hover:text-white transition">Order single gigs from ₹1,299</a> — the board works on pay-as-you-go too.
+      Not ready to commit? <a href="{{ route('marketplace') }}" class="text-violet-soft hover:text-white transition">Order single gigs from ₹1,299</a> — the board works on pay-as-you-go too.
     </div>
   </div>
 </section>
@@ -274,8 +274,8 @@
 
       <div class="mt-8 space-y-3" x-data="{ open: 0 }">
         @foreach([
-          ['Who actually does the work?', 'Verified Quick GIGS creators — ID checked, portfolio reviewed and scored on on-time delivery. You see who is assigned, their rating and their record, on every task.'],
-          ['Can we talk to the specialist directly?', 'Yes. Every task has a thread. For plans with a pod, the same creators stay on your account so they learn your brand.'],
+          ['Who actually does the work?', 'Verified Quick GIGS freelancers — ID checked, portfolio reviewed and scored on on-time delivery. You see who is assigned, their rating and their record, on every task.'],
+          ['Can we talk to the specialist directly?', 'Yes. Every task has a thread. For plans with a pod, the same freelancers stay on your account so they learn your brand.'],
           ['What is the delivery timeline?', 'Express tasks land in about three hours, standard next-day, larger packs in two days. The SLA is attached to your plan and credited back if missed.'],
           ['Can we rebook the same creator?', 'Yes — request them by name on a task, or lock a pod on the Scale plan.'],
           ['How many revisions are included?', 'Two free rounds on every task, translated into timestamped notes so the re-cut lands right.'],
@@ -339,7 +339,7 @@
           <textarea id="b_message" name="message" rows="3" class="field" placeholder="Weekly reels for two brands, plus thumbnails and a monthly AI ad.">{{ old('message') }}</textarea>
         </div>
 
-        <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-pink/20">Book the demo</button>
+        <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-violet/20">Book the demo</button>
         <div class="text-center text-[11.5px] text-mut">One reply from a human, within a working day.</div>
       </form>
     </div>
@@ -367,11 +367,11 @@ document.addEventListener('alpine:init', () => {
     columns: [
       { key: 'queued',     label: 'Queued',        ring: 'border-white/12',  text: 'text-mut' },
       { key: 'assigned',   label: 'Assigned',      ring: 'border-violet/30', text: 'text-violet-soft' },
-      { key: 'production', label: 'In production', ring: 'border-pink/30',   text: 'text-pink-soft' },
+      { key: 'production', label: 'In production', ring: 'border-violet/30',   text: 'text-violet-soft' },
       { key: 'done',       label: 'Delivered',     ring: 'border-lime/30',   text: 'text-lime' },
     ],
     cards: [
-      { id: 1, uid: 'T-7K2A', col: 'queued',     title: 'Diwali campaign — hero reel',   who: 'Matching…',    img: 'https://i.pravatar.cc/60?img=5',  due: '2 Oct', priority: 'Urgent', tone: 'bg-pink/20 text-pink-soft' },
+      { id: 1, uid: 'T-7K2A', col: 'queued',     title: 'Diwali campaign — hero reel',   who: 'Matching…',    img: 'https://i.pravatar.cc/60?img=5',  due: '2 Oct', priority: 'Urgent', tone: 'bg-pink/20 text-violet-soft' },
       { id: 2, uid: 'T-M31C', col: 'queued',     title: 'Amazon A+ banner set',          who: 'Matching…',    img: 'https://i.pravatar.cc/60?img=9',  due: '4 Oct', priority: 'Normal', tone: 'bg-white/10 text-mut' },
       { id: 3, uid: 'T-B84P', col: 'assigned',   title: 'UGC testimonial — protein bar', who: 'Riya M.',      img: 'https://i.pravatar.cc/60?img=32', due: '1 Oct', priority: 'High',   tone: 'bg-amber/20 text-amber-soft' },
       { id: 4, uid: 'T-Q19X', col: 'production', title: 'Podcast — 5 vertical shorts',   who: 'Rahul V.',     img: 'https://i.pravatar.cc/60?img=12', due: '3 Oct', priority: 'High',   tone: 'bg-amber/20 text-amber-soft' },

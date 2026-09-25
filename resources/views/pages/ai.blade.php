@@ -22,7 +22,7 @@
 <section class="pt-16 pb-14">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[720px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">The engine</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">The engine</div>
       <h1 class="mt-4 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">
         Automation you can <span class="grad-text">audit</span>.
       </h1>
@@ -56,7 +56,7 @@
         <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Module 01</div>
         <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Explainable matching</h2>
         <p class="mt-4 text-[15px] leading-7 text-mut">
-          These are real creators from the live marketplace, scored right now against a sample brief
+          These are real freelancers from the live marketplace, scored right now against a sample brief
           (short-form reel, express lane, ₹3,000 budget). Move the priorities and watch the ranking change —
           this is the same maths the platform runs when it assigns your gig.
         </p>
@@ -86,7 +86,7 @@
         </div>
       </div>
 
-      {{-- ranked creators --}}
+      {{-- ranked freelancers --}}
       <div class="space-y-4">
         <template x-for="(m, i) in ranked" :key="m.handle">
           <div class="glass rounded-3xl p-5 sm:p-6" :class="i === 0 ? 'ring-glow' : ''">
@@ -126,7 +126,7 @@
         </template>
 
         <div class="text-[12.5px] text-mut">
-          Creators see the same breakdown on their side — which is how they know what to fix to win more gigs.
+          Freelancers see the same breakdown on their side — which is how they know what to fix to win more gigs.
         </div>
       </div>
     </div>
@@ -138,11 +138,11 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8" x-data="qaGate()">
     <div class="grid lg:grid-cols-[0.95fr_1.05fr] gap-10 items-start">
       <div>
-        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Module 02</div>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Module 02</div>
         <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">The quality gate</h2>
         <p class="mt-4 text-[15px] leading-7 text-mut">
           A delivery cannot reach your inbox until it passes six automated checks derived from your brief.
-          If one fails, it bounces straight back to the creator with the exact fix — you never see the bad cut,
+          If one fails, it bounces straight back to the freelancer with the exact fix — you never see the bad cut,
           and you never have to write "the captions are missing" again.
         </p>
 
@@ -189,9 +189,9 @@
         </div>
 
         <div x-show="done && !passed" x-cloak x-transition class="mt-5 rounded-2xl border border-amber-400/30 bg-amber-400/8 p-5">
-          <div class="text-[13px] font-semibold text-amber-200">Bounced to the creator automatically</div>
+          <div class="text-[13px] font-semibold text-amber-200">Bounced to the freelancer automatically</div>
           <p class="mt-1.5 text-[13px] leading-6 text-white/75">
-            Caption coverage came back at 82%. The creator got the failing timestamps and a 40-minute window to
+            Caption coverage came back at 82%. The freelancer got the failing timestamps and a 40-minute window to
             re-upload before the SLA clock is affected. You were never interrupted.
           </p>
         </div>
@@ -241,14 +241,14 @@
         <ol class="mt-5 space-y-3">
           <template x-for="(n, i) in notes" :key="i">
             <li class="flex gap-3">
-              <span class="font-mono text-[11.5px] text-cyan shrink-0 mt-0.5" x-text="n.t"></span>
+              <span class="font-mono text-[11.5px] text-violet-soft shrink-0 mt-0.5" x-text="n.t"></span>
               <span class="text-[13.5px] leading-6 text-white/85" x-text="n.do"></span>
             </li>
           </template>
         </ol>
 
         <div x-show="notes.length" x-cloak class="mt-6 pt-5 border-t border-white/8 flex items-center justify-between gap-4">
-          <div class="text-[12.5px] text-mut">Sent to the creator with the delivery timeline attached.</div>
+          <div class="text-[12.5px] text-mut">Sent to the freelancer with the delivery timeline attached.</div>
           <span class="text-[11.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1 shrink-0">Round 1 of 2 free</span>
         </div>
       </div>
@@ -261,15 +261,15 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="grid lg:grid-cols-[0.8fr_1.2fr] gap-10">
       <div>
-        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Straight answers</div>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Straight answers</div>
         <h2 class="mt-3 font-display text-[28px] sm:text-[34px] font-semibold leading-[1.1]">What the engine is — and is not.</h2>
       </div>
       <div class="space-y-4">
         @foreach([
           ['Does a model write my video?', 'No. Humans make the work. The engine writes the brief, ranks the humans, checks the output against the spec and translates your feedback. AI video gigs are a category you can order — not something we secretly substitute.'],
-          ['Is my brief used to train anything?', 'No. Briefs stay attached to your workspace and are shared only with the creator assigned to the gig.'],
-          ['Can I override the match?', 'Always. The score is a recommendation — you can pick any available creator from the marketplace, or re-run matching with different priorities.'],
-          ['What happens when the gate is wrong?', 'You can accept a bounced delivery manually, and creators can dispute a failed check. Every override is logged on the order.'],
+          ['Is my brief used to train anything?', 'No. Briefs stay attached to your workspace and are shared only with the freelancer assigned to the gig.'],
+          ['Can I override the match?', 'Always. The score is a recommendation — you can pick any available freelancer from the marketplace, or re-run matching with different priorities.'],
+          ['What happens when the gate is wrong?', 'You can accept a bounced delivery manually, and freelancers can dispute a failed check. Every override is logged on the order.'],
         ] as [$q, $a])
           <div class="glass rounded-3xl p-6">
             <div class="text-[15px] font-semibold">{{ $q }}</div>
@@ -285,7 +285,7 @@
   'eyebrow'   => 'See it on your own brief',
   'tone'      => 'cyan',
   'title'     => 'Run the engine on something you actually need this week.',
-  'body'      => 'The brief builder is free, needs no account, and ends with three scored creators who can start today.',
+  'body'      => 'The brief builder is free, needs no account, and ends with three scored freelancers who can start today.',
   'primary'   => ['Open the brief builder', route('brief-builder')],
   'secondary' => ['Browse the marketplace', route('marketplace')],
 ])
@@ -297,15 +297,15 @@
 document.addEventListener('alpine:init', () => {
 
   /* 01 — live re-ranking with adjustable weights */
-  Alpine.data('matchLab', (creators, baseWeights) => ({
-    creators,
+  Alpine.data('matchLab', (freelancers, baseWeights) => ({
+    freelancers,
     base: { ...baseWeights },
     weights: { ...baseWeights },
     get totalWeight() { return Object.values(this.weights).reduce((a, b) => a + b, 0); },
     get ranked() {
       const keys = Object.keys(this.weights);
       const total = Math.max(1, this.totalWeight);
-      return this.creators
+      return this.freelancers
         .map(c => {
           let s = 0;
           c.factors.forEach((f, i) => { s += (this.weights[keys[i]] || 0) * f.pct; });
@@ -369,7 +369,7 @@ document.addEventListener('alpine:init', () => {
       const hits = this.rules.filter(r => r.match.test(t)).map(r => ({ t: r.t, do: r.do }));
       this.notes = hits.length ? hits : [{
         t: 'General',
-        do: 'Noted verbatim for the creator, with a request to confirm the change in writing before the re-cut starts.',
+        do: 'Noted verbatim for the freelancer, with a request to confirm the change in writing before the re-cut starts.',
       }];
     },
   }));

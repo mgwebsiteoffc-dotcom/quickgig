@@ -17,14 +17,14 @@ class PageController extends Controller
             [
                 'key' => 'brief', 'stage' => 'Stage 01', 'title' => 'Brief engine',
                 'time' => '40 seconds',
-                'body' => 'One line in, a production-ready brief out: objective, three hook options, a timed beat sheet, deliverables and the technical spec. Vague briefs are the number one cause of revisions — this removes them before a creator is even matched.',
+                'body' => 'One line in, a production-ready brief out: objective, three hook options, a timed beat sheet, deliverables and the technical spec. Vague briefs are the number one cause of revisions — this removes them before a freelancer is even matched.',
                 'proof'=> 'Try it free, no signup',
                 'link' => 'brief-builder',
             ],
             [
                 'key' => 'match', 'stage' => 'Stage 02', 'title' => 'Explainable matching',
                 'time' => '4 minutes',
-                'body' => 'Every available creator is scored on skill fit, live availability, on-time record, rating and budget fit. You see the score and the reasons behind it — not a black box that says "matched".',
+                'body' => 'Every available freelancer is scored on skill fit, live availability, on-time record, rating and budget fit. You see the score and the reasons behind it — not a black box that says "matched".',
                 'proof'=> 'Score breakdown on every match',
                 'link' => 'ai',
             ],
@@ -36,16 +36,16 @@ class PageController extends Controller
                 'link' => 'pricing',
             ],
             [
-                'key' => 'copilot', 'stage' => 'Stage 04', 'title' => 'Creator copilot',
+                'key' => 'copilot', 'stage' => 'Stage 04', 'title' => 'Freelancer copilot',
                 'time' => 'during production',
-                'body' => 'The assigned creator gets the beat sheet, shot list and reference frames generated from your brief, plus live spec checks while they work. Less guessing means fewer rounds.',
+                'body' => 'The assigned freelancer gets the beat sheet, shot list and reference frames generated from your brief, plus live spec checks while they work. Less guessing means fewer rounds.',
                 'proof'=> 'Shipped with every gig',
                 'link' => 'for-creators',
             ],
             [
                 'key' => 'qa', 'stage' => 'Stage 05', 'title' => 'Automated QA gate',
                 'time' => '90 seconds',
-                'body' => 'Before anything reaches you, the delivery is checked against the brief: hook timing, caption coverage, loudness, aspect ratio, resolution and licensing. Failed checks bounce back to the creator automatically.',
+                'body' => 'Before anything reaches you, the delivery is checked against the brief: hook timing, caption coverage, loudness, aspect ratio, resolution and licensing. Failed checks bounce back to the freelancer automatically.',
                 'proof'=> '6 checks per delivery',
                 'link' => 'ai',
             ],
@@ -72,13 +72,13 @@ class PageController extends Controller
         return [
             'columns' => ['Quick GIGS', 'Quick-commerce gig apps', 'Managed agencies', 'Bidding marketplaces'],
             'rows' => [
-                ['Time to a working creator',   'Matched in ~4 min',              '"Seconds" to checkout, then a queue', '30 min call, then onboarding', '2–5 days of proposals'],
+                ['Time to a working freelancer',   'Matched in ~4 min',              '"Seconds" to checkout, then a queue', '30 min call, then onboarding', '2–5 days of proposals'],
                 ['Brief quality',               'Generated for you, free',         'You write it',                        'Discovery call required',      'You write it, 40 times'],
-                ['Why this creator?',           'Score + reasons shown',           'Hidden',                              'Account manager picks',        'You guess from portfolios'],
+                ['Why this freelancer?',           'Score + reasons shown',           'Hidden',                              'Account manager picks',        'You guess from portfolios'],
                 ['Money up front',              'Escrow, refundable',              'Prepaid checkout',                    'Commitment fee / retainer',    'Escrow + connects fees'],
                 ['Pre-delivery QA',             '6 automated checks',              'None',                                'Manual, variable',             'None'],
                 ['Revisions',                   '2 free, translated to notes',     'Paid add-on',                         'Scoped in contract',           'Negotiated per gig'],
-                ['Creator take-home',           '90%',                             '~70–80%',                             'Undisclosed',                  '~80% after fees'],
+                ['Freelancer take-home',           '90%',                             '~70–80%',                             'Undisclosed',                  '~80% after fees'],
                 ['Repurposing',                 'Automatic on approval',           'New order',                           'New line item',                'New gig'],
             ],
         ];
@@ -90,7 +90,7 @@ class PageController extends Controller
             'pipeline' => self::pipeline(),
             'seo' => [
                 'title'       => 'How Quick GIGS works — brief, match, escrow, QA, delivery',
-                'description' => 'The seven-stage Quick GIGS pipeline: brief engine, explainable matching, escrow, creator copilot, automated QA gate, revision translator and auto-repurposing.',
+                'description' => 'The seven-stage Quick GIGS pipeline: brief engine, explainable matching, escrow, freelancer copilot, automated QA gate, revision translator and auto-repurposing.',
                 'canonical'   => route('how-it-works'),
             ],
         ]);
@@ -124,7 +124,7 @@ class PageController extends Controller
             'comparison' => self::comparison(),
             'seo' => [
                 'title'       => 'Pricing — flat gig prices, 10% platform fee, escrow included | Quick GIGS',
-                'description' => 'Transparent Quick GIGS pricing: gigs from ₹1,299, a flat 10% platform fee, creators keep 90%, escrow on every order and no subscription or commitment fee.',
+                'description' => 'Transparent Quick GIGS pricing: gigs from ₹1,299, a flat 10% platform fee, freelancers keep 90%, escrow on every order and no subscription or commitment fee.',
                 'canonical'   => route('pricing'),
             ],
         ]);
@@ -150,13 +150,13 @@ class PageController extends Controller
             'tiers' => \App\Models\Company::TIERS,
             'categories' => [
                 ['Video editing',   'Social cuts, ads, YouTube',        'from-violet to-violet-deep'],
-                ['Graphic design',  'Posts, banners, packaging',        'from-pink to-pink-soft'],
-                ['AI content',      'Product images, AI video ads',     'from-teal to-cyan'],
-                ['Motion graphics', 'Explainers, animated logos',       'from-amber to-pink'],
-                ['Presentations',   'Pitch decks, sales one-pagers',    'from-cyan to-violet'],
-                ['Branding',        'Logos, identity, guidelines',      'from-violet to-pink'],
-                ['UI design',       'Apps, SaaS screens, landing pages','from-lime to-teal'],
-                ['UGC & influencer','Creators on camera, testimonials', 'from-pink to-amber'],
+                ['Graphic design',  'Posts, banners, packaging',        'from-violet to-violet-deep'],
+                ['AI content',      'Product images, AI video ads',     'from-violet to-violet-deep'],
+                ['Motion graphics', 'Explainers, animated logos',       'from-violet to-violet-deep'],
+                ['Presentations',   'Pitch decks, sales one-pagers',    'from-violet to-violet-deep'],
+                ['Branding',        'Logos, identity, guidelines',      'from-violet to-violet-deep'],
+                ['UI design',       'Apps, SaaS screens, landing pages','from-violet to-violet-deep'],
+                ['UGC & influencer','Freelancers on camera, testimonials', 'from-violet to-violet-deep'],
             ],
             'seo' => [
                 'title'       => 'Quick GIGS for Business — your creative team on a subscription',
@@ -172,7 +172,7 @@ class PageController extends Controller
             'comparison' => self::comparison(),
             'seo' => [
                 'title'       => 'Quick GIGS vs gig apps, agencies and bidding marketplaces',
-                'description' => 'An honest comparison: matching speed, brief quality, transparency, escrow terms, QA, revisions and creator take-home across Quick GIGS, quick-commerce gig apps, managed agencies and bidding marketplaces.',
+                'description' => 'An honest comparison: matching speed, brief quality, transparency, escrow terms, QA, revisions and freelancer take-home across Quick GIGS, quick-commerce gig apps, managed agencies and bidding marketplaces.',
                 'canonical'   => route('compare'),
             ],
         ]);
@@ -183,7 +183,7 @@ class PageController extends Controller
         return view('pages.enterprise', [
             'seo' => [
                 'title'       => 'Quick GIGS for teams — content pods, SLAs and consolidated billing',
-                'description' => 'Run always-on content with dedicated creator pods, brand-locked briefs, SLA-backed turnaround, seat-based approvals and a single monthly invoice.',
+                'description' => 'Run always-on content with dedicated expert pods, brand-locked briefs, SLA-backed turnaround, seat-based approvals and a single monthly invoice.',
                 'canonical'   => route('enterprise'),
             ],
         ]);
@@ -209,7 +209,7 @@ class PageController extends Controller
         return view('pages.contact', [
             'seo' => [
                 'title'       => 'Contact Quick GIGS',
-                'description' => 'Talk to the Quick GIGS team about gigs, creator verification, enterprise pods or partnerships.',
+                'description' => 'Talk to the Quick GIGS team about gigs, freelancer verification, enterprise pods or partnerships.',
                 'canonical'   => route('contact'),
             ],
         ]);

@@ -30,14 +30,14 @@
 
           <div class="p-6 sm:p-7">
             <div class="flex flex-wrap items-center gap-5 pb-6 border-b border-white/8">
-              <div class="flex items-center gap-2 text-[13.5px]"><span class="text-cyan">★</span> {{ number_format((float) $gig->rating, 1) }} <span class="text-mut">rating</span></div>
+              <div class="flex items-center gap-2 text-[13.5px]"><span class="text-violet-soft">★</span> {{ number_format((float) $gig->rating, 1) }} <span class="text-mut">rating</span></div>
               <div class="text-[13.5px] text-mut">{{ $gig->sold_count }} gigs delivered</div>
               <div class="text-[13.5px] text-mut">{{ $gig->revision_count ?? 2 }} free revisions</div>
             </div>
 
             <div class="mt-6 prose-invert">
               <h2 class="font-display text-[18px] font-semibold">What you get</h2>
-              <p class="mt-3 text-[14.5px] leading-7 text-mut whitespace-pre-line">{{ $gig->description ?: 'A complete, ready-to-publish deliverable produced by a verified Quick GIGS creator. Includes source-quality export, one round of notes and fast turnaround.' }}</p>
+              <p class="mt-3 text-[14.5px] leading-7 text-mut whitespace-pre-line">{{ $gig->description ?: 'A complete, ready-to-publish deliverable produced by a verified Quick GIGS freelancer. Includes source-quality export, one round of notes and fast turnaround.' }}</p>
 
               @php $deliverables = is_array($gig->deliverables) ? $gig->deliverables : []; @endphp
               @if(count($deliverables))
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        {{-- creator --}}
+        {{-- freelancer --}}
         @if($gig->creator)
           <div class="mt-5 glass rounded-3xl p-6">
             <div class="flex items-start gap-4">
@@ -63,14 +63,14 @@
                 <div class="flex items-center gap-2">
                   <a href="{{ route('creator.public', $gig->creator->id) }}" class="font-display text-[17px] font-semibold hover:text-violet-soft transition">{{ $gig->creator->name }}</a>
                   @if($gig->creator->is_verified)
-                    <span class="text-[10.5px] font-semibold rounded-full bg-cyan/15 text-cyan px-2 py-0.5">Verified</span>
+                    <span class="text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2 py-0.5">Verified</span>
                   @endif
                   @if($gig->creator->is_available)
                     <span class="text-[10.5px] font-semibold rounded-full bg-lime/15 text-lime px-2 py-0.5">Available now</span>
                   @endif
                 </div>
                 <div class="text-[12.5px] text-mut mt-0.5">{{ $gig->creator->handle }} · {{ $gig->creator->headline }}</div>
-                <p class="mt-3 text-[13.5px] leading-6 text-mut">{{ Str::limit($gig->creator->bio ?: 'Verified Quick GIGS creator.', 220) }}</p>
+                <p class="mt-3 text-[13.5px] leading-6 text-mut">{{ Str::limit($gig->creator->bio ?: 'Verified Quick GIGS freelancer.', 220) }}</p>
 
                 <div class="mt-4 flex flex-wrap gap-2">
                   @foreach((array) ($gig->creator->skills ?? []) as $skill)
@@ -101,8 +101,18 @@
         <div class="glass-strong rounded-3xl p-6 ring-glow">
           <div class="flex items-baseline justify-between">
             <span class="text-[12.5px] text-mut">Total</span>
-            <span class="font-display text-[32px] font-semibold" x-text="'₹' + total.toLocaleString('en-IN')"></span>
+            <span class="flex items-baseline gap-2">
+              @if($gig->compareAt())
+                <span class="text-[13px] line-through price-strike text-mut">₹{{ number_format($gig->compareAt()) }}</span>
+              @endif
+              <span class="font-display text-[32px] font-semibold" x-text="'₹' + total.toLocaleString('en-IN')"></span>
+            </span>
           </div>
+          @if($gig->discountPercent())
+            <div class="mt-1.5 text-right">
+              <span class="text-[11px] font-semibold px-2 py-0.5 rounded badge-off">{{ $gig->discountPercent() }}% off list price</span>
+            </div>
+          @endif
 
           <div class="mt-5 text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Delivery speed</div>
           <div class="mt-3 space-y-2">
@@ -121,7 +131,7 @@
           <div class="mt-5 rounded-2xl border border-white/10 bg-black/25 p-4 space-y-2 text-[12.5px]">
             <div class="flex justify-between"><span class="text-mut">Gig price</span><span class="font-mono" x-text="'₹' + total.toLocaleString('en-IN')"></span></div>
             <div class="flex justify-between"><span class="text-mut">Platform fee (10%)</span><span class="font-mono" x-text="'₹' + fee.toLocaleString('en-IN')"></span></div>
-            <div class="flex justify-between"><span class="text-mut">Creator receives</span><span class="font-mono text-lime" x-text="'₹' + payout.toLocaleString('en-IN')"></span></div>
+            <div class="flex justify-between"><span class="text-mut">Freelancer receives</span><span class="font-mono text-lime" x-text="'₹' + payout.toLocaleString('en-IN')"></span></div>
             <div class="pt-2 mt-2 border-t border-white/8 flex justify-between"><span class="text-mut">Held in escrow until you approve</span><span class="font-mono">✓</span></div>
           </div>
 
@@ -134,7 +144,7 @@
               <div class="flex items-center justify-between">
                 <label class="label" for="brief">Your brief</label>
                 @if(session('brief.draft'))
-                  <span class="label text-cyan">loaded from brief builder</span>
+                  <span class="label text-violet-soft">loaded from brief builder</span>
                 @else
                   <a href="{{ route('brief-builder') }}" class="label text-violet-soft hover:text-white transition">generate one free</a>
                 @endif
@@ -158,7 +168,7 @@
         <div class="mt-4 glass rounded-3xl p-5">
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Included with every gig</div>
           <ul class="mt-3.5 space-y-2.5">
-            @foreach(['Escrow protection', '2 free revisions', 'Live production tracking', 'Chat with the creator'] as $item)
+            @foreach(['Escrow protection', '2 free revisions', 'Live production tracking', 'Chat with the freelancer'] as $item)
               <li class="flex gap-2.5 text-[13px] text-mut">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2.6" class="shrink-0 mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
                 {{ $item }}

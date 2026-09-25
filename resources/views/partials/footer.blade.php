@@ -32,7 +32,7 @@
         'For you' => [
           ['For business', route('for-business')],
           ['Hire talent', route('register').'?type=business'],
-          ['Work as a pro', route('for-creators')],
+          ['Work as a freelancer', route('for-creators')],
           ['For teams', route('enterprise')],
           ['Pricing', route('pricing')],
           ['Compare', route('compare')],

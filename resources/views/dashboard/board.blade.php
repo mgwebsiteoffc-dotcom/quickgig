@@ -4,15 +4,15 @@
   $tone = [
     'queued'     => ['dot' => 'bg-white/35',  'ring' => 'border-white/12',  'text' => 'text-mut'],
     'assigned'   => ['dot' => 'bg-violet',    'ring' => 'border-violet/35', 'text' => 'text-violet-soft'],
-    'production' => ['dot' => 'bg-pink',      'ring' => 'border-pink/35',   'text' => 'text-pink-soft'],
+    'production' => ['dot' => 'bg-pink',      'ring' => 'border-pink/35',   'text' => 'text-violet-soft'],
     'review'     => ['dot' => 'bg-amber',     'ring' => 'border-amber/35',  'text' => 'text-amber-soft'],
     'done'       => ['dot' => 'bg-lime',      'ring' => 'border-lime/35',   'text' => 'text-lime'],
   ];
   $priorityTone = [
-    'urgent' => 'bg-pink/18 text-pink-soft',
+    'urgent' => 'bg-pink/18 text-violet-soft',
     'high'   => 'bg-amber/18 text-amber-soft',
     'normal' => 'bg-white/8 text-mut',
-    'low'    => 'bg-teal/15 text-teal',
+    'low'    => 'bg-violet/15 text-violet-soft',
   ];
 @endphp
 
@@ -54,10 +54,10 @@
     {{-- stats --}}
     <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
       @foreach([
-        ['Open tasks', $counts['open'], 'in the queue or in progress', 'from-violet/18'],
-        ['Overdue', $counts['overdue'], 'past the requested date', 'from-pink/18'],
-        ['Delivered', $counts['done'], 'all time', 'from-lime/18'],
-        ['Credits left', $company->creditsLeft(), 'renews ' . ($company->renews_on?->format('d M') ?? '—'), 'from-amber/18'],
+        ['Open tasks', $counts['open'], 'in the queue or in progress', 'from-violet/14'],
+        ['Overdue', $counts['overdue'], 'past the requested date', 'from-violet/10'],
+        ['Delivered', $counts['done'], 'all time', 'from-lime/14'],
+        ['Credits left', $company->creditsLeft(), 'renews ' . ($company->renews_on?->format('d M') ?? '—'), 'from-amber/12'],
       ] as [$label, $value, $hint, $grad])
         <div class="glass rounded-2xl p-4 bg-gradient-to-br {{ $grad }} to-transparent">
           <div class="text-[10.5px] font-semibold tracking-[.12em] uppercase text-white/45">{{ $label }}</div>
@@ -153,7 +153,7 @@
                 <div class="mt-3 flex items-center gap-2.5 text-[11px] text-mut">
                   <span class="rounded-md bg-white/6 px-1.5 py-0.5">{{ $task->category }}</span>
                   @if($task->due_on)
-                    <span class="inline-flex items-center gap-1 {{ $task->isOverdue() ? 'text-pink-soft' : '' }}">
+                    <span class="inline-flex items-center gap-1 {{ $task->isOverdue() ? 'text-violet-soft' : '' }}">
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
                       {{ $task->due_on->format('d M') }}
                     </span>

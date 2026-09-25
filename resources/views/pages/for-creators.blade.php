@@ -5,7 +5,7 @@
 <section class="pt-16 pb-12">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
     <div>
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">For creators</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">For freelancers</div>
       <h1 class="mt-4 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">
         Stop bidding.<br><span class="grad-text">Start delivering.</span>
       </h1>
@@ -16,7 +16,7 @@
 
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="{{ route('register') }}?type=creator" class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2 shadow-xl shadow-violet/25">
-          Apply as a creator
+          Apply as a freelancer
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <a href="#earnings" class="h-12 px-6 rounded-xl glass font-medium text-[14.5px] inline-flex items-center hover:border-white/30 transition">See what you would earn</a>
@@ -34,7 +34,7 @@
 
     {{-- incoming gig card --}}
     <div class="relative">
-      <div class="absolute -inset-6 bg-cyan/12 blur-3xl rounded-full -z-10"></div>
+      <div class="absolute -inset-6 bg-violet/12 blur-3xl rounded-full -z-10"></div>
       <div class="glass-strong rounded-3xl p-6 ring-glow">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-white/50">
@@ -136,14 +136,14 @@
 <section class="band-lav py-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">How work reaches you</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">How work reaches you</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Four steps, no sales work.</h2>
     </div>
 
     <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       @foreach([
         ['Get verified', 'ID, portfolio and two references. Usually reviewed within a day. Verified profiles rank higher and can take express gigs.'],
-        ['Stay visible', 'Flip your availability on. The engine only matches creators who are actually free — no ghost listings.'],
+        ['Stay visible', 'Flip your availability on. The engine only matches freelancers who are actually free — no ghost listings.'],
         ['Accept a brief', 'Offers arrive with beats, spec and escrow already funded. Accept or pass in one tap; passing costs you nothing.'],
         ['Get paid', 'Deliver, pass the QA gate, get approved. Escrow releases to your UPI or bank immediately.'],
       ] as $i => [$t, $b])
@@ -161,7 +161,7 @@
 <section class="py-16 border-y border-white/8">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-2 gap-6">
     <div class="glass rounded-3xl p-7">
-      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-violet-soft">Creator copilot</div>
+      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-violet-soft">Freelancer copilot</div>
       <h3 class="mt-3 font-display text-[22px] font-semibold">Tools that reduce your rounds</h3>
       <ul class="mt-5 space-y-3.5">
         @foreach([
@@ -178,7 +178,7 @@
     </div>
 
     <div class="glass rounded-3xl p-7">
-      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-cyan">Fair by design</div>
+      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-violet-soft">Fair by design</div>
       <h3 class="mt-3 font-display text-[22px] font-semibold">The rules we hold ourselves to</h3>
       <ul class="mt-5 space-y-3.5">
         @foreach([
@@ -199,9 +199,9 @@
 @include('partials.cta', [
   'eyebrow'   => 'Applications are open',
   'tone'      => 'cyan',
-  'title'     => 'Join ' . number_format($creatorCount) . '+ verified creators taking briefs today.',
+  'title'     => 'Join ' . number_format($creatorCount) . '+ verified freelancers taking briefs today.',
   'body'      => 'Free to join. Verification usually takes under a day. You choose every gig you accept.',
-  'primary'   => ['Apply as a creator', route('register').'?type=creator'],
+  'primary'   => ['Apply as a freelancer', route('register').'?type=creator'],
   'secondary' => ['See how matching works', route('ai')],
 ])
 

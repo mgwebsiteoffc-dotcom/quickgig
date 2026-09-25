@@ -14,7 +14,7 @@
           <h1 class="font-display text-[26px] sm:text-[30px] font-semibold leading-tight flex items-center gap-2">
             {{ $creator->name }}
             @if($creator->is_verified)
-              <span class="text-[10.5px] font-semibold rounded-full bg-cyan/15 text-cyan px-2 py-0.5">Verified</span>
+              <span class="text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2 py-0.5">Verified</span>
             @else
               <span class="text-[10.5px] font-semibold rounded-full bg-amber-400/15 text-amber-300 px-2 py-0.5">Pending review</span>
             @endif
@@ -64,7 +64,7 @@
                 <div class="text-[12px] text-mut mt-0.5 font-mono">{{ $o->uid }} · {{ $o->company->name ?? 'Client' }} · {{ $o->turnaround }}</div>
               </div>
               <span class="text-[11.5px] font-semibold rounded-full px-2.5 py-1 shrink-0
-                {{ $o->status === 'delivered' ? 'bg-lime/15 text-lime' : ($o->status === 'review' ? 'bg-cyan/15 text-cyan' : 'bg-violet/15 text-violet-soft') }}">
+                {{ $o->status === 'delivered' ? 'bg-lime/15 text-lime' : ($o->status === 'review' ? 'bg-violet/15 text-violet-soft' : 'bg-violet/15 text-violet-soft') }}">
                 {{ ucfirst($o->status) }}
               </span>
               <div class="text-right shrink-0">

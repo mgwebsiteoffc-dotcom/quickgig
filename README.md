@@ -2,9 +2,12 @@
 
 **Hire a verified pro in minutes, not weeks.**
 
-Quick GIGS is a fast, escrow-protected gig marketplace built on Laravel 11: post a brief or buy a
-fixed-price gig, get matched to a verified creator automatically, track production live, and release
-payment only when you approve.
+Quick GIGS is a fast, escrow-protected freelance marketplace built on Laravel 11: post a brief or buy
+a fixed-price gig, get matched to a verified freelancer automatically, track production live, and
+release payment only when you approve.
+
+Categories span video and editing, design and brand, content and copy, web and app development,
+AI and automation, marketing, UGC and voice over.
 
 No build step required — Tailwind, Alpine and the editor load from CDN, cache and sessions use
 file/database drivers, and the queue runs on the database connection.
@@ -164,7 +167,12 @@ always gets a brief.
 
 ## Design system
 
-* Dark, high-contrast UI with an aurora/grid backdrop, glass surfaces and a violet → cyan accent ramp.
+* One brand accent (`#5B3DF5` indigo) on neutral surfaces. Green, amber and red appear only as
+  status — availability, warnings, overdue — never decoration.
+* Dark sections alternate with light cream/grey bands (`.band-light`, `.band-lav`); the same markup
+  works in both because the band flips glass surfaces, muted text, borders and form fields.
+* Catalogue cards follow quick-commerce conventions: image-led, MRP strike-through, “% off” badge,
+  delivery chip and rating — colour comes from the thumbnails, not the chrome.
 * Type: **Space Grotesk** for display, **Inter** for body — semibold headings instead of heavy black weights.
 * Shared shell: `resources/views/layouts/site.blade.php` with `partials/nav` (four links + one CTA) and `partials/footer`.
 

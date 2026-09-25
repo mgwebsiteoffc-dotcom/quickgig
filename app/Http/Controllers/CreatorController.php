@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class CreatorController extends Controller
 {
-    /** Creator studio — gigs, earnings, availability. */
+    /** Freelancer studio — gigs, earnings, availability. */
     public function dashboard(Request $request)
     {
         $creator = $this->creator($request);
@@ -35,7 +35,7 @@ class CreatorController extends Controller
             'orders'    => $orders,
             'stats'     => $stats,
             'portfolio' => $creator->portfolio()->limit(6)->get(),
-            'seo'       => ['title' => 'Creator studio — Quick GIGS', 'canonical' => url('/creator')],
+            'seo'       => ['title' => 'Freelancer studio — Quick GIGS', 'canonical' => url('/creator')],
         ]);
     }
 
@@ -46,7 +46,7 @@ class CreatorController extends Controller
         return view('creator.profile', [
             'creator'   => $creator,
             'portfolio' => $creator->portfolio()->orderBy('sort_order')->get(),
-            'seo'       => ['title' => 'Creator profile — Quick GIGS', 'canonical' => url('/creator/profile')],
+            'seo'       => ['title' => 'Freelancer profile — Quick GIGS', 'canonical' => url('/creator/profile')],
         ]);
     }
 
@@ -56,8 +56,8 @@ class CreatorController extends Controller
 
         $data = $request->validate([
             'name'            => ['required', 'string', 'max:80'],
-            'handle'          => ['required', 'string', 'max:40', 'unique:creators,handle,' . $creator->id],
-            'email'           => ['nullable', 'email', 'max:120', 'unique:creators,email,' . $creator->id],
+            'handle'          => ['required', 'string', 'max:40', 'unique:freelancers,handle,' . $creator->id],
+            'email'           => ['nullable', 'email', 'max:120', 'unique:freelancers,email,' . $creator->id],
             'phone'           => ['nullable', 'string', 'max:20'],
             'bio'             => ['nullable', 'string', 'max:800'],
             'headline'        => ['nullable', 'string', 'max:120'],
@@ -102,7 +102,7 @@ class CreatorController extends Controller
 
         $creator->update($data);
 
-        return back()->with('toast', 'Creator profile saved.');
+        return back()->with('toast', 'Freelancer profile saved.');
     }
 
     public function toggleAvailability(Request $request)
@@ -195,7 +195,7 @@ class CreatorController extends Controller
 
     /* ───────────────────────── helpers ───────────────────────── */
 
-    /** Resolve the creator profile of the logged-in user, creating one if needed. */
+    /** Resolve the freelancer profile of the logged-in user, creating one if needed. */
     private function creator(Request $request): Creator
     {
         $user = $request->user();

@@ -28,7 +28,7 @@ class OrderController extends Controller
             'brief'      => ['required', 'string', 'min:12', 'max:2000'],
             'lane'       => ['required', 'in:express,standard,relaxed'],
         ], [
-            'brief.min' => 'Give the creator a little more detail (at least 12 characters).',
+            'brief.min' => 'Give the freelancer a little more detail (at least 12 characters).',
         ]);
 
         $user = Auth::user();
@@ -75,7 +75,7 @@ class OrderController extends Controller
             'order' => $o,
             'seo'   => [
                 'title'       => 'Order ' . $o->uid . ' — Quick GIGS',
-                'description' => 'Track your Quick GIGS order live, chat with the creator and release escrow when you approve.',
+                'description' => 'Track your Quick GIGS order live, chat with the freelancer and release escrow when you approve.',
                 'canonical'   => route('orders.show', $o->uid),
             ],
         ]);
@@ -91,7 +91,7 @@ class OrderController extends Controller
         $this->authorizeOrder($request, $o);
 
         [$status, $progress, $message] = match (true) {
-            $o->progress < 40  => ['working',   45,  'Creator started production — files are being cut now.'],
+            $o->progress < 40  => ['working',   45,  'Freelancer started production — files are being cut now.'],
             $o->progress < 80  => ['working',   85,  'Sound, captions and colour pass complete.'],
             $o->status !== 'review' && $o->status !== 'delivered' => ['review', 100, 'Delivery uploaded — review it and approve to release escrow.'],
             default            => [$o->status,  100, 'This order is already waiting for your approval.'],
@@ -133,7 +133,7 @@ class OrderController extends Controller
         }
 
         $payout  = $o->total - $o->fee;
-        $message = 'Approved — ₹' . number_format($payout) . ' released to the creator.';
+        $message = 'Approved — ₹' . number_format($payout) . ' released to the freelancer.';
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -196,7 +196,7 @@ class OrderController extends Controller
         return $company;
     }
 
-    /** Buyer, assigned creator or staff only. */
+    /** Buyer, assigned freelancer or staff only. */
     private function authorizeOrder(Request $request, Order $order): void
     {
         $user = $request->user();

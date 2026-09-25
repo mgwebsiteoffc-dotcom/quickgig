@@ -10,13 +10,13 @@
         Always-on content, <span class="grad-text">without the headcount</span>.
       </h1>
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[560px]">
-        A dedicated pod of verified creators who learn your brand, an SLA that carries a credit when it
+        A dedicated pod of verified freelancers who learn your brand, an SLA that carries a credit when it
         slips, seat-based approvals for your marketers, and one invoice at the end of the month.
       </p>
 
       <div class="mt-9 grid sm:grid-cols-2 gap-4">
         @foreach([
-          ['Dedicated pod', 'The same 3–6 creators on your account, so nobody re-learns your brand every week.'],
+          ['Dedicated pod', 'The same 3–6 freelancers on your account, so nobody re-learns your brand every week.'],
           ['Brand-locked briefs', 'Your tone, banned words, logo rules and spec pre-loaded into every generated brief.'],
           ['SLA with credits', 'Miss the window and the express premium comes back automatically — no support ticket.'],
           ['Seats and approvals', 'Marketers raise gigs, one approver releases escrow. Full audit trail per order.'],
@@ -91,14 +91,14 @@
 <section class="band-light py-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Operating model</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Operating model</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">How a pod runs.</h2>
     </div>
 
     <div class="mt-12 grid md:grid-cols-4 gap-4">
       @foreach([
         ['Week 0', 'Calibration', 'We load your brand rules, past winners and banned claims into the brief engine, then run two test gigs.'],
-        ['Week 1', 'Pod assembled', 'Three to six creators are matched to your formats and locked to your account.'],
+        ['Week 1', 'Pod assembled', 'Three to six freelancers are matched to your formats and locked to your account.'],
         ['Ongoing', 'Request → deliver', 'Your team raises gigs from the dashboard. Everything runs the standard pipeline with your SLA attached.'],
         ['Monthly', 'Review + invoice', 'Delivery report, QA pass-rate, spend by format, and a single GST invoice.'],
       ] as $i => [$when, $t, $b])
@@ -122,7 +122,7 @@
     <div class="grid sm:grid-cols-2 gap-4">
       @foreach([
         ['Rights and licensing', 'Full commercial rights transfer on approval. Music and stock are licensed for paid media by default.'],
-        ['Confidentiality', 'Briefs and assets are visible only to your workspace and the assigned creator. Mutual NDA available.'],
+        ['Confidentiality', 'Briefs and assets are visible only to your workspace and the assigned freelancer. Mutual NDA available.'],
         ['Access control', 'Role-based seats: requester, approver, finance. Every escrow release is attributed and timestamped.'],
         ['Data handling', 'Files stay on your workspace storage. Deletion on request, and nothing is used for model training.'],
       ] as [$t, $b])

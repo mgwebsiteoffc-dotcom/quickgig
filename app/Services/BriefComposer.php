@@ -365,7 +365,7 @@ class BriefComposer
         if (Str::length($idea) < 60)      $tips[] = 'Add one concrete detail — a number, a feature name or a customer quote.';
         if (Str::length($audience) < 12)  $tips[] = 'Describe who this is for; it changes the hook more than anything else.';
         if (! preg_match('/\d/', $idea))  $tips[] = 'Numbers earn attention: price, days saved, percentage lift.';
-        if (empty($tips))                 $tips[] = 'Strong input — this brief is ready to send to a creator.';
+        if (empty($tips))                 $tips[] = 'Strong input — this brief is ready to send to a freelancer.';
 
         return ['score' => $score, 'tips' => $tips];
     }

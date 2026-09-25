@@ -27,7 +27,7 @@ class BlogController extends Controller
         // SEO for blog listing
         $seo = [
             'title' => 'Blog — Reels, Thumbnails & AI Video Playbooks | Quick GIGS',
-            'description' => 'Playbooks from verified creators: retention cuts, CTR thumbs, Veo 3 UGC ads. -safe SOPs you can ship tomorrow.',
+            'description' => 'Playbooks from verified freelancers: retention cuts, CTR thumbs, Veo 3 UGC ads. -safe SOPs you can ship tomorrow.',
             'canonical' => url('/blog'),
             'image' => url('/og-blog.jpg'),
         ];

@@ -77,8 +77,8 @@ class MarketplaceController extends Controller
                 'online'   => Creator::where('is_verified', true)->where('is_available', true)->count(),
             ],
             'seo' => [
-                'title'       => 'Marketplace — fixed-price gigs from verified creators | Quick GIGS',
-                'description' => 'Browse ready-to-buy gigs: reels, thumbnails, AI video ads, UGC and design. Fixed prices, verified creators, escrow-protected delivery from ₹1,299.',
+                'title'       => 'Marketplace — fixed-price gigs from verified freelancers | Quick GIGS',
+                'description' => 'Browse ready-to-buy gigs: reels, thumbnails, AI video ads, UGC and design. Fixed prices, verified freelancers, escrow-protected delivery from ₹1,299.',
                 'canonical'   => url('/marketplace'),
             ],
         ]);

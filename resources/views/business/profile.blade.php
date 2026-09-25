@@ -6,7 +6,7 @@
 
     <a href="{{ route('business.home') }}" class="text-[12.5px] text-mut hover:text-white">← Back to dashboard</a>
     <h1 class="mt-3 font-display text-[30px] font-semibold">Workspace settings</h1>
-    <p class="mt-2 text-[14.5px] text-mut">This is the name creators, invoices and order pages will show.</p>
+    <p class="mt-2 text-[14.5px] text-mut">This is the name freelancers, invoices and order pages will show.</p>
 
     @if($errors->any())
       <div class="mt-6 rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-[13.5px] text-rose-200">{{ $errors->first() }}</div>
@@ -61,7 +61,7 @@
 
       <div class="mt-5">
         <label class="label" for="bio">About the company</label>
-        <textarea id="bio" name="bio" rows="3" class="field" placeholder="What do you do? Creators see this with every brief.">{{ old('bio', $company->bio) }}</textarea>
+        <textarea id="bio" name="bio" rows="3" class="field" placeholder="What do you do? Freelancers see this with every brief.">{{ old('bio', $company->bio) }}</textarea>
       </div>
 
       <div class="mt-5 grid sm:grid-cols-[2fr_1fr_1fr_1fr] gap-4">

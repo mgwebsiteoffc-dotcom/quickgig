@@ -9,14 +9,14 @@
       <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Contact</div>
       <h1 class="mt-4 font-display text-[36px] sm:text-[44px] font-semibold leading-[1.06]">Talk to a human.</h1>
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[520px]">
-        Questions about a gig, creator verification, a pod for your team, or something that broke —
+        Questions about a gig, freelancer verification, a pod for your team, or something that broke —
         this form reaches the same small team that builds the product.
       </p>
 
       <div class="mt-10 space-y-4">
         @foreach([
           ['Order or delivery issue', 'Reply within 4 working hours. Escrow stays held until it is resolved.', 'support@quickgigs.in'],
-          ['Creator verification', 'Usually reviewed within one working day of applying.', 'creators@quickgigs.in'],
+          ['Freelancer verification', 'Usually reviewed within one working day of applying.', 'freelancers@quickgigs.in'],
           ['Teams and volume', 'Pod proposals, SLAs and consolidated billing.', 'teams@quickgigs.in'],
         ] as [$t, $b, $mail])
           <div class="glass rounded-3xl p-5">

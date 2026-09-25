@@ -11,7 +11,7 @@
       </h1>
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[600px]">
         Most platforms automate the checkout and leave you to run the project. Quick GIGS automates the
-        parts that actually waste your week: writing the brief, choosing a creator, chasing status,
+        parts that actually waste your week: writing the brief, choosing a freelancer, chasing status,
         checking quality and re-cutting for every format.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
@@ -25,11 +25,11 @@
       @foreach([
         ['00:00', 'You describe the job', 'one sentence is enough'],
         ['00:40', 'Brief is generated', 'hooks, beats, spec, QA gate'],
-        ['04:12', 'Creator accepts', 'scored and explained'],
+        ['04:12', 'Freelancer accepts', 'scored and explained'],
         ['03:00 h', 'Delivery in review', 'express lane, QA already passed'],
       ] as $i => [$t, $title, $sub])
         <div class="glass rounded-3xl p-5 reveal" style="transition-delay: {{ $i * 70 }}ms">
-          <div class="font-mono text-[12px] text-cyan">{{ $t }}</div>
+          <div class="font-mono text-[12px] text-violet-soft">{{ $t }}</div>
           <div class="mt-2 text-[15px] font-semibold">{{ $title }}</div>
           <div class="text-[12.5px] text-mut mt-1">{{ $sub }}</div>
         </div>
@@ -42,7 +42,7 @@
 <section class="py-16 border-y border-white/8">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">The pipeline</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">The pipeline</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Every gig runs the same seven stages.</h2>
     </div>
 
@@ -53,7 +53,7 @@
             <div class="font-mono text-[11.5px] text-violet-soft">{{ $stage['stage'] }}</div>
             <div class="mt-2 font-display text-[20px] font-semibold leading-tight">{{ $stage['title'] }}</div>
             <div class="mt-2 inline-flex items-center gap-1.5 text-[11.5px] text-mut glass rounded-full px-2.5 py-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-cyan"></span>{{ $stage['time'] }}
+              <span class="w-1.5 h-1.5 rounded-full bg-violet"></span>{{ $stage['time'] }}
             </div>
           </div>
 
@@ -90,7 +90,7 @@
           ['SLA or credit', 'Miss the promised window and the express premium is credited back automatically.'],
           ['Two free revisions', 'Included on every gig, translated into timestamped notes so they actually land.'],
           ['No lock-in', 'No subscription, no commitment fee, no minimum volume. Order one gig or two hundred.'],
-          ['Creators keep 90%', 'A flat 10% platform fee. No connects, no bidding credits, no listing charges.'],
+          ['Freelancers keep 90%', 'A flat 10% platform fee. No connects, no bidding credits, no listing charges.'],
           ['Your files, your rights', 'Full commercial rights transfer on approval, with licensed music and footage only.'],
         ] as $i => [$t, $b])
           <div class="reveal glass rounded-3xl p-6" style="transition-delay: {{ $i * 60 }}ms">

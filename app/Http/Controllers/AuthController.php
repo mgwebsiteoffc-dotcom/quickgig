@@ -74,7 +74,7 @@ class AuthController extends Controller
             'plan' => $request->query('plan'),
             'seo'  => [
                 'title'       => 'Create your free account — Quick GIGS',
-                'description' => 'Sign up in 30 seconds. Hire verified creators or start earning as a pro on Quick GIGS. Free to join, escrow protected.',
+                'description' => 'Sign up in 30 seconds. Hire verified freelancers or start earning as a pro on Quick GIGS. Free to join, escrow protected.',
                 'canonical'   => url('/register'),
             ],
         ]);

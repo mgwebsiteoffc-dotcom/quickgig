@@ -5,7 +5,7 @@
   <div class="max-w-[900px] mx-auto px-5 lg:px-8">
 
     <a href="{{ route('creator.dashboard') }}" class="text-[12.5px] text-mut hover:text-white">← Back to studio</a>
-    <h1 class="mt-3 font-display text-[30px] font-semibold">Creator profile</h1>
+    <h1 class="mt-3 font-display text-[30px] font-semibold">Freelancer profile</h1>
     <p class="mt-2 text-[14.5px] text-mut">A complete profile gets verified faster and ranks higher in matching.</p>
 
     @if($errors->any())

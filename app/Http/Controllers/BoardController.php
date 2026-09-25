@@ -170,7 +170,7 @@ class BoardController extends Controller
 
     /* ───────────────────────── helpers ───────────────────────── */
 
-    /** Pick the best available creator. Only the create flow flips the status. */
+    /** Pick the best available freelancer. Only the create flow flips the status. */
     private function autoAssign(Task $task, bool $save = true, bool $setStatus = true): void
     {
         $creator = Creator::where('is_verified', true)
@@ -192,11 +192,18 @@ class BoardController extends Controller
         $t = mb_strtolower($text);
 
         return match (true) {
-            str_contains($t, 'thumbnail')                            => 'Thumbnail',
-            str_contains($t, 'ugc') || str_contains($t, 'unboxing')  => 'UGC Video',
-            str_contains($t, ' ai') || str_contains($t, 'ai ')       => 'AI Video',
-            str_contains($t, 'brand') || str_contains($t, 'logo')    => 'Bundle',
-            default                                                  => 'Reel',
+            str_contains($t, 'thumbnail')                                              => 'Thumbnail',
+            str_contains($t, 'ugc') || str_contains($t, 'unboxing')                    => 'UGC Video',
+            str_contains($t, 'blog') || str_contains($t, 'copy') || str_contains($t, 'article')
+                || str_contains($t, 'seo') || str_contains($t, 'newsletter')           => 'Writing',
+            str_contains($t, 'website') || str_contains($t, 'landing page') || str_contains($t, 'app ')
+                || str_contains($t, 'shopify') || str_contains($t, 'api')              => 'Development',
+            str_contains($t, 'voice') || str_contains($t, 'narration') || str_contains($t, 'dub') => 'Voice Over',
+            str_contains($t, 'ads') || str_contains($t, 'campaign') || str_contains($t, 'performance') => 'Marketing',
+            str_contains($t, 'logo') || str_contains($t, 'brand') || str_contains($t, 'ui ')
+                || str_contains($t, 'figma') || str_contains($t, 'poster')             => 'Design',
+            str_contains($t, ' ai') || str_contains($t, 'ai ')                         => 'AI Video',
+            default                                                                     => 'Reel',
         };
     }
 

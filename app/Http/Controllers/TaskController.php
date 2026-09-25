@@ -111,11 +111,19 @@ class TaskController extends Controller
         $haystack = mb_strtolower($task['title'] . ' ' . $task['description']);
 
         $category = match (true) {
-            str_contains($haystack, 'thumbnail')                                  => 'Thumbnail',
-            str_contains($haystack, 'ugc') || str_contains($haystack, 'unboxing') => 'UGC Video',
-            str_contains($haystack, 'ai ')  || str_contains($haystack, 'ai-')     => 'AI Video',
-            str_contains($haystack, 'brand') || str_contains($haystack, 'kit')    => 'Bundle',
-            default                                                               => 'Reel',
+            str_contains($haystack, 'thumbnail')                                        => 'Thumbnail',
+            str_contains($haystack, 'ugc') || str_contains($haystack, 'unboxing')       => 'UGC Video',
+            str_contains($haystack, 'blog') || str_contains($haystack, 'copy')
+                || str_contains($haystack, 'article') || str_contains($haystack, 'seo') => 'Writing',
+            str_contains($haystack, 'website') || str_contains($haystack, 'landing page')
+                || str_contains($haystack, 'shopify') || str_contains($haystack, 'app') => 'Development',
+            str_contains($haystack, 'voice') || str_contains($haystack, 'narration')    => 'Voice Over',
+            str_contains($haystack, 'ads') || str_contains($haystack, 'campaign')       => 'Marketing',
+            str_contains($haystack, 'logo') || str_contains($haystack, 'ui ')
+                || str_contains($haystack, 'figma')                                     => 'Design',
+            str_contains($haystack, 'ai ')  || str_contains($haystack, 'ai-')           => 'AI Video',
+            str_contains($haystack, 'brand') || str_contains($haystack, 'kit')          => 'Bundle',
+            default                                                                     => 'Reel',
         };
 
         return Service::where('is_active', true)->where('category', $category)->orderByDesc('sold_count')->first()

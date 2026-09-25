@@ -17,12 +17,12 @@
                 class="rounded-2xl p-4 text-left border transition"
                 :class="type==='business' ? 'border-violet bg-violet/12' : 'border-white/10 bg-white/3 hover:border-white/25'">
           <div class="text-[14px] font-semibold">I need work done</div>
-          <div class="text-[12px] text-mut mt-0.5">Hire verified creators</div>
+          <div class="text-[12px] text-mut mt-0.5">Hire verified freelancers</div>
         </button>
         <button type="button" x-on:click="type='creator'"
                 class="rounded-2xl p-4 text-left border transition"
-                :class="type==='creator' ? 'border-cyan bg-cyan/10' : 'border-white/10 bg-white/3 hover:border-white/25'">
-          <div class="text-[14px] font-semibold">I'm a creator</div>
+                :class="type==='creator' ? 'border-violet bg-violet/10' : 'border-white/10 bg-white/3 hover:border-white/25'">
+          <div class="text-[14px] font-semibold">I'm a freelancer</div>
           <div class="text-[12px] text-mut mt-0.5">Get matched to gigs</div>
         </button>
       </div>
@@ -90,7 +90,7 @@
 
         <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-violet/20">
           <span x-show="type==='business'">Create account & post a gig</span>
-          <span x-show="type==='creator'" x-cloak>Create creator account</span>
+          <span x-show="type==='creator'" x-cloak>Create freelancer account</span>
         </button>
 
         <div class="text-center text-[13.5px] text-mut">
@@ -108,7 +108,7 @@
             ['Matched in minutes', 'Our engine ranks verified pros by skill, speed and rating — no bidding, no proposals.'],
             ['Escrow on every gig', 'Money is held safely and released only when you approve the delivery.'],
             ['Live production tracking', 'Watch progress, chat and preview files without chasing anyone.'],
-            ['Flat 10% platform fee', 'Creators keep 90%. No connects, no listing fees, no subscriptions.'],
+            ['Flat 10% platform fee', 'Freelancers keep 90%. No connects, no listing fees, no subscriptions.'],
           ] as [$title, $body])
             <li class="flex gap-3.5">
               <span class="w-6 h-6 rounded-lg bg-violet/18 grid place-items-center shrink-0 mt-0.5">
@@ -129,7 +129,7 @@
             @endforeach
           </div>
           <div class="text-[12.5px] text-mut leading-tight">
-            <span class="block text-white font-medium">1,284 creators online</span>
+            <span class="block text-white font-medium">1,284 freelancers online</span>
             average match time 4 min
           </div>
         </div>

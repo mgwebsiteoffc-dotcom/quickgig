@@ -144,7 +144,7 @@ class BriefWriter
             'Avoid:',
             '- ' . implode("\n- ", $draft['avoid']),
             '',
-            'Rewrite it so a creator could shoot and cut from it today. Keep the structure, sharpen the language, make the hooks specific to the request.',
+            'Rewrite it so a freelancer could shoot and cut from it today. Keep the structure, sharpen the language, make the hooks specific to the request.',
         ]);
     }
 

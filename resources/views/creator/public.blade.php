@@ -20,7 +20,7 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8">
 
     <div class="glass rounded-3xl overflow-hidden">
-      <div class="h-[160px] sm:h-[200px] bg-gradient-to-br from-violet/30 via-violet/10 to-cyan/20 relative">
+      <div class="h-[160px] sm:h-[200px] bg-gradient-to-br from-violet/25 to-violet/5 relative">
         @if($c->cover)
           <img src="{{ filter_var($c->cover, FILTER_VALIDATE_URL) ? $c->cover : asset('storage/'.$c->cover) }}" class="w-full h-full object-cover opacity-70" alt="">
         @endif
@@ -32,7 +32,7 @@
           <div class="flex-1 min-w-[240px]">
             <h1 class="font-display text-[28px] font-semibold flex items-center gap-2.5">
               {{ $c->name }}
-              @if($c->is_verified)<span class="text-[10.5px] font-semibold rounded-full bg-cyan/15 text-cyan px-2.5 py-1">Verified</span>@endif
+              @if($c->is_verified)<span class="text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1">Verified</span>@endif
             </h1>
             <div class="text-[13.5px] text-mut mt-1">{{ $c->handle }} · {{ $c->headline }}</div>
           </div>

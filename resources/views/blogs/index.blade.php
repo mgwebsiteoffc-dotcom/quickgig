@@ -7,7 +7,7 @@
       <div class="max-w-[620px]">
         <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Insights</div>
         <h1 class="mt-3 font-display text-[34px] sm:text-[42px] font-semibold leading-[1.08]">Playbooks you can ship tomorrow.</h1>
-        <p class="mt-4 text-[15px] leading-7 text-mut">Short, practical notes from verified creators — retention editing, thumbnails that get clicked, AI video workflows.</p>
+        <p class="mt-4 text-[15px] leading-7 text-mut">Short, practical notes from verified freelancers — retention editing, thumbnails that get clicked, AI video workflows.</p>
       </div>
 
       <form method="GET" class="flex gap-2.5 w-full sm:w-auto">
@@ -35,7 +35,7 @@
           <a href="{{ route('blog.show', $b->slug) }}" class="glass rounded-3xl overflow-hidden card-hover group flex flex-col">
             <img src="{{ filter_var($b->cover, FILTER_VALIDATE_URL) ? $b->cover : asset('storage/'.$b->cover) }}" alt="{{ $b->cover_alt ?: $b->title }}" class="h-[180px] w-full object-cover opacity-85 group-hover:opacity-100 transition">
             <div class="p-5 flex-1 flex flex-col">
-              <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-cyan">{{ $b->category->name ?? 'Playbook' }} · {{ $b->reading_minutes }} min</div>
+              <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-violet-soft">{{ $b->category->name ?? 'Playbook' }} · {{ $b->reading_minutes }} min</div>
               <div class="mt-2 text-[16px] font-semibold leading-snug line-clamp-2">{{ $b->title }}</div>
               <div class="mt-2 text-[13px] leading-6 text-mut line-clamp-3">{{ $b->excerpt }}</div>
               <div class="mt-auto pt-4 text-[12px] text-mut">{{ $b->published_at?->format('d M Y') }} · {{ number_format($b->views) }} reads</div>

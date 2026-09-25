@@ -51,7 +51,7 @@
 
       <div class="mt-5 grid sm:grid-cols-5 gap-2.5">
         @foreach(\App\Models\Task::STATUSES as $key => $label)
-          @php $tint = ['queued'=>'from-white/8','assigned'=>'from-violet/20','production'=>'from-pink/20','review'=>'from-amber/20','done'=>'from-lime/20'][$key]; @endphp
+          @php $tint = ['queued'=>'from-white/8','assigned'=>'from-violet/14','production'=>'from-violet/12','review'=>'from-amber/12','done'=>'from-lime/14'][$key]; @endphp
           <div class="rounded-2xl border border-white/10 bg-gradient-to-br {{ $tint }} to-transparent p-4">
             <div class="text-[11px] text-mut">{{ $label }}</div>
             <div class="mt-1 font-display text-[22px] font-semibold">{{ $board['by_status'][$key] ?? 0 }}</div>
@@ -60,8 +60,8 @@
       </div>
 
       @if($board['next'])
-        <a href="{{ route('board') }}" class="mt-4 flex items-center gap-3 rounded-2xl border border-white/8 bg-white/3 p-4 hover:border-pink/40 transition">
-          <span class="text-[10px] font-semibold tracking-wider uppercase rounded-full px-2 py-0.5 bg-pink/18 text-pink-soft shrink-0">Next up</span>
+        <a href="{{ route('board') }}" class="mt-4 flex items-center gap-3 rounded-2xl border border-white/8 bg-white/3 p-4 hover:border-violet/35 transition">
+          <span class="text-[10px] font-semibold tracking-wider uppercase rounded-full px-2 py-0.5 bg-pink/18 text-violet-soft shrink-0">Next up</span>
           <span class="text-[13.5px] font-medium truncate">{{ $board['next']->title }}</span>
           <span class="ml-auto text-[12px] text-mut shrink-0">{{ $board['next']->due_on?->format('d M') }}</span>
         </a>
@@ -130,7 +130,7 @@
           <template x-if="task?.warnings?.length">
             <div class="mt-4 space-y-1.5">
               <template x-for="w in task.warnings" :key="w">
-                <div class="flex gap-2 text-[12.5px] text-amber-soft"><span class="shrink-0">!</span><span x-text="w"></span></div>
+                <div class="flex gap-2 text-[12.5px] text-violet-soft"><span class="shrink-0">!</span><span x-text="w"></span></div>
               </template>
             </div>
           </template>
@@ -167,7 +167,7 @@ Accept: application/json
         </div>
 
         @forelse($orders as $o)
-          <a href="{{ route('orders.show', $o->uid) }}" class="mt-4 flex flex-wrap items-center gap-4 rounded-2xl border border-white/8 bg-white/3 p-4 hover:border-violet/40 transition group">
+          <a href="{{ route('orders.show', $o->uid) }}" class="mt-4 flex flex-wrap items-center gap-4 rounded-2xl border border-white/8 bg-white/3 p-4 hover:border-violet/35 transition group">
             <img src="{{ $o->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-10 h-10 rounded-xl object-cover border border-white/12" alt="">
             <div class="min-w-0 flex-1">
               <div class="text-[14px] font-medium truncate group-hover:text-violet-soft transition">{{ $o->service->title ?? 'Custom gig' }}</div>
@@ -185,7 +185,7 @@ Accept: application/json
         @empty
           <div class="mt-5 rounded-2xl border border-dashed border-white/12 p-10 text-center">
             <div class="font-display text-[17px] font-semibold">No gigs yet</div>
-            <p class="mt-1.5 text-[13.5px] text-mut">Order your first gig — matched to a verified creator in minutes.</p>
+            <p class="mt-1.5 text-[13.5px] text-mut">Order your first gig — matched to a verified freelancer in minutes.</p>
             <a href="{{ route('marketplace') }}" class="mt-5 inline-flex h-11 px-5 rounded-xl btn-grad items-center text-[13.5px] font-semibold">Browse the marketplace</a>
           </div>
         @endforelse
@@ -195,7 +195,7 @@ Accept: application/json
       <aside class="space-y-5">
         <div class="glass rounded-3xl p-5">
           <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">
-            <span class="w-1.5 h-1.5 rounded-full bg-lime pulse-dot text-lime"></span> Creators online
+            <span class="w-1.5 h-1.5 rounded-full bg-lime pulse-dot text-lime"></span> Freelancers online
           </div>
           <div class="mt-4 space-y-3.5">
             @forelse($availableNow as $c)

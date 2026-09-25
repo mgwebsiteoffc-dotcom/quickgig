@@ -84,7 +84,7 @@
             <div class="space-y-2">
               @foreach(['express' => 'Express · 3 hours (+60%)', 'standard' => 'Standard · 24 hours', 'relaxed' => 'Relaxed · 48 hours (−15%)'] as $key => $label)
                 <label class="flex items-center gap-3 rounded-2xl px-4 py-3 border cursor-pointer transition"
-                       :class="urgency === '{{ $key }}' ? 'border-cyan bg-cyan/10' : 'border-white/10 bg-white/3 hover:border-white/25'">
+                       :class="urgency === '{{ $key }}' ? 'border-violet bg-violet/10' : 'border-white/10 bg-white/3 hover:border-white/25'">
                   <input type="radio" name="urgency" value="{{ $key }}" x-model="urgency" class="accent-cyan">
                   <span class="text-[13.5px] font-medium">{{ $label }}</span>
                 </label>
@@ -92,7 +92,7 @@
             </div>
           </div>
 
-          <button type="submit" class="w-full py-3.5 rounded-xl btn-grad font-semibold text-[15px] shadow-lg shadow-pink/25">
+          <button type="submit" class="w-full py-3.5 rounded-xl btn-grad font-semibold text-[15px] shadow-lg shadow-violet/20">
             Generate my brief →
           </button>
           <div class="text-center text-[11.5px] text-mut">Runs instantly. Nothing is stored against your name.</div>
@@ -154,8 +154,8 @@
 <section class="py-14" x-data x-show="true">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid md:grid-cols-3 gap-5">
     @foreach([
-      ['Fewer revisions', 'Gigs ordered with a generated brief come back right the first time far more often — because the creator gets beats and a spec, not a vibe.'],
-      ['Comparable quotes', 'A structured brief means every creator prices the same scope. No more "it depends".'],
+      ['Fewer revisions', 'Gigs ordered with a generated brief come back right the first time far more often — because the freelancer gets beats and a spec, not a vibe.'],
+      ['Comparable quotes', 'A structured brief means every freelancer prices the same scope. No more "it depends".'],
       ['Yours to keep', 'Copy it into any tool, send it to your own editor, or order it here. No lock-in, no email gate.'],
     ] as [$t, $b])
       <div class="glass rounded-3xl p-6 reveal">

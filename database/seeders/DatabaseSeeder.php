@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->staff();
         $this->creatorStats();
+        $this->extraFreelancers();
         $this->faqs();
         $creator = $this->creatorAccount();
         $company = $this->businessAccount();
@@ -56,7 +57,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    /* ── give each creator distinct performance data so matching has signal ── */
+    /* ── give each freelancer distinct performance data so matching has signal ── */
     private function creatorStats(): void
     {
         $profiles = [
@@ -78,13 +79,13 @@ class DatabaseSeeder extends Seeder
     private function faqs(): void
     {
         $faqs = [
-            ['How is Quick GIGS different from a normal freelance site?', 'You never post a job and wait for proposals. Pick a fixed-price gig or post a brief, and the matching engine assigns a verified creator in minutes. Payment stays in escrow until you approve.', 'General', 1, true],
+            ['How is Quick GIGS different from a normal freelance site?', 'You never post a job and wait for proposals. Pick a fixed-price gig or post a brief, and the matching engine assigns a verified freelancer in minutes. Payment stays in escrow until you approve.', 'General', 1, true],
             ['How fast is delivery, really?', 'Express gigs start within minutes and land in about three hours. Standard reels and thumbnails are next-day. Team packs and AI ads take up to two days.', 'Delivery', 2, true],
             ['What if I do not like the work?', 'Every gig includes two free revisions. If the delivery still misses the brief, raise a dispute before approving and the escrow is refunded in full.', 'Guarantee', 3, true],
-            ['How are creators verified?', 'Creators submit ID, portfolio and client references. Our team reviews each profile manually, then tracks on-time delivery, rating and response time on every gig.', 'Creators', 4, true],
-            ['What does it cost?', 'Gigs start at ₹1,299. The platform fee is a flat 10%, so creators keep 90%. Posting briefs, browsing gigs and getting matched is free.', 'Pricing', 5, true],
-            ['How do creators get paid?', 'The moment you approve a delivery, escrow is released and paid out to the creator via UPI or bank transfer, usually within minutes.', 'Payouts', 6, true],
-            ['Do you provide GST invoices?', 'Yes. Add your GSTIN in workspace settings and every order generates a GST-compliant invoice. Creators get matching payout statements.', 'Pricing', 7, false],
+            ['How are freelancers verified?', 'Freelancers submit ID, portfolio and client references. Our team reviews each profile manually, then tracks on-time delivery, rating and response time on every gig.', 'Freelancers', 4, true],
+            ['What does it cost?', 'Gigs start at ₹1,299. The platform fee is a flat 10%, so freelancers keep 90%. Posting briefs, browsing gigs and getting matched is free.', 'Pricing', 5, true],
+            ['How do freelancers get paid?', 'The moment you approve a delivery, escrow is released and paid out to the freelancer via UPI or bank transfer, usually within minutes.', 'Payouts', 6, true],
+            ['Do you provide GST invoices?', 'Yes. Add your GSTIN in workspace settings and every order generates a GST-compliant invoice. Freelancers get matching payout statements.', 'Pricing', 7, false],
         ];
 
         // Replace any legacy seeded copy so the public site stays on-brand.
@@ -103,7 +104,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    /* ── demo creator login, wired to an existing creator profile ── */
+    /* ── demo freelancer login, wired to an existing freelancer profile ── */
     private function creatorAccount(): Creator
     {
         $creator = Creator::where('handle', '@priyaedits')->first() ?? Creator::create([
@@ -178,14 +179,64 @@ class DatabaseSeeder extends Seeder
         return $company;
     }
 
+    /* ── freelancers beyond video, so the marketplace reads as a full platform ── */
+    private function extraFreelancers(): void
+    {
+        $people = [
+            ['Ananya Rao',   '@ananyawrites',  'Conversion copy & long-form content', 'hybrid',       ['Copywriting','SEO','Landing pages','Email'],        1499, 4.9, 16, 96, 142],
+            ['Vikram Shah',  '@vikrambuilds',  'Laravel & React product development', 'hybrid',       ['Laravel','React','APIs','Shopify'],                 7999, 4.8, 38, 94, 61],
+            ['Meera Nair',   '@meeradesigns',  'Brand systems and product UI',        'designer',     ['UI design','Branding','Figma','Design systems'],    3499, 4.9, 22, 97, 118],
+            ['Arjun Kapoor', '@arjunvoice',    'Voice over in Hindi and English',     'hybrid',       ['Voice over','Narration','Dubbing'],                 999,  4.8, 12, 98, 205],
+            ['Sana Sheikh',  '@sanagrowth',    'Performance marketing and ad ops',    'hybrid',       ['Meta ads','Google ads','Analytics','CRO'],          4999, 4.7, 41, 92, 73],
+        ];
+
+        foreach ($people as [$name, $handle, $headline, $type, $skills, $from, $rating, $mins, $onTime, $orders]) {
+            Creator::updateOrCreate(
+                ['handle' => $handle],
+                [
+                    'name' => $name, 'email' => ltrim($handle, '@') . '@quickgigs.in',
+                    'headline' => $headline, 'profile_type' => $type, 'skills' => $skills,
+                    'price_from' => $from, 'rating' => $rating, 'response_minutes' => $mins,
+                    'on_time_rate' => $onTime, 'orders_count' => $orders, 'reviews_count' => (int) ($orders * 0.9),
+                    'is_available' => true, 'is_verified' => true,
+                ]
+            );
+        }
+    }
+
     /* ── a few extra catalogue gigs so the marketplace never looks empty ── */
     private function extraGigs(): void
     {
         $creators = Creator::where('is_verified', true)->pluck('id')->all();
         if (empty($creators)) return;
 
+        $byHandle = fn (string $h) => Creator::where('handle', $h)->value('id') ?? $creators[0];
+
+        $wider = [
+            ['Landing page copy that converts',        'Writing',     2999,  8999,  2, 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80',  'Copywriting', 340, 4.9, '@ananyawrites', 'Full page: hero, three proof blocks, objections, FAQ and CTA — written from your positioning, not templates.'],
+            ['SEO blog article, 1500 words',           'Writing',     1799,  2499,  2, 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80',  'SEO',         520, 4.8, '@ananyawrites', 'Keyword-mapped article with internal links, meta title and description, ready to publish.'],
+            ['Landing page in Laravel or React',       'Development', 14999, 19999, 3, 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80',    'Dev',         96,  4.8, '@vikrambuilds', 'Responsive build from your design, form handling, analytics and deploy — code handed over.'],
+            ['Shopify store setup and theme polish',   'Development', 9999,  13999, 3, 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80',    'Shopify',     140, 4.7, '@vikrambuilds', 'Theme setup, product templates, checkout tidy-up and speed pass.'],
+            ['Product UI screens (5 screens)',         'Design',      8999,  11999, 3, 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80',    'UI',          210, 4.9, '@meeradesigns', 'Figma file with components, states and a handoff-ready spec.'],
+            ['Hindi + English voice over, 60 seconds', 'Voice Over',  1299,  1899,  1, 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&q=80',  'VO',          430, 4.8, '@arjunvoice',   'Studio-clean read, two takes, WAV and MP3 delivered with sync markers.'],
+            ['Meta ads creative + campaign setup',     'Marketing',   6999,  9999,  2, 'https://images.unsplash.com/photo-1611926653458-09294b3142bf?w=800&q=80',  'Ads',         180, 4.7, '@sanagrowth',   'Three ad variants, audiences, pixel check and a first-week optimisation note.'],
+        ];
+
+        foreach ($wider as [$title, $category, $price, $mrp, $days, $cover, $badge, $sold, $rating, $handle, $desc]) {
+            Service::firstOrCreate(
+                ['slug' => Str::slug($title)],
+                [
+                    'creator_id' => $byHandle($handle), 'title' => $title, 'description' => $desc,
+                    'cover' => $cover, 'price' => $price, 'compare_price' => $mrp, 'mrp' => $mrp,
+                    'delivery_days' => $days, 'category' => $category, 'badge' => $badge,
+                    'sold_count' => $sold, 'rating' => $rating, 'is_active' => true, 'price_type' => 'paid',
+                    'deliverables' => ['Source files', 'One round of notes', '2 free revisions'],
+                ]
+            );
+        }
+
         $gigs = [
-            ['UGC unboxing video by a real creator', 'UGC Video', 3999, 1, 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=80', 'UGC', 860, 4.9, 'A real creator films, speaks and edits an authentic 30-second unboxing for your product. Shot vertically with captions and a clear call to action.'],
+            ['UGC unboxing video by a real freelancer', 'UGC Video', 3999, 1, 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=80', 'UGC', 860, 4.9, 'A real freelancer films, speaks and edits an authentic 30-second unboxing for your product. Shot vertically with captions and a clear call to action.'],
             ['Podcast clips — 5 shorts from one episode', 'Reel', 4499, 2, 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=800&q=80', 'Bundle', 540, 4.8, 'Send one long episode and get five publish-ready vertical clips with captions, hooks and end cards.'],
             ['Brand kit — logo, colours and social templates', 'Bundle', 7499, 2, 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&q=80', 'Design', 210, 4.8, 'A compact brand system: primary logo, colour palette, type scale and ten editable social templates.'],
             ['Product photo retouching — 10 images', 'Thumbnail', 1999, 1, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80', 'Design', 430, 4.7, 'Clean cut-outs, colour correction and marketplace-ready exports for ten product photos.'],
@@ -211,6 +262,10 @@ class DatabaseSeeder extends Seeder
                 ]
             );
         }
+
+        // Quick-commerce style MRP so the discount badge has something to show.
+        Service::whereNull('compare_price')->orWhere('compare_price', 0)->get()
+            ->each(fn ($s) => $s->update(['compare_price' => (int) round($s->price * 1.28 / 10) * 10]));
 
         // Make sure everything in the catalogue is orderable.
         Service::whereNull('is_active')->update(['is_active' => true]);

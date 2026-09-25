@@ -49,7 +49,7 @@
       <div class="mt-3 space-y-2">
         @foreach([
           ['label' => 'Business', 'email' => 'business@quickgigs.in', 'pass' => 'Business@123'],
-          ['label' => 'Creator',  'email' => 'creator@quickgigs.in',  'pass' => 'Creator@123'],
+          ['label' => 'Freelancer',  'email' => 'creator@quickgigs.in',  'pass' => 'Freelancer@123'],
           ['label' => 'Admin',    'email' => 'admin@quickgigs.in',    'pass' => 'Admin@12345'],
         ] as $d)
           <button type="button" x-on:click="fill(@js($d['email']), @js($d['pass']))"

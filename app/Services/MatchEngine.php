@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
  *
  * Most marketplaces show "AI matched" and nothing else. This returns a score
  * out of 100 together with the factors that produced it, so a buyer can see
- * exactly why a creator was picked — and a creator can see what to improve.
+ * exactly why a freelancer was picked — and a freelancer can see what to improve.
  */
 class MatchEngine
 {
@@ -91,7 +91,7 @@ class MatchEngine
             default => 0.05,
         };
 
-        // portfolio depth nudges the score so two similar creators never tie exactly
+        // portfolio depth nudges the score so two similar freelancers never tie exactly
         $depth = min(0.08, ($creator->orders_count ?? 0) / 5000);
         $pct = min(0.99, 0.28 + $typeBonus + $depth + ($wanted->isEmpty() ? 0.18 : 0.42 * ($hits->count() / max(1, $wanted->count()))));
 

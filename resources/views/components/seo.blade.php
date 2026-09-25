@@ -1,7 +1,7 @@
 {{-- SEO + AEO component — @include('components.seo', ['seo'=>$seo]) --}}
 @php
   $seo = $seo ?? [];
-  $title = $seo['title'] ?? 'Quick GIGS — Hire verified creators in minutes, not weeks';
+  $title = $seo['title'] ?? 'Quick GIGS — Hire verified freelancers in minutes, not weeks';
   $desc = $seo['description'] ?? 'Quick GIGS is the fast gig marketplace for reels, thumbnails, AI video and design. Post a brief, get matched to a verified pro in minutes, track delivery live and pay only when you approve.';
   $canonical = $seo['canonical'] ?? url()->current();
   $image = $seo['image'] ?? url('/og-default.jpg');

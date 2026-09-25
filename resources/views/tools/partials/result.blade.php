@@ -4,7 +4,7 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
         <div class="flex flex-wrap items-center gap-2.5">
-          <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Your brief</div>
+          <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Your brief</div>
           @if(($meta['source'] ?? 'rules') === 'ai')
             <span class="inline-flex items-center gap-1.5 text-[10.5px] font-semibold rounded-full bg-violet/15 text-violet-soft px-2.5 py-1">
               <span class="w-1.5 h-1.5 rounded-full bg-violet-soft"></span>
@@ -78,7 +78,7 @@
                   @if(!$loop->last)<span class="w-px flex-1 bg-white/12 my-1"></span>@endif
                 </div>
                 <div class="pb-1">
-                  <div class="font-mono text-[12px] text-cyan">{{ $beat['t'] }}</div>
+                  <div class="font-mono text-[12px] text-violet-soft">{{ $beat['t'] }}</div>
                   <div class="text-[14px] leading-6 text-white/85 mt-0.5">{{ $beat['what'] }}</div>
                 </div>
               </div>
@@ -121,8 +121,8 @@
             </ul>
           </div>
 
-          <div class="rounded-3xl p-6 border border-cyan/20 bg-cyan/5">
-            <h3 class="font-display text-[17px] font-semibold text-cyan">QA gate on delivery</h3>
+          <div class="rounded-3xl p-6 border border-cyan/20 bg-violet/5">
+            <h3 class="font-display text-[17px] font-semibold text-violet-soft">QA gate on delivery</h3>
             <ul class="mt-4 space-y-2.5">
               @foreach($brief['qa_gate'] as $g)
                 <li class="text-[13px] leading-6 text-white/70"><span class="font-medium text-white/90">{{ $g['check'] }}</span> — {{ $g['detail'] }}</li>
@@ -168,10 +168,10 @@
           </ul>
         </div>
 
-        {{-- matched creators --}}
+        {{-- matched freelancers --}}
         @if($matches->count())
           <div class="glass rounded-3xl p-6">
-            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Creators matched to this brief</div>
+            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Freelancers matched to this brief</div>
             <div class="mt-4 space-y-4">
               @foreach($matches as $m)
                 @php $c = $m['creator']; @endphp

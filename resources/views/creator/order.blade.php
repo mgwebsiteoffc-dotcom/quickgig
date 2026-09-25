@@ -12,7 +12,7 @@
         <div class="mt-1.5 text-[13px] text-mut font-mono">{{ $o->uid }} · {{ $o->company->name ?? 'Client' }}</div>
       </div>
       <span class="rounded-full px-3.5 py-1.5 text-[12px] font-semibold
-        {{ $o->status === 'delivered' ? 'bg-lime/15 text-lime' : ($o->status === 'review' ? 'bg-cyan/15 text-cyan' : 'bg-violet/15 text-violet-soft') }}">
+        {{ $o->status === 'delivered' ? 'bg-lime/15 text-lime' : ($o->status === 'review' ? 'bg-violet/15 text-violet-soft' : 'bg-violet/15 text-violet-soft') }}">
         {{ ucfirst($o->status) }}
       </span>
     </div>

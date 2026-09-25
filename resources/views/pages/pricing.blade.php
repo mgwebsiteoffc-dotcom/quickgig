@@ -4,7 +4,7 @@
   $plans = [
     ['slug'=>'starter','name'=>'Starter','price'=>1299,'retainer'=>9999,'unit'=>'/ gig','featured'=>false,
      'tagline'=>'Thumbnails, edits and quick fixes.',
-     'features'=>['1-day delivery','2 free revisions','Verified creator + chat','Escrow protection','Generated brief included']],
+     'features'=>['1-day delivery','2 free revisions','Verified freelancer + chat','Escrow protection','Generated brief included']],
     ['slug'=>'pro','name'=>'Pro','price'=>2499,'retainer'=>24999,'unit'=>'/ gig','featured'=>true,
      'tagline'=>'Retention reels and UGC that convert.',
      'features'=>['Express lane from 3 hours','Priority matching','Live production tracking','Automated QA gate','Auto-repurpose to 4 formats','Escrow protection']],
@@ -71,7 +71,7 @@
 <section class="py-16 border-y border-white/8">
   <div class="max-w-shell mx-auto px-5 lg:px-8" x-data="costCalc()">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Cost calculator</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Cost calculator</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">What a month actually costs.</h2>
       <p class="mt-4 text-[15px] leading-7 text-mut">Set your monthly output and compare the three real options: Quick GIGS, an in-house editor, or an agency retainer.</p>
     </div>
@@ -140,9 +140,9 @@
 
     <div class="mt-10 grid sm:grid-cols-3 gap-4">
       @foreach([
-        ['Quick GIGS', '₹2,249', 'to the creator', '₹250 platform fee (10%). Nothing else — no listing fee, no connects, no payout charge.', true],
-        ['Bidding marketplaces', '₹1,999', 'to the creator', 'Around 20% commission, plus paid bids or connects before they even win the job.', false],
-        ['Managed agencies', 'Not disclosed', 'to the creator', 'You pay a retainer or commitment fee; the split with the actual maker is rarely shown.', false],
+        ['Quick GIGS', '₹2,249', 'to the freelancer', '₹250 platform fee (10%). Nothing else — no listing fee, no connects, no payout charge.', true],
+        ['Bidding marketplaces', '₹1,999', 'to the freelancer', 'Around 20% commission, plus paid bids or connects before they even win the job.', false],
+        ['Managed agencies', 'Not disclosed', 'to the freelancer', 'You pay a retainer or commitment fee; the split with the actual maker is rarely shown.', false],
       ] as [$name, $amount, $sub, $body, $highlight])
         <div class="reveal rounded-3xl p-6 {{ $highlight ? 'glass-strong ring-glow' : 'glass' }}">
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">{{ $name }}</div>
@@ -190,13 +190,13 @@
     <div class="mt-10 space-y-3">
       @foreach([
         ['Is there any subscription or minimum?', 'No. You can order a single ₹1,299 gig and never come back. The retainer option exists only because teams asked for predictable monthly billing at a discount.'],
-        ['When is my card charged?', 'At order time the amount moves into escrow. It is released to the creator when you approve, or refunded to you if you reject the delivery within the review window.'],
-        ['What does the 10% fee cover?', 'Matching, the brief engine, escrow and payouts, the QA gate, dispute handling and support. Creators keep the other 90%.'],
-        ['Do express gigs cost more?', 'Yes — express is 1.6× the base price because the creator reorganises their day for it. Relaxed 48-hour delivery is 0.85×. You always see the exact number before ordering.'],
+        ['When is my card charged?', 'At order time the amount moves into escrow. It is released to the freelancer when you approve, or refunded to you if you reject the delivery within the review window.'],
+        ['What does the 10% fee cover?', 'Matching, the brief engine, escrow and payouts, the QA gate, dispute handling and support. Freelancers keep the other 90%.'],
+        ['Do express gigs cost more?', 'Yes — express is 1.6× the base price because the freelancer reorganises their day for it. Relaxed 48-hour delivery is 0.85×. You always see the exact number before ordering.'],
         ['What if the deadline is missed?', 'The express premium is credited back automatically, and you keep the right to reject the delivery and recover the escrow.'],
         ['Do you invoice with GST?', 'Yes. Add your GSTIN in workspace settings and every order produces a GST-compliant invoice; teams can consolidate into one monthly invoice.'],
       ] as $i => [$q, $a])
-        <div class="glass rounded-2xl overflow-hidden" :class="open === {{ $i }} ? 'border-violet/40' : ''">
+        <div class="glass rounded-2xl overflow-hidden" :class="open === {{ $i }} ? 'border-violet/35' : ''">
           <button type="button" x-on:click="open = open === {{ $i }} ? -1 : {{ $i }}" class="w-full flex items-center justify-between gap-5 p-5 text-left">
             <span class="text-[14.5px] font-medium">{{ $q }}</span>
             <span class="w-7 h-7 rounded-full grid place-items-center shrink-0 transition" :class="open === {{ $i }} ? 'btn-grad text-ink rotate-180' : 'bg-white/6 text-white/50'">
@@ -244,7 +244,7 @@ document.addEventListener('alpine:init', () => {
       const agency  = 85000 + Math.max(0, units - 15) * 1800;  // retainer + overages
       const max = Math.max(this.ours, inhouse, agency, 1);
       return [
-        { label: 'In-house editor', note: 'salary, tools and overflow freelancers', cost: inhouse, bar: Math.round(inhouse / max * 100) },
+        { label: 'In-house editor', note: 'salary, tools and overflow creators', cost: inhouse, bar: Math.round(inhouse / max * 100) },
         { label: 'Agency retainer', note: 'monthly retainer plus scope overages',   cost: agency,  bar: Math.round(agency / max * 100) },
       ];
     },

@@ -12,7 +12,7 @@
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[620px]">
         Quick-commerce gig apps are fast to check out. Managed agencies take the quality burden off you.
         Bidding marketplaces have the deepest supply. We built Quick GIGS because none of them tell you
-        <em>why</em> a creator was chosen, or stop bad work before it reaches your inbox.
+        <em>why</em> a freelancer was chosen, or stop bad work before it reaches your inbox.
       </p>
     </div>
   </div>
@@ -74,15 +74,15 @@
 <section class="py-16">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Why teams switch</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Why teams switch</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Three differences that change the week.</h2>
     </div>
 
     <div class="mt-12 space-y-5">
       @foreach([
-        ['The brief is not your job anymore', 'Every other model starts with "send us a brief". We generate it from one sentence — hooks, beats, spec, QA gate — and hand the same document to the creator. Fewer rounds, comparable quotes, nothing lost in a DM.', 'Try the brief builder', route('brief-builder')],
+        ['The brief is not your job anymore', 'Every other model starts with "send us a brief". We generate it from one sentence — hooks, beats, spec, QA gate — and hand the same document to the freelancer. Fewer rounds, comparable quotes, nothing lost in a DM.', 'Try the brief builder', route('brief-builder')],
         ['Matching you can audit', 'You get a score out of 100 with the five factors that produced it: skill fit, availability, reliability, rating and budget. Re-weight them and the ranking changes in front of you.', 'Open the engine', route('ai')],
-        ['Bad deliveries never reach you', 'Six automated checks run before hand-off. A 4:5 export, missing captions or unlicensed music bounces back to the creator automatically — you only see work that already matches the spec.', 'See the QA gate', route('ai').'#m02'],
+        ['Bad deliveries never reach you', 'Six automated checks run before hand-off. A 4:5 export, missing captions or unlicensed music bounces back to the freelancer automatically — you only see work that already matches the spec.', 'See the QA gate', route('ai').'#m02'],
       ] as $i => [$t, $b, $cta, $href])
         <div class="reveal glass rounded-3xl p-7 sm:p-8 grid lg:grid-cols-[80px_1fr_180px] gap-6 items-center card-hover">
           <div class="font-display text-[42px] font-semibold text-white/10">0{{ $i + 1 }}</div>
@@ -112,7 +112,7 @@
       @foreach([
         ['You need a full-time person embedded in your team', 'If someone needs to sit in your standups and own a roadmap, hire them. We are built for defined deliverables, not headcount.'],
         ['You need a 12-week brand film with a crew', 'Multi-week productions with locations, casting and legal clearances belong with a production house. We handle work measured in hours and days.'],
-        ['You want the absolute lowest price on earth', 'Bidding marketplaces will always undercut us at the bottom end. Our floor is ₹1,299 because that is what a verified creator can do the work for properly.'],
+        ['You want the absolute lowest price on earth', 'Bidding marketplaces will always undercut us at the bottom end. Our floor is ₹1,299 because that is what a verified freelancer can do the work for properly.'],
       ] as [$t, $b])
         <div class="glass rounded-3xl p-6">
           <div class="flex gap-3.5">
