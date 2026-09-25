@@ -72,7 +72,7 @@
         <div class="bg-blue-50 border border-blue-100 rounded-xl p-3"><div class="text-[11px] font-bold text-blue-700">Priya Sharma • 10:38 AM</div><div class="text-[13px] font-medium">Sure! Adding now — will share draft in 1 hour.</div></div>
       </div>
       <form method="POST" action="{{ route('orders.message',$order['id']) }}" class="mt-3 flex gap-2">@csrf<input name="message" placeholder="Type as admin..." class="flex-1 h-10 px-3 rounded-full border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"><button class="h-10 px-5 rounded-full bg-[#0F0F0F] text-white font-bold text-[13px]">Send</button></form>
-      <div class="mt-2 text-[11px] text-[#7A7A78] font-medium">No WebSockets needed — page polls every 15s. Works on shared hosting.</div>
+      <div class="mt-2 text-[11px] text-[#7A7A78] font-medium">No WebSockets configured — page polls every 15s.</div>
     </div>
   </div>
 </div>

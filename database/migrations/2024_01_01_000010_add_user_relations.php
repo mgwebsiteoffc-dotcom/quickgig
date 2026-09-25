@@ -9,7 +9,7 @@ return new class extends Migration {
         // Runs after companies and creators exist; safe to add.
         Schema::table('users', function (Blueprint $table) {
             // Add foreign keys if not already present (fresh install will not have them)
-            // Use try/catch for shared hosting where FK names may already exist on rerun
+            // Use try/catch where FK names may already exist on rerun
             try {
                 $table->foreign('company_id')->references('id')->on('companies')->nullOnDelete();
             } catch (\Throwable $e) {}
