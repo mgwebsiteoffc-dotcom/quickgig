@@ -113,5 +113,6 @@
     <div class="px-6 py-4 text-center text-[11px] font-semibold text-[#7A7A78] border-t border-[#F0F0EE] bg-white">© {{ date('Y') }} Quick GIGS • Admin console</div>
   </div>
 </div>
+@stack('scripts')
 </body>
 </html>

@@ -21,7 +21,7 @@ class BriefWriter
 {
     public function __construct(
         private BriefComposer $composer,
-        private OpenRouterClient $client,
+        private AiManager $client,
     ) {
     }
 

@@ -143,7 +143,7 @@ class BoardController extends Controller
             'brief'         => $task->brief ?: $task->title,
             'turnaround'    => $task->priority === 'urgent' ? 'Express · 3 hours' : 'Standard · 24 hours',
             'subtotal'      => $subtotal,
-            'fee'           => (int) round($subtotal * 0.10),
+            'fee'           => (int) round($subtotal * \App\Http\Controllers\OrderController::feeRate()),
             'discount'      => 0,
             'total'         => $subtotal,
             'status'        => 'working',

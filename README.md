@@ -122,6 +122,30 @@ the board header and on the dashboard.
 
 ---
 
+## Configuration from the admin console
+
+Super admins set everything at **`/admin/settings`** — no redeploy needed. Secrets are encrypted with the
+app key before they hit the database and are only ever shown masked (`sk-or-••••••••3f2a`), with a
+**Test connection** button per provider.
+
+| Group | Keys |
+|---|---|
+| Platform | fee %, escrow hold hours, support email/phone, maintenance banner |
+| Payments | Razorpay key id, key secret, webhook secret |
+| AI | preferred provider (auto / OpenRouter / OpenAI / Gemini / off) plus a key and model for each |
+
+Values fall back to `.env`, so an env-only deployment keeps working unchanged.
+
+## Payments
+
+Razorpay is wired end to end: ordering creates a gateway order, the gig page opens Checkout, the callback
+signature is verified server-side before anything is marked paid, and `POST /webhooks/razorpay` accepts
+signed `payment.captured` / `payment.failed` / `refund.processed` events (CSRF-exempt, signature-checked).
+
+**With no keys configured the platform runs in demo mode** — orders are marked held so the whole flow stays
+demonstrable. Note that payouts to freelancers are not automated yet; approval releases escrow and records a
+payout reference. See `docs/status.md`.
+
 ## AI (optional)
 
 Every AI feature has a deterministic engine behind it. Without a key the product works exactly as
@@ -153,6 +177,9 @@ OPENROUTER_LOG=false
 | `app/Services/Ai/OpenRouterClient.php` | HTTP client. Returns `reasoning_details` untouched, exposes `assistantTurn()` for replaying it, `extractJson()` for fenced/prose-wrapped JSON. Every failure becomes `AiUnavailable`. |
 | `app/Services/Ai/BriefWriter.php` | Model-written briefs on top of `BriefComposer`, with per-field validation and merge. |
 | `app/Services/Ai/TaskParser.php` | Sentence → `{title, start_date, end_date, description, client}`, model-first with a Carbon/regex fallback. Flags past or inverted dates instead of silently rewriting them. |
+| `app/Services/Ai/AiManager.php` | Picks the active provider (admin setting → first configured → none) and exposes one `chat()` for every service. |
+| `app/Services/Ai/Providers/*` | OpenRouter, OpenAI and Gemini clients behind one interface. |
+| `app/Services/Payments/RazorpayGateway.php` | Order creation, signature verification, webhooks, refunds, credential ping. |
 | `scripts/openrouter_reasoning_example.py` | The same reasoning round-trip in ~60 lines of Python. |
 
 ### Verify it

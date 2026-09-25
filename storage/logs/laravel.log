@@ -250,3 +250,5 @@
 #67 /home/user/quickgig/scripts/dev/router.php(18): require('/home/user/quic...')
 #68 {main}
 "} 
+[2026-09-25 09:10:16] local.WARNING: razorpay.bad_signature {"order":"QC-6179-E7"} 
+[2026-09-25 09:10:31] local.INFO: razorpay.webhook {"event":"payment.captured","order":"QC-6179-E7"} 

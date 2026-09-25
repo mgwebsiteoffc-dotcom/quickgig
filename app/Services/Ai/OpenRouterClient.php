@@ -19,14 +19,15 @@ use Throwable;
  *     {@see AiUnavailable}, which the services catch to fall back to the
  *     deterministic engines.
  */
-class OpenRouterClient
+class OpenRouterClient implements \App\Services\Ai\Providers\ChatProvider
 {
     public function __construct(
         private ?string $apiKey = null,
         private ?string $model = null,
     ) {
-        $this->apiKey ??= config('openrouter.key');
-        $this->model  ??= config('openrouter.model');
+        // DB setting first (admin console), then config/env
+        $this->apiKey ??= setting('ai.openrouter.key') ?: config('openrouter.key');
+        $this->model  ??= setting('ai.openrouter.model') ?: config('openrouter.model');
     }
 
     public function enabled(): bool
@@ -38,6 +39,9 @@ class OpenRouterClient
     {
         return (string) $this->model;
     }
+
+    public function key(): string   { return 'openrouter'; }
+    public function label(): string { return 'OpenRouter'; }
 
     /**
      * @param  array<int,array<string,mixed>>  $messages  OpenAI-style messages. Assistant turns may

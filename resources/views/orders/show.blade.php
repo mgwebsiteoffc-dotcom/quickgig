@@ -37,7 +37,43 @@
       </span>
     </div>
 
-    <div class="mt-9 grid lg:grid-cols-[1fr_360px] gap-6 items-start">
+    @if($order->awaitingPayment())
+      <div class="mt-6 rounded-3xl border border-mint/40 bg-mint-wash p-5 sm:p-6"
+           x-data="checkoutPay(@js([
+             'key'      => app(\App\Services\Payments\RazorpayGateway::class)->keyId(),
+             'orderId'  => $order->payment_order_id,
+             'amount'   => $order->total,
+             'name'     => config('app.name'),
+             'gig'      => $order->service->title ?? 'Quick GIGS order',
+             'buyer'    => $order->company->person_name ?? '',
+             'email'    => $order->company->email ?? '',
+             'verify'   => route('orders.payment.verify', $order->uid),
+           ]))">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-mint-deep">Awaiting payment</div>
+            <div class="mt-1 text-[15px] font-medium">
+              Pay ₹{{ number_format($order->total) }} to move this gig into escrow — it is released only when you approve.
+            </div>
+          </div>
+          <button x-on:click="pay()" :disabled="busy"
+                  class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] shrink-0 disabled:opacity-60">
+            <span x-show="!busy">Pay ₹{{ number_format($order->total) }}</span>
+            <span x-show="busy" x-cloak>Opening checkout…</span>
+          </button>
+        </div>
+        <div x-show="error" x-cloak class="mt-3 text-[12.5px] text-pink" x-text="error"></div>
+      </div>
+    @elseif($order->isPaid() && $order->payment_provider === 'razorpay')
+      <div class="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-tint px-5 py-3.5 text-[13px]">
+        <span class="w-5 h-5 rounded-full bg-mint grid place-items-center shrink-0">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#04120D" stroke-width="3.2"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <span>Paid via Razorpay · <span class="font-mono">{{ $order->payment_id }}</span> · held in escrow since {{ $order->paid_at?->format('d M, H:i') }}</span>
+      </div>
+    @endif
+
+    <div class="mt-6 grid lg:grid-cols-[1fr_360px] gap-6 items-start">
 
       {{-- pipeline --}}
       <div class="space-y-5">
@@ -217,6 +253,50 @@ document.addEventListener('alpine:init', () => {
     },
     advance() { return this.call('/orders/' + this.uid + '/simulate'); },
     approve() { return this.call('/orders/' + this.uid + '/approve'); },
+  }));
+});
+</script>
+@endpush
+
+@push('scripts')
+<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('checkoutPay', (cfg) => ({
+    busy: false, error: '',
+    pay() {
+      if (typeof window.Razorpay === 'undefined') {
+        this.error = 'Checkout script blocked — disable the blocker or pay from another network.';
+        return;
+      }
+      this.busy = true;
+      const rzp = new window.Razorpay({
+        key: cfg.key,
+        order_id: cfg.orderId,
+        amount: cfg.amount * 100,
+        currency: 'INR',
+        name: cfg.name,
+        description: cfg.gig,
+        prefill: { name: cfg.buyer, email: cfg.email },
+        theme: { color: '#00C48C' },
+        modal: { ondismiss: () => { this.busy = false; } },
+        handler: async (response) => {
+          try {
+            const res = await window.qg.post(cfg.verify, response);
+            window.qg.toast(res.message || 'Payment captured.');
+            setTimeout(() => window.location.reload(), 900);
+          } catch (e) {
+            this.error = 'We could not verify that payment. Nothing has been released — contact support with the payment id.';
+            this.busy = false;
+          }
+        },
+      });
+      rzp.on('payment.failed', (e) => {
+        this.busy = false;
+        this.error = e?.error?.description || 'Payment failed.';
+      });
+      rzp.open();
+    },
   }));
 });
 </script>

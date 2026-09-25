@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\Ai\AiUnavailable;
-use App\Services\Ai\OpenRouterClient;
+use App\Services\Ai\AiManager;
 use Illuminate\Console\Command;
 
 class AiPing extends Command
@@ -12,16 +12,16 @@ class AiPing extends Command
 
     protected $description = 'Check the OpenRouter connection and print the model, latency and token usage';
 
-    public function handle(OpenRouterClient $client): int
+    public function handle(AiManager $client): int
     {
         if (! $client->enabled()) {
-            $this->components->error('OPENROUTER_API_KEY is not set. Every AI feature is running on the deterministic engine.');
-            $this->line('  Add the key to .env, then run this again.');
+            $this->components->error('No AI provider configured — every AI feature is on the deterministic engine.');
+            $this->line('  Add a key in /admin/settings (or .env), then run this again.');
 
             return self::FAILURE;
         }
 
-        $this->components->info('Calling ' . ($this->option('model') ?: $client->model()) . ' …');
+        $this->components->info('Calling ' . $client->label() . ' · ' . ($this->option('model') ?: $client->model()) . ' …');
 
         try {
             $result = $client->chat(

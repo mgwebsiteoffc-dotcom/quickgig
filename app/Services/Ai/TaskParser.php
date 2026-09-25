@@ -22,7 +22,7 @@ class TaskParser
 {
     public const FIELDS = ['title', 'start_date', 'end_date', 'description', 'client'];
 
-    public function __construct(private OpenRouterClient $client)
+    public function __construct(private AiManager $client)
     {
     }
 

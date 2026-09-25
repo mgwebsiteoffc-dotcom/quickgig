@@ -8,10 +8,20 @@ use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Payments\RazorpayGateway;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
     public const PLATFORM_FEE = 0.10;
+
+    /** Fee comes from the admin console; the constant is the fallback. */
+    public static function feeRate(): float
+    {
+        $pct = (float) setting('platform.fee_percent', self::PLATFORM_FEE * 100);
+
+        return max(0, min(30, $pct)) / 100;
+    }
 
     /** Speed lanes offered at checkout. */
     public const LANES = [
@@ -37,7 +47,7 @@ class OrderController extends Controller
 
         $lane     = self::LANES[$data['lane']];
         $subtotal = (int) round($service->price * $lane['mult']);
-        $fee      = (int) round($subtotal * self::PLATFORM_FEE);
+        $fee      = (int) round($subtotal * self::feeRate());
 
         $creatorId = $service->creator_id ?: Creator::where('is_verified', true)
             ->where('is_available', true)->orderByDesc('rating')->value('id');
@@ -59,6 +69,22 @@ class OrderController extends Controller
         ]);
 
         $service->increment('sold_count');
+
+        $gateway = app(RazorpayGateway::class);
+
+        if ($gateway->enabled()) {
+            try {
+                $gateway->createOrder($order);
+
+                return redirect()->route('orders.show', $order->uid)
+                    ->with('toast', 'Gig booked — pay ₹' . number_format($subtotal) . ' to move it into escrow.');
+            } catch (\Throwable $e) {
+                Log::warning('razorpay.order_failed', ['order' => $order->uid, 'message' => $e->getMessage()]);
+            }
+        }
+
+        // demo mode: no gateway configured, so escrow is simulated
+        $order->forceFill(['payment_provider' => 'demo', 'payment_status' => 'paid', 'paid_at' => now()])->save();
 
         return redirect()->route('orders.show', $order->uid)
             ->with('toast', 'Gig booked — ₹' . number_format($subtotal) . ' is held in escrow until you approve.');
@@ -123,9 +149,10 @@ class OrderController extends Controller
         }
 
         $o->update([
-            'status'        => 'delivered',
-            'escrow_status' => 'released',
-            'progress'      => 100,
+            'status'           => 'delivered',
+            'escrow_status'    => 'released',
+            'progress'         => 100,
+            'payout_reference' => $o->payout_reference ?: 'PO-' . strtoupper(\Illuminate\Support\Str::random(8)),
         ]);
 
         if ($o->creator) {
@@ -145,6 +172,77 @@ class OrderController extends Controller
         }
 
         return back()->with('toast', $message);
+    }
+
+    /** Checkout callback — verify the signature before trusting anything. */
+    public function verifyPayment(Request $request, RazorpayGateway $gateway, $order)
+    {
+        $o = Order::where('uid', $order)->orWhere('id', $order)->firstOrFail();
+        $this->authorizeOrder($request, $o);
+
+        $data = $request->validate([
+            'razorpay_order_id'   => ['required', 'string'],
+            'razorpay_payment_id' => ['required', 'string'],
+            'razorpay_signature'  => ['required', 'string'],
+        ]);
+
+        $valid = $gateway->verifyPaymentSignature(
+            $data['razorpay_order_id'], $data['razorpay_payment_id'], $data['razorpay_signature']
+        );
+
+        if (! $valid) {
+            Log::warning('razorpay.bad_signature', ['order' => $o->uid]);
+
+            return $request->expectsJson()
+                ? response()->json(['ok' => false, 'message' => 'Payment signature did not verify.'], 422)
+                : back()->with('toast', 'Payment signature did not verify — nothing was charged.');
+        }
+
+        $o->forceFill([
+            'payment_id'     => $data['razorpay_payment_id'],
+            'payment_status' => 'paid',
+            'paid_at'        => now(),
+            'escrow_status'  => 'held',
+        ])->save();
+
+        $message = '₹' . number_format($o->total) . ' captured and held in escrow.';
+
+        return $request->expectsJson()
+            ? response()->json(['ok' => true, 'message' => $message, 'payment_status' => 'paid'])
+            : back()->with('toast', $message);
+    }
+
+    /** Server-to-server confirmation from Razorpay. */
+    public function webhook(Request $request, RazorpayGateway $gateway)
+    {
+        $payload   = $request->getContent();
+        $signature = $request->header('X-Razorpay-Signature');
+
+        if (! $gateway->verifyWebhookSignature($payload, $signature)) {
+            return response()->json(['ok' => false], 400);
+        }
+
+        $event   = (string) $request->input('event');
+        $entity  = (array) $request->input('payload.payment.entity', []);
+        $receipt = (string) ($entity['notes']['order_uid'] ?? '');
+
+        $order = $receipt ? Order::where('uid', $receipt)->first() : null;
+
+        if ($order) {
+            match ($event) {
+                'payment.captured' => $order->forceFill([
+                    'payment_id' => $entity['id'] ?? $order->payment_id,
+                    'payment_status' => 'paid', 'paid_at' => now(), 'escrow_status' => 'held',
+                ])->save(),
+                'payment.failed' => $order->forceFill(['payment_status' => 'failed'])->save(),
+                'refund.processed' => $order->forceFill(['payment_status' => 'refunded', 'escrow_status' => 'refunded'])->save(),
+                default => null,
+            };
+        }
+
+        Log::info('razorpay.webhook', ['event' => $event, 'order' => $receipt]);
+
+        return response()->json(['ok' => true]);
     }
 
     public function message(Request $request, $order)

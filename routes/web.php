@@ -105,6 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
     Route::post('/orders/{order}/simulate', [OrderController::class, 'simulate'])->name('orders.simulate');
     Route::post('/orders/{order}/message', [OrderController::class, 'message'])->name('orders.message');
+    Route::post('/orders/{order}/payment/verify', [OrderController::class, 'verifyPayment'])->name('orders.payment.verify');
 
     /* ── Creator studio ── */
     Route::get('/creator', [CreatorController::class, 'dashboard'])->name('creator.dashboard');
@@ -130,6 +131,9 @@ Route::get('/creators/{id}', function ($id) {
         ],
     ]);
 })->whereNumber('id')->name('creator.public');
+
+/* ── Payment webhooks (signature verified, no session) ── */
+Route::post('/webhooks/razorpay', [OrderController::class, 'webhook'])->name('webhooks.razorpay');
 
 /* ── Health ── */
 Route::get('/health', fn () => response()->json([
@@ -204,6 +208,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,ad
     Route::post('/payouts/{id}/paid', [AdminPayout::class, 'markPaid'])->middleware('role:super_admin,admin,finance')->name('payouts.paid');
     Route::post('/payouts/{id}/hold', [AdminPayout::class, 'hold'])->middleware('role:super_admin,admin,finance')->name('payouts.hold');
 
-    Route::get('/settings', [AdminSetting::class, 'index'])->middleware('role:super_admin')->name('settings.index');
-    Route::post('/settings', [AdminSetting::class, 'update'])->middleware('role:super_admin')->name('settings.update');
+    Route::get('/settings',        [AdminSetting::class, 'index'])->middleware('role:super_admin')->name('settings.index');
+    Route::post('/settings',       [AdminSetting::class, 'update'])->middleware('role:super_admin')->name('settings.update');
+    Route::post('/settings/clear', [AdminSetting::class, 'clear'])->middleware('role:super_admin')->name('settings.clear');
+    Route::post('/settings/test',  [AdminSetting::class, 'test'])->middleware('role:super_admin')->name('settings.test');
 });
