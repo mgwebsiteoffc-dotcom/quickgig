@@ -53,7 +53,9 @@ Extra staff logins: `manager@quickgigs.in` / `Manager@123`, `support@quickgigs.i
 | Gig detail | `/gigs/{id}` | Speed lanes (express / standard / relaxed) with live price + fee split, brief form, creator card, related gigs. |
 | Sign up | `/register` | One flow, two account types (business or creator). Creates the user **and** the company/creator profile, then logs you in. |
 | Log in | `/login` | Role-aware redirect, one-tap demo account fill. |
-| Business dashboard | `/business` | Spend/escrow stats, gig list with progress, recommendations, creators online. |
+| Business dashboard | `/business` | Spend/escrow stats, task-board snapshot, natural-language task capture, gig list, recommendations. |
+| **Task board** | `/business/board` | Five-column board (queued → assigned → production → review → delivered). Create tasks from one sentence, auto-assignment, priorities, due dates, monthly credits, and one-click conversion into an escrow-backed order. Every action is inline JSON — no reloads. |
+| For business | `/for-business` | B2B landing: live board demo, hiring-vs-subscription calculator, category grid, workspace features, plan tiers (Starter/Growth/Scale) and a demo request form. |
 | Order tracking | `/orders/{uid}` | Five-stage pipeline, **Advance demo pipeline** button, approve-and-release escrow, messages. |
 | Creator studio | `/creator` | Availability toggle, assigned gigs, deliver flow, earnings, profile-strength meter. |
 | Profiles | `/business/profile`, `/creator/profile`, `/creators/{id}` | Editable and persisted, with portfolio CRUD for creators. |
@@ -81,6 +83,20 @@ to hire someone else.
 `/how-it-works` · `/ai-engine` · `/brief-builder` · `/pricing` · `/compare` · `/for-creators` ·
 `/enterprise` (lead form) · `/about` · `/contact` (lead form). Enquiries are stored in the `leads`
 table and reviewed at `/admin/leads`.
+
+### Business plans
+
+`Company::TIERS` defines the subscription tiers used by the panel and `/for-business`:
+
+| Tier | Price | Task credits | Seats |
+|---|---|---|---|
+| Pay as you go | — | per gig | 2 |
+| Starter | ₹24,999 / mo | 8 | 3 |
+| Growth | ₹54,999 / mo | 20 | 8 |
+| Scale | ₹99,999 / mo | 45 | 20 |
+
+Credits are consumed when a board task is converted into an order; the remaining balance shows in
+the board header and on the dashboard.
 
 ### Money flow
 

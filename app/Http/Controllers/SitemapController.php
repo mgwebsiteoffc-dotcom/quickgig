@@ -23,6 +23,7 @@ class SitemapController extends Controller
             ['loc' => url('/brief-builder'), 'changefreq' => 'weekly',  'priority' => '0.9'],
             ['loc' => url('/pricing'),       'changefreq' => 'weekly',  'priority' => '0.9'],
             ['loc' => url('/compare'),       'changefreq' => 'monthly', 'priority' => '0.8'],
+            ['loc' => url('/for-business'),  'changefreq' => 'weekly',  'priority' => '0.9'],
             ['loc' => url('/for-creators'),  'changefreq' => 'weekly',  'priority' => '0.8'],
             ['loc' => url('/enterprise'),    'changefreq' => 'monthly', 'priority' => '0.7'],
             ['loc' => url('/about'),         'changefreq' => 'monthly', 'priority' => '0.5'],

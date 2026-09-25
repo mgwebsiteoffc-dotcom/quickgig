@@ -7,6 +7,7 @@ use App\Models\Creator;
 use App\Models\Faq;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $company = $this->businessAccount();
         $this->extraGigs();
         $this->sampleOrders($company, $creator);
+        $this->sampleBoard($company, $creator);
 
         $this->command?->info('Quick GIGS demo data ready — log in with business@quickgigs.in / Business@123');
     }
@@ -149,6 +151,11 @@ class DatabaseSeeder extends Seeder
                 'email'       => 'business@quickgigs.in',
                 'phone'       => '+91 98765 43210',
                 'plan'        => 'Pro',
+                'plan_tier'       => 'growth',
+                'monthly_credits' => 20,
+                'credits_used'    => 7,
+                'seats'           => 8,
+                'renews_on'       => now()->addDays(12)->toDateString(),
                 'industry'    => 'D2C brand',
                 'team_size'   => 18,
                 'bio'         => 'Direct-to-consumer brand shipping 40+ short videos a month.',
@@ -208,6 +215,44 @@ class DatabaseSeeder extends Seeder
         // Make sure everything in the catalogue is orderable.
         Service::whereNull('is_active')->update(['is_active' => true]);
         Service::whereNull('price_type')->update(['price_type' => 'paid']);
+    }
+
+    /* ── a populated task board for the demo workspace ── */
+    private function sampleBoard(Company $company, Creator $creator): void
+    {
+        if (Task::where('company_id', $company->id)->exists()) return;
+
+        $second = Creator::where('handle', '@nehacreates')->first() ?? $creator;
+        $third  = Creator::where('handle', '@rahulcuts')->first() ?? $creator;
+
+        $rows = [
+            ['Diwali campaign — hero reel',        'Reel',       'urgent', 'queued',     null,     2,  'Festive hero film for the homepage and Meta ads. Founder voiceover, product macro shots, 30 seconds.'],
+            ['Amazon A+ banner set',               'Thumbnail',  'normal', 'queued',     null,     4,  'Six A+ content banners in brand colours, mobile-first crops included.'],
+            ['Protein bar — UGC testimonial',      'UGC Video',  'high',   'assigned',   $creator, 1,  'Real customer on camera, unscripted, 30 seconds with burned-in captions.'],
+            ['YouTube thumbnail A/B set',          'Thumbnail',  'normal', 'production', $second,  1,  'Three variants for the launch video: face-led, text-led and contrast-led.'],
+            ['Founder podcast — 5 shorts',         'Reel',       'high',   'production', $third,   2,  'Five vertical clips from episode 14, captions and hook cards.'],
+            ['Festive offer — static carousel',    'Bundle',     'low',    'review',     $second,  0,  'Five-slide Instagram carousel announcing the festive bundle pricing.'],
+            ['AI product ad — skincare serum',     'AI Video',   'normal', 'done',       $creator, -2, 'Thirty-second AI-generated ad with voiceover and 1:1 crop for Meta.'],
+            ['Brand kit refresh',                  'Bundle',     'normal', 'done',       $third,   -5, 'Logo lockups, palette and ten editable social templates.'],
+        ];
+
+        foreach ($rows as $i => [$title, $category, $priority, $status, $assignee, $dueInDays, $brief]) {
+            Task::create([
+                'company_id'     => $company->id,
+                'creator_id'     => $assignee?->id,
+                'title'          => $title,
+                'brief'          => $brief,
+                'category'       => $category,
+                'priority'       => $priority,
+                'status'         => $status,
+                'start_on'       => now()->subDays(max(0, 3 - $i))->toDateString(),
+                'due_on'         => now()->addDays($dueInDays)->toDateString(),
+                'links'          => $i % 3 === 0 ? ['https://drive.google.com/brand-assets'] : [],
+                'comments_count' => [4, 0, 7, 2, 11, 3, 6, 1][$i] ?? 0,
+                'sort_order'     => $i,
+                'delivered_at'   => $status === 'done' ? now()->subDays(abs($dueInDays)) : null,
+            ]);
+        }
     }
 
     /* ── two example orders so dashboards show real state ── */

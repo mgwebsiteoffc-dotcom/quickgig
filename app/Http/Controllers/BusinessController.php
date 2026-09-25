@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Creator;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class BusinessController extends Controller
@@ -36,11 +37,20 @@ class BusinessController extends Controller
         $availableNow = Creator::where('is_verified', true)->where('is_available', true)
             ->orderByDesc('rating')->limit(5)->get();
 
+        $tasks = Task::where('company_id', $company->id)->get();
+        $board = [
+            'open'      => $tasks->whereNotIn('status', ['done'])->count(),
+            'overdue'   => $tasks->filter->isOverdue()->count(),
+            'by_status' => collect(Task::STATUSES)->map(fn ($l, $k) => $tasks->where('status', $k)->count())->all(),
+            'next'      => $tasks->whereNotIn('status', ['done'])->sortBy('due_on')->first(),
+        ];
+
         return view('dashboard.business', [
             'company'      => $company,
             'orders'       => $orders,
             'stats'        => $stats,
             'recommended'  => $recommended,
+            'board'        => $board,
             'availableNow' => $availableNow,
             'seo'          => ['title' => 'Dashboard — Quick GIGS', 'canonical' => url('/business')],
         ]);

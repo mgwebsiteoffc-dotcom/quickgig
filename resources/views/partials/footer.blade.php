@@ -30,6 +30,7 @@
           ['Live demo', route('landing').'#demo'],
         ],
         'For you' => [
+          ['For business', route('for-business')],
           ['Hire talent', route('register').'?type=business'],
           ['Work as a pro', route('for-creators')],
           ['For teams', route('enterprise')],

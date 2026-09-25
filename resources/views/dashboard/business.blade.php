@@ -18,8 +18,10 @@
       </div>
     </div>
 
+    <div class="mt-6">@include('partials.panel-tabs')</div>
+
     {{-- stats --}}
-    <div class="mt-9 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
       @foreach([
         ['Active gigs', $stats['active'], 'in production or review'],
         ['In escrow', '₹'.number_format($stats['escrow']), 'released on approval'],
@@ -32,6 +34,38 @@
           <div class="text-[12px] text-mut mt-0.5">{{ $hint }}</div>
         </div>
       @endforeach
+    </div>
+
+    {{-- ── task board snapshot ── --}}
+    <div class="mt-6 glass rounded-3xl p-6 sm:p-7">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="font-display text-[19px] font-semibold">Task board</h2>
+          <p class="mt-1 text-[13px] text-mut">{{ $board['open'] }} open · {{ $board['overdue'] }} overdue · {{ $company->creditsLeft() }} credits left this month</p>
+        </div>
+        <a href="{{ route('board') }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center gap-2 text-[13.5px] font-semibold">
+          Open the board
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+
+      <div class="mt-5 grid sm:grid-cols-5 gap-2.5">
+        @foreach(\App\Models\Task::STATUSES as $key => $label)
+          @php $tint = ['queued'=>'from-white/8','assigned'=>'from-violet/20','production'=>'from-pink/20','review'=>'from-amber/20','done'=>'from-lime/20'][$key]; @endphp
+          <div class="rounded-2xl border border-white/10 bg-gradient-to-br {{ $tint }} to-transparent p-4">
+            <div class="text-[11px] text-mut">{{ $label }}</div>
+            <div class="mt-1 font-display text-[22px] font-semibold">{{ $board['by_status'][$key] ?? 0 }}</div>
+          </div>
+        @endforeach
+      </div>
+
+      @if($board['next'])
+        <a href="{{ route('board') }}" class="mt-4 flex items-center gap-3 rounded-2xl border border-white/8 bg-white/3 p-4 hover:border-pink/40 transition">
+          <span class="text-[10px] font-semibold tracking-wider uppercase rounded-full px-2 py-0.5 bg-pink/18 text-pink-soft shrink-0">Next up</span>
+          <span class="text-[13.5px] font-medium truncate">{{ $board['next']->title }}</span>
+          <span class="ml-auto text-[12px] text-mut shrink-0">{{ $board['next']->due_on?->format('d M') }}</span>
+        </a>
+      @endif
     </div>
 
     {{-- ── natural-language task capture (inline, never reloads) ── --}}

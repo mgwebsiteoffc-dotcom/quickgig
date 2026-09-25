@@ -5,6 +5,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\BriefBuilderController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CreatorController;
@@ -45,6 +46,7 @@ Route::get('/how-it-works', [PageController::class, 'howItWorks'])->name('how-it
 Route::get('/ai-engine',    [PageController::class, 'ai'])->name('ai');
 Route::get('/pricing',      [PageController::class, 'pricing'])->name('pricing');
 Route::get('/for-creators', [PageController::class, 'forCreators'])->name('for-creators');
+Route::get('/for-business', [PageController::class, 'forBusiness'])->name('for-business');
 Route::get('/compare',      [PageController::class, 'compare'])->name('compare');
 Route::get('/enterprise',   [PageController::class, 'enterprise'])->name('enterprise');
 Route::get('/about',        [PageController::class, 'about'])->name('about');
@@ -81,6 +83,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/business/switch', [BusinessController::class, 'switch'])->name('business.switch');
     Route::get('/business/profile', [BusinessController::class, 'profile'])->name('business.profile');
     Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->name('business.profile.update');
+
+    /* ── Business task board ── */
+    Route::get('/business/board',                    [BoardController::class, 'index'])->name('board');
+    Route::post('/business/board/tasks',             [BoardController::class, 'store'])->name('board.store');
+    Route::post('/business/board/{task}/status',     [BoardController::class, 'updateStatus'])->name('board.status');
+    Route::post('/business/board/{task}/priority',   [BoardController::class, 'updatePriority'])->name('board.priority');
+    Route::post('/business/board/{task}/convert',    [BoardController::class, 'convert'])->name('board.convert');
+    Route::delete('/business/board/{task}',          [BoardController::class, 'destroy'])->name('board.destroy');
 
     /* ── Natural-language task capture (also a JSON endpoint) ── */
     Route::post('/tasks/parse',  [TaskController::class, 'parse'])->name('tasks.parse');

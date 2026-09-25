@@ -144,6 +144,28 @@ class PageController extends Controller
         ]);
     }
 
+    public function forBusiness()
+    {
+        return view('pages.for-business', [
+            'tiers' => \App\Models\Company::TIERS,
+            'categories' => [
+                ['Video editing',   'Social cuts, ads, YouTube',        'from-violet to-violet-deep'],
+                ['Graphic design',  'Posts, banners, packaging',        'from-pink to-pink-soft'],
+                ['AI content',      'Product images, AI video ads',     'from-teal to-cyan'],
+                ['Motion graphics', 'Explainers, animated logos',       'from-amber to-pink'],
+                ['Presentations',   'Pitch decks, sales one-pagers',    'from-cyan to-violet'],
+                ['Branding',        'Logos, identity, guidelines',      'from-violet to-pink'],
+                ['UI design',       'Apps, SaaS screens, landing pages','from-lime to-teal'],
+                ['UGC & influencer','Creators on camera, testimonials', 'from-pink to-amber'],
+            ],
+            'seo' => [
+                'title'       => 'Quick GIGS for Business — your creative team on a subscription',
+                'description' => 'Queue creative tasks on a shared board, get a verified specialist assigned in minutes and approve the work. Team seats, SLAs, escrow and one invoice — from ₹24,999 a month.',
+                'canonical'   => route('for-business'),
+            ],
+        ]);
+    }
+
     public function compare()
     {
         return view('pages.compare', [

@@ -9,6 +9,7 @@
     ['Compare',       'Quick GIGS vs the alternatives', route('compare')],
   ];
   $company = [
+    ['For business', 'Task board, seats, one invoice', route('for-business')],
     ['For creators', 'Keep 90%, no bidding',        route('for-creators')],
     ['For teams',    'Pods, SLAs, one invoice',     route('enterprise')],
     ['Insights',     'Playbooks and case studies',  route('blog.index')],
