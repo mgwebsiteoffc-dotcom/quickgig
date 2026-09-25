@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\Admin\DashboardController as AdminDash;
 use App\Http\Controllers\Admin\OrderController as AdminOrder;
 use App\Http\Controllers\Admin\CreatorController as AdminCreator;
@@ -48,7 +49,13 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 // ── Auth (file session, no Redis) ──
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1')->name('login.post');
+
+// Password reset (throttled — see AuthController for the per-email limiter too)
+Route::get('/forgot-password', [AuthController::class, 'showForgot'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->middleware('throttle:6,1')->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:6,1')->name('password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ── Business — marketplace + PROFILE (real DB) ──
@@ -62,7 +69,7 @@ Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 
 // Orders — file queue, no Redis
-Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:20,1')->name('orders.store');
 Route::post('/teams', [OrderController::class, 'storeTeam'])->name('teams.store');
 Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
@@ -79,6 +86,9 @@ Route::get('/creator/orders/{order}', [CreatorController::class, 'order'])->name
 Route::post('/creator/orders/{order}/deliver', [CreatorController::class, 'deliver'])->name('creator.deliver');
 // Public creator profile (SEO Person JSON-LD) — numeric only so /creator/profile stays safe
 Route::get('/creator/{id}', function($id){ $c=\App\Models\Creator::findOrFail($id); return view('creator.public', compact('c')); })->where('id','[0-9]+')->name('creator.public');
+
+// ── Webhooks (no CSRF — signature verified instead) ──
+Route::post('/webhooks/razorpayx', [WebhookController::class, 'razorpayx'])->name('webhooks.razorpayx');
 
 // Health
 Route::get('/health', fn() => response()->json(['status'=>'ok','app'=>"QuickContent — India's First Quick Content Delivery",'host'=>'hostinger-shared-ready']));

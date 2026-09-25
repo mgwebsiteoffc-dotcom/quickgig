@@ -28,23 +28,18 @@
     @csrf
     <div>
       <label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Email</label>
-      <input name="email" type="email" value="{{ old('email','admin@quickcontent.in') }}" required class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px] font-medium outline-none focus:bg-white focus:border-[#0F0F0F]">
+      <input name="email" type="email" value="{{ old('email') }}" autocomplete="username" required class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px] font-medium outline-none focus:bg-white focus:border-[#0F0F0F]">
     </div>
     <div>
       <label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Password</label>
-      <input name="password" type="password" value="Admin@12345" required class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px] font-medium outline-none focus:bg-white focus:border-[#0F0F0F]">
+      <input name="password" type="password" autocomplete="current-password" required class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px] font-medium outline-none focus:bg-white focus:border-[#0F0F0F]">
     </div>
     <label class="flex items-center gap-2 text-[13px] font-semibold"><input type="checkbox" name="remember" value="1" class="rounded"> Remember me</label>
     <button class="w-full h-11 rounded-full bg-[#0F0F0F] text-white font-extrabold text-[14px] hover:bg-black">Login →</button>
   </form>
 
-  <div class="mt-5 bg-[#F8F8F7] border border-[#E8E8E6] rounded-xl p-3">
-    <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Demo logins (change after first login)</div>
-    <div class="mt-2 grid grid-cols-1 gap-1.5 text-[12px] font-mono">
-      <div class="flex justify-between bg-white border border-[#E8E8E6] rounded-lg px-2.5 py-1.5"><span>admin@quickcontent.in / Admin@12345</span><span class="font-bold">super_admin</span></div>
-      <div class="flex justify-between bg-white border border-[#E8E8E6] rounded-lg px-2.5 py-1.5"><span>manager@quickcontent.in / Manager@123</span><span class="font-bold">manager</span></div>
-      <div class="flex justify-between bg-white border border-[#E8E8E6] rounded-lg px-2.5 py-1.5"><span>support@quickcontent.in / Support@123</span><span class="font-bold">support</span></div>
-    </div>
+  <div class="mt-4 text-center">
+    <a href="{{ route('password.request') }}" class="text-[12px] font-bold text-[#7A7A78] underline">Forgot your password?</a>
   </div>
 
   <div class="mt-4 text-center text-[12px] font-semibold text-[#7A7A78]">Go to <a href="{{ route('landing') }}" class="text-[#0F0F0F] underline">Landing</a> • <a href="{{ route('business.home') }}" class="text-[#0F0F0F] underline">Marketplace</a></div>

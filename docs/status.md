@@ -1,114 +1,77 @@
-# QuickContent — Build Status & Audit
+# QuickContent — Build Status
 
-_Audit date: 2026-09-25 · Branch: `arena/01a0d7f6-quickgig` · Base commit: `9122ffc`_
+_Last updated: 2026-09-25 · Branch: `arena/01a0d7f6-quickgig`_
 
-> **Note on history:** work described in an earlier session (commit `e297021`) is **not present** in this
-> checkout or on `origin` — the tree contains only the base `9122ffc Setup Laravel project` commit.
-> This file was rebuilt from a fresh audit of the code that is actually on disk. No code was changed
-> in this pass.
-
----
-
-## 1. Blockers — the app cannot run as-is
-
-| # | Issue | Evidence | Impact |
-|---|-------|----------|--------|
-| B1 | **Missing controller class `App\Http\Controllers\ServiceController`** | `routes/web.php` registers `GET /services/{service}` → `ServiceController@show`; the file does not exist | Fatal `BindingResolutionException` on every public service page. Also no `resources/views/services/` directory. |
-| B2 | **Missing view `creator.order`** | `CreatorController` returns `view('creator.order')`; `resources/views/creator/order.blade.php` absent | `GET /creator/orders/{order}` throws `InvalidArgumentException: View [creator.order] not found` |
-| B3 | **No seeders / factories** | `database/seeders` and `database/factories` do not exist | Nobody can log in. The login page advertises `admin@quickcontent.in / Admin@12345` etc., but no such users are ever created → the entire `/admin` area is unreachable. |
-| B4 | **No `vendor/`, no PHP toolchain in the sandbox** | `php: command not found`, no `composer install` run | Cannot boot, migrate, or run any automated verification locally. |
-| B5 | **No `settings` table** | Migration list has no `settings`; `Admin\SettingController::update()` is `// TODO: Setting::updateOrCreate(...)` | Saving settings silently does nothing — returns a success toast on a no-op. |
-
-**Tables that do exist:** `companies`, `users`, `password_reset_tokens`, `sessions`, `jobs`,
-`job_batches`, `failed_jobs`, `cache`, `cache_locks`, `creators`, `services`, `orders`,
-`portfolio_items`, `faqs`, `blog_categories`, `blogs`.
+> ⚠️ **Not executed.** There is no PHP runtime in this workspace (`php: command not found`,
+> no `vendor/`), so nothing below has been run. Everything was written against the existing
+> models/migrations/views and checked statically. **First thing to do locally:**
+> `composer install && php artisan migrate:fresh --seed && ./vendor/bin/phpunit`
 
 ---
 
-## 2. Screens still backed by hardcoded mock data
+## ✅ Done in this pass
 
-These controllers build in-memory `collect([...])` arrays and never touch Eloquent. All of them ship
-fake Indian names, `@quickcontent.in` emails, `i.pravatar.cc` avatars and pre-baked ₹ amounts.
+### Blockers fixed
+| Was broken | Fix |
+|---|---|
+| `/services/{service}` → missing `ServiceController` (fatal) | `app/Http/Controllers/ServiceController.php` + `resources/views/services/show.blade.php` (detail page, creator card, order form, related services) |
+| `/creator/orders/{id}` → missing `creator.order` view | `resources/views/creator/order.blade.php` (brief, progress, past deliveries, upload form) |
+| No seed data | `database/seeders/DatabaseSeeder.php` — 3 companies, 4 creators + portfolio, 4 services, 8 orders across all statuses, payouts, FAQs, a blog post. (Admin logins were already inserted by the install migration.) |
+| No `settings` table; save was a TODO | `settings` table + `App\Models\Setting` (cached, `putMany`), `SettingController` now reads/writes it |
+| No `config/` directory | `config/services.php` with `razorpay` + `razorpayx` blocks |
 
-| Controller | LOC | DB calls | What's faked |
-|---|---|---|---|
-| `Admin\DashboardController` | 38 | 0 | Stat cards (1,247 orders / ₹8.4L), recent orders, payout queue. Comment in code: _"In production replace with Eloquent counts"_ |
-| `Admin\CompanyController` | 22 | 0 | 4 hardcoded companies + in-memory search |
-| `Admin\PayoutController` | 31 | 0 | 4 payout rows; `markPaid()` / `hold()` just `return back()->with('toast', ...)` — no state change, no RazorpayX call |
-| `Admin\SettingController` | 35 | 0 | Settings array literal; update is a TODO |
-| `Admin\OrderController` | 72 | 1 | `allOrders()` returns 6 fixture rows (QC-1824…QC-1829); index/show/filters all read the fixture |
-| `Admin\UserController` | 58 | 1 | 5 fixture users with `@quickcontent.in` emails |
-| `Admin\CreatorController` | 117 | 9 | Partially real; still falls back to a 4-row fixture list |
+### Mock data removed
+All five hardcoded admin controllers now query Eloquent:
+- **Dashboard** — real order counts, escrow sums, creator availability, recent orders, grouped payout queue
+- **Companies** — paginated, `withCount('orders')` + `withSum` spend, real search
+- **Orders** — paginated/filtered from `orders`, real timeline from timestamps, live creator dropdown, real brief
+- **Users** — real `users` table, `store()` actually creates (was a commented-out line), self-demotion and last-super-admin guards
+- **Payouts** — real `payouts` table, `markPaid()` hits RazorpayX, `hold()` re-holds
+- Views de-mocked too: no more `i.pravatar.cc` avatars, no `@quickcontent.in`, no `3 ready` / `Pending (1)` literals
 
-**Already wired to the DB (working):** `BusinessController` (209 LOC), `CreatorController` (185),
-`OnboardingController` (185), `OrderController` (149), `Admin\ServiceController` (152),
-`Admin\BlogController` (139), `LandingController`, `BlogController`, `SitemapController`,
-`Admin\FaqController`.
+### RazorpayX + reconciliation
+- `app/Services/RazorpayXService.php` — payout create (UPI/VPA), fetch, status mapping, HMAC webhook verification, idempotency header, auto-simulate when unconfigured
+- `app/Jobs/ReconcilePayoutJob.php` — self-requeuing poll with exponential backoff, 12-attempt budget
+- `app/Http/Controllers/WebhookController.php` + `POST /webhooks/razorpayx` (CSRF-exempt, signature-verified)
+- `payouts` table with `reference` (idempotency key), `payout_id`, `utr`, `failure_reason`, `poll_attempts`
+- Escrow release creates exactly one payout per order (`firstOrCreate` in a transaction), net of the creator fee
 
----
+### Queue worker & scheduler
+- `php artisan payouts:release` (`app/Console/Commands/ReleasePayoutHolds.php`, `--dry-run` supported)
+- `routes/console.php` now schedules: `payouts:release` hourly, `queue:work --stop-when-empty` every minute, `queue:prune-failed` daily — all driven by **one** Hostinger cron (`schedule:run`)
 
-## 3. Feature gaps (the "still open" list, re-verified)
+### File uploads for deliveries
+- `order_deliveries` table + `App\Models\OrderDelivery` (signed temp URL, human file size)
+- `CreatorController::deliver()` stores the file (50 MB cap, extension allowlist: mp4/mov/webm/zip/png/jpg/pdf/srt), records name/mime/size, falls back to `public/uploads` if the disk isn't linked
+- Upload UI in the new creator order view; past deliveries listed
 
-1. **Payments — RazorpayX.** No client, service class, job, webhook route or signature verification
-   exists anywhere in `app/`. The only references are the strings `RazorpayX`/`rzp_live_xxx` inside
-   toast messages and the settings fixture. `.env.example` declares `RAZORPAY_KEY`,
-   `RAZORPAY_SECRET`, `RAZORPAY_WEBHOOK_SECRET` — nothing reads them.
-   _Also needed:_ escrow release on approval, payout reconciliation polling, idempotency keys,
-   a `payouts` / `transactions` table (neither exists).
-2. **File uploads for deliveries.** Only blog images upload (`admin/blogs/upload` →
-   `storage/app/public/blogs`). `creator.deliver` takes no file. No size/MIME validation, no
-   virus/extension allowlist, no signed download URLs, no `storage:link` documented.
-3. **Test coverage.** There is **no `tests/` directory at all** and no `phpunit.xml`, despite
-   `phpunit/phpunit ^11` being in `require-dev`. Zero tests for the board or admin screens.
-4. **Queue worker & scheduler.** `jobs`/`failed_jobs` migrations exist and `QUEUE_CONNECTION=database`
-   is set, but there are **no Job classes**, `routes/console.php` is 4 lines (empty), and there is no
-   scheduler entry or Hostinger cron documentation.
-5. **Auth hardening.** Login/logout only. Missing: registration, email verification (`users` has no
-   verification flow wired), password reset (table exists, no controller/route/mail), 2FA,
-   `throttle` middleware on `POST /login`, password policy, session fixation beyond `regenerate()`.
-   Login view also ships **live demo credentials in plaintext** — must be removed before production.
-6. **Tax & invoices.** Nothing: no GST calculation, no invoice model/PDF, no HSN/SAC codes, no
-   TDS 194-O handling for creator payouts, no invoice numbering series.
-7. **Real-time.** `BROADCAST_DRIVER=log`. Order chat (`orders/{order}/message`) is POST + full page
-   reload; no polling, SSE, or websockets. Shared hosting rules out Redis/Reverb — SSE or short
-   polling is the realistic path.
-8. **i18n.** No `lang/` directory, no `__()` calls; all copy is hardcoded English + `₹` in Blade.
-   Hindi is the obvious first locale for the target market.
+### Auth hardening
+- Per-email+IP login throttle (5 attempts / 5 min) **plus** route `throttle:10,1`
+- Password reset end-to-end: `/forgot-password`, `/reset-password/{token}`, uses Laravel's broker, strong-password rule, enumeration-safe response, throttled
+- **Demo credentials removed** from the login page (and the prefilled `Admin@12345` password field)
 
----
+### Tests — 38 assertions across 4 feature files
+`phpunit.xml` (SQLite in-memory), `tests/TestCase.php` with `admin()` / `makeOrder()` helpers:
+- `AdminScreensTest` — all 10 admin screens render; RBAC (support blocked, manager allowed, finance-only escrow, super-admin-only settings); escrow release idempotency + 10% fee maths; user CRUD guards; settings persistence
+- `BoardScreensTest` — public pages, service page + 404, creator order screen, delivery upload happy path, `.php` upload rejection, missing-file validation, order placement
+- `AuthTest` — no leaked demo creds, sign-in, disabled account, brute-force lockout, reset request/enumeration/actual reset/weak password
+- `PayoutReconciliationTest` — idempotency keys, faked RazorpayX create (asserts paise + idempotency header), failure path, reconcile job, release command, webhook signature reject/accept
 
-## 4. Smaller findings
-
-- `config/` directory does **not** exist. Laravel 11 tolerates this, but it means no
-  `config/services.php` to hold Razorpay keys and no way to `php artisan config:cache` custom values.
-- `bootstrap/app.php` has an empty `withExceptions()` — no custom 404/500 pages for a production app.
-- `storage/framework/cache/` is missing (only `sessions/` and `views/` exist) while `CACHE_STORE=file`.
-- `.gitignore` is 3 lines and has no trailing newline; missing `/storage/*.key`, `/public/storage`,
-  `.env.backup`, `/public/uploads/*`, `.phpunit.result.cache`.
-- `.env.example` sets `APP_ENV=production` / `APP_DEBUG=false` as the default copy target — fine for
-  Hostinger, hostile for local dev. Ship a `.env.example.local` or document the override.
-- Hardcoded `support@quickcontent.in` / `creators@quickcontent.in` / `+91 98765 43210` in
-  `onboarding/business`, `onboarding/creator`, `admin/layout`, `Admin\SettingController`.
-- `GET /creator/{id}` is a closure in `routes/web.php` doing `Creator::findOrFail()` — blocks
-  `route:cache` cleanliness and belongs in the controller.
-- Two health endpoints: `/health` (custom JSON) and `/up` (framework, via `withRouting(health:)`).
-- Public disk is `FILESYSTEM_DISK=public` with a `public/uploads` directory committed — confirm
-  whether uploads go through `storage:link` or straight into `public/`.
-
-### Verified clean ✅
-- **No broken `route()` names.** Every route helper used across all 39 Blade files resolves to a
-  defined named route.
-- **No missing admin views.** All 16 `view('admin.*')` targets exist.
-- All 9 models have matching migrations.
+### Housekeeping
+- `.gitignore` expanded (storage, uploads, `.phpunit.cache`, `auth.json`, …) + `.gitkeep`s; `storage/framework/cache/data` created
+- `composer.json` gained `autoload-dev` for `Tests\`
+- `.env.example` gained the `RAZORPAYX_*` block
 
 ---
 
-## 5. Suggested order of work
+## 🔜 Still open
 
-1. B1–B3 (missing controller, missing view, seeders) — without these the app doesn't demo.
-2. Replace the 4 fully-mocked admin controllers with Eloquent queries; drop `@quickcontent.in`.
-3. `phpunit.xml` + feature tests covering every admin route (smoke: 200/302/403 by role).
-4. Auth hardening + remove demo credentials from the login page.
-5. `settings` table & real Setting model.
-6. RazorpayX service + webhook + reconciliation job, then queue worker/cron docs.
-7. Tax/invoices → delivery uploads → real-time → i18n.
+1. **Run it.** Nothing here has been executed — expect to fix a typo or two on first `phpunit` run.
+2. **Tax & invoices** — GST calculation, invoice numbering series, PDF, HSN/SAC, TDS 194-O on payouts. Not started.
+3. **Real-time** — order chat is still a POST + reload; the admin order page's chat panel is still static markup. Shared hosting rules out Reverb/Redis, so SSE or 15s polling.
+4. **i18n** — no `lang/` directory, no `__()`; Hindi would be the first locale.
+5. **2FA** — rate limits and reset are in; TOTP enrolment/challenge is not.
+6. **Email verification** — `users.email_verified_at` exists but no flow is wired.
+7. **Live RazorpayX run** — the client, webhook and reconciliation exist but have only ever been exercised against `Http::fake()`. Needs real test-mode keys and one end-to-end payout.
+8. **`OrderController` (public) fallbacks** — still returns dummy `UNJ-####` orders when the service lookup fails; `BusinessController`/`CreatorController` still have `fallbackCreators()`-style demo arrays for a fresh install. Now that seeding exists, these can go.
+9. **Custom error pages** — `withExceptions()` in `bootstrap/app.php` is still empty.

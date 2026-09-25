@@ -130,25 +130,60 @@ class CreatorController extends Controller
 
     public function order(Request $request, $order)
     {
-        // Creator view of single order
-        try {
-            $creatorId = $request->session()->get('creator_id', 1);
-            $o = Order::with(['company','service'])->where('creator_id',$creatorId)->where('uid', $order)->orWhere('id',$order)->firstOrFail();
-        } catch (\Throwable $e) {
-            $o = (object)['uid'=>'QC-1829','brief'=>'Need talking-head reel, hook in 2s','status'=>'working','total'=>2499,'company'=>(object)['name'=>'Avante Studio'],'service'=>(object)['title'=>'Talking-Head Reel']];
-        }
+        $creatorId = $request->session()->get('creator_id', 1);
+
+        $o = Order::with(['company','service','deliveries'])
+            ->where('creator_id', $creatorId)
+            ->where(fn($q) => $q->where('uid', $order)->orWhere('id', $order))
+            ->firstOrFail();
+
         return view('creator.order', compact('o'));
     }
 
     public function deliver(Request $request, $order)
     {
-        $request->validate(['delivery_url'=>'required|url','note'=>'nullable|string|max:500']);
-        try {
-            $creatorId = $request->session()->get('creator_id', 1);
-            $o = Order::where('creator_id',$creatorId)->where('uid',$order)->orWhere('id',$order)->firstOrFail();
-            $o->update(['status'=>'review','progress'=>90]);
-        } catch (\Throwable $e) {}
-        return back()->with('toast','Delivered for review — company notified');
+        $data = $request->validate([
+            'delivery_url' => 'required_without:file|nullable|url|max:500',
+            'note'         => 'nullable|string|max:500',
+            'file'         => 'nullable|file|max:51200|mimes:mp4,mov,webm,zip,png,jpg,jpeg,pdf,srt',
+        ]);
+
+        $creatorId = $request->session()->get('creator_id', 1);
+
+        $o = Order::where('creator_id', $creatorId)
+            ->where(fn($q) => $q->where('uid', $order)->orWhere('id', $order))
+            ->firstOrFail();
+
+        $payload = [
+            'order_id'     => $o->id,
+            'creator_id'   => $creatorId,
+            'delivery_url' => $data['delivery_url'] ?? null,
+            'note'         => $data['note'] ?? null,
+        ];
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            try {
+                $path = $file->store('deliveries/'.$o->id, 'public');
+            } catch (\Throwable $e) {
+                $safe = time().'_'.preg_replace('/[^a-zA-Z0-9._-]/', '', $file->getClientOriginalName());
+                $file->move(public_path('uploads/deliveries'), $safe);
+                $path = 'uploads/deliveries/'.$safe;
+            }
+
+            $payload += [
+                'file_path' => $path,
+                'file_name' => $file->getClientOriginalName(),
+                'mime'      => $file->getClientMimeType(),
+                'size'      => $file->getSize(),
+            ];
+        }
+
+        \App\Models\OrderDelivery::create($payload);
+
+        $o->update(['status' => 'review', 'progress' => 90]);
+
+        return back()->with('toast', 'Delivered for review — company notified');
     }
 
     // Portfolio CRUD — fully working

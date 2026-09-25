@@ -9,11 +9,11 @@
 </div>
 
 <div class="mt-6 bg-white border border-[#E8E8E6] rounded-2xl overflow-hidden">
-  <div class="px-5 py-4 border-b border-[#F0F0EE] flex items-center justify-between"><div class="font-black text-[14px]">Payout Queue</div><div class="text-[12px] font-semibold text-[#7A7A78]">RazorpayX • UPI • Cron moves held → ready after {{ 48 }}h</div></div>
+  <div class="px-5 py-4 border-b border-[#F0F0EE] flex items-center justify-between"><div class="font-black text-[14px]">Payout Queue</div><div class="text-[12px] font-semibold text-[#7A7A78]">RazorpayX • UPI • Cron moves held → ready after {{ \App\Models\Setting::get('escrow_hours',48) }}h</div></div>
   <div class="divide-y divide-[#F0F0EE]">
     @foreach($queue as $q)
     <div class="flex flex-wrap items-center gap-4 px-5 py-4 hover:bg-[#F8F8F7]/50">
-      <img src="https://i.pravatar.cc/100?img={{ $q['id'] + 4 }}" class="w-10 h-10 rounded-full object-cover border border-[#E8E8E6]">
+      <div class="w-10 h-10 rounded-full bg-[#0F0F0F] text-white grid place-items-center font-black text-[12px] shrink-0">{{ strtoupper(substr($q['creator'],0,1)) }}</div>
       <div class="flex-1 min-w-[160px]"><div class="text-[13px] font-black">{{ $q['creator'] }} <span class="text-[#7A7A78] font-semibold">{{ $q['handle'] }}</span></div><div class="text-[11px] font-semibold text-[#7A7A78]">UPI: {{ $q['upi'] }} • {{ $q['orders'] }} orders • Hold till {{ $q['hold_until'] }}</div></div>
       <div class="text-right"><div class="text-[14px] font-black">₹{{ number_format($q['amount']) }}</div><span class="text-[11px] font-bold px-2.5 py-1 rounded-full border
         @if($q['status']=='hold') bg-amber-50 border-amber-200 text-amber-700
@@ -29,5 +29,5 @@
   </div>
 </div>
 
-<div class="mt-4 bg-blue-50 border border-blue-200 rounded-2xl p-4 text-[13px] leading-5"><b>How it works on Hostinger (no Redis):</b> Payments are held in Razorpay escrow. A daily cron runs <code class="bg-white border border-blue-200 px-1 py-0.5 rounded font-mono text-[11px]">php artisan payouts:release</code> (you create this command) to move eligible holds to ready. Finance clicks Mark Paid → calls RazorpayX payout API → creator gets UPI. Support cron logs to <code class="bg-white border border-blue-200 px-1 py-0.5 rounded">storage/logs/payouts.log</code>.</div>
+<div class="mt-4 bg-blue-50 border border-blue-200 rounded-2xl p-4 text-[13px] leading-5"><b>How it works on Hostinger (no Redis):</b> Payments are held in Razorpay escrow. A daily cron runs <code class="bg-white border border-blue-200 px-1 py-0.5 rounded font-mono text-[11px]">php artisan payouts:release</code>  to move eligible holds to ready. Finance clicks Mark Paid → calls RazorpayX payout API → creator gets UPI. Support cron logs to <code class="bg-white border border-blue-200 px-1 py-0.5 rounded">storage/logs/payouts.log</code>.</div>
 @endsection
