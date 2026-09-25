@@ -58,34 +58,39 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->nam
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:6,1')->name('password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ── Business — marketplace + PROFILE (real DB) ──
-Route::get('/business', [BusinessController::class, 'home'])->name('business.home');
-Route::get('/app', [BusinessController::class, 'home'])->name('app');
-Route::post('/business/switch', [BusinessController::class, 'switch'])->name('business.switch');
-Route::get('/business/profile', [BusinessController::class, 'profile'])->name('business.profile');
-Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->name('business.profile.update');
+// ── Authenticated app: business + creator ──
+Route::middleware('auth')->group(function () {
 
-// Services
+    // Business — marketplace + profile
+    Route::get('/business', [BusinessController::class, 'home'])->name('business.home');
+    Route::get('/app', [BusinessController::class, 'home'])->name('app');
+    Route::post('/business/switch', [BusinessController::class, 'switch'])->name('business.switch');
+    Route::get('/business/profile', [BusinessController::class, 'profile'])->name('business.profile');
+    Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->name('business.profile.update');
+
+    // Orders
+    Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:20,1')->name('orders.store');
+    Route::post('/teams', [OrderController::class, 'storeTeam'])->name('teams.store');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
+    Route::post('/orders/{order}/message', [OrderController::class, 'message'])->name('orders.message');
+
+    // Creator — dashboard, profile, portfolio, deliveries
+    Route::get('/creator', [CreatorController::class, 'dashboard'])->name('creator.dashboard');
+    Route::get('/creator/profile', [CreatorController::class, 'profile'])->name('creator.profile');
+    Route::post('/creator/profile', [CreatorController::class, 'updateProfile'])->name('creator.profile.update');
+    Route::post('/creator/availability', [CreatorController::class, 'toggleAvailability'])->name('creator.availability');
+    Route::post('/creator/portfolio', [CreatorController::class, 'storePortfolio'])->name('creator.portfolio.store');
+    Route::delete('/creator/portfolio/{id}', [CreatorController::class, 'destroyPortfolio'])->name('creator.portfolio.destroy');
+    Route::get('/creator/orders/{order}', [CreatorController::class, 'order'])->name('creator.order');
+    Route::post('/creator/orders/{order}/deliver', [CreatorController::class, 'deliver'])->middleware('throttle:30,1')->name('creator.deliver');
+});
+
+// ── Public ──
+// Service detail (browsable without an account; ordering requires auth)
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
-
-// Orders — file queue, no Redis
-Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:20,1')->name('orders.store');
-Route::post('/teams', [OrderController::class, 'storeTeam'])->name('teams.store');
-Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
-Route::post('/orders/{order}/message', [OrderController::class, 'message'])->name('orders.message');
-
-// Creator — dashboard + PROFILE + portfolio (real DB)
-Route::get('/creator', [CreatorController::class, 'dashboard'])->name('creator.dashboard');
-Route::get('/creator/profile', [CreatorController::class, 'profile'])->name('creator.profile');
-Route::post('/creator/profile', [CreatorController::class, 'updateProfile'])->name('creator.profile.update');
-Route::post('/creator/availability', [CreatorController::class, 'toggleAvailability'])->name('creator.availability');
-Route::post('/creator/portfolio', [CreatorController::class, 'storePortfolio'])->name('creator.portfolio.store');
-Route::delete('/creator/portfolio/{id}', [CreatorController::class, 'destroyPortfolio'])->name('creator.portfolio.destroy');
-Route::get('/creator/orders/{order}', [CreatorController::class, 'order'])->name('creator.order');
-Route::post('/creator/orders/{order}/deliver', [CreatorController::class, 'deliver'])->name('creator.deliver');
 // Public creator profile (SEO Person JSON-LD) — numeric only so /creator/profile stays safe
-Route::get('/creator/{id}', function($id){ $c=\App\Models\Creator::findOrFail($id); return view('creator.public', compact('c')); })->where('id','[0-9]+')->name('creator.public');
+Route::get('/creator/{id}', [CreatorController::class, 'publicProfile'])->where('id', '[0-9]+')->name('creator.public');
 
 // ── Webhooks (no CSRF — signature verified instead) ──
 Route::post('/webhooks/razorpayx', [WebhookController::class, 'razorpayx'])->name('webhooks.razorpayx');

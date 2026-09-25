@@ -7,18 +7,25 @@ use App\Models\Service;
 use App\Models\Creator;
 use App\Models\Company;
 use App\Models\Order;
+use App\Http\Controllers\Concerns\ResolvesActor;
 
 class OrderController extends Controller
 {
+    use ResolvesActor;
+
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'service_id' => 'required',
-            'creator_id' => 'nullable',
+            'service_id' => 'required|exists:services,id',
+            'creator_id' => 'nullable|exists:creators,id',
             'company_id' => 'required|integer',
             'brief' => 'required|string|min:8',
             'turnaround' => 'nullable|string',
         ]);
+
+        // You may only order on behalf of a business you belong to.
+        $allowed = $this->selectableCompanies($request)->pluck('id');
+        abort_unless($allowed->contains((int) $validated['company_id']), 403, 'That business is not yours.');
 
         // Try DB-backed order for real flow (supports UGC/Barter same flow)
         try {
@@ -71,10 +78,7 @@ class OrderController extends Controller
             // fall through to dummy
         }
 
-        $orderId = 'UNJ-'.rand(8000,9999);
-        return redirect()->route('orders.show', $orderId)
-            ->with('toast', 'Booked for company — creator in 4 min ⚡')
-            ->with('order', $validated);
+        return back()->with('error', 'That service is not available right now. Please pick another.');
     }
 
     public function storeTeam(Request $request)
@@ -83,67 +87,84 @@ class OrderController extends Controller
             'prompt' => 'required|string|min:5',
             'company_id' => 'required|integer',
         ]);
-        $orderId = 'TEAM-'.rand(8000,9999);
-        return redirect()->route('orders.show', $orderId)
-            ->with('toast', 'Team booked — captain will manage delivery');
+
+        $allowed = $this->selectableCompanies($request)->pluck('id');
+        abort_unless($allowed->contains((int) $validated['company_id']), 403, 'That business is not yours.');
+
+        // Prompt-a-team is not wired to a real fulfilment flow yet — see docs/status.md.
+        return back()->with('toast', 'Prompt received — our team will confirm scope and price shortly.');
     }
 
-    public function show($order)
+    public function show(Request $request, $order)
     {
-        try {
-            $o = Order::with(['company','creator','service'])->where('uid',$order)->orWhere('id',$order)->first();
-            if ($o) {
-                return view('orders.show', [
-                    'order' => [
-                        'id' => $o->uid ?? $o->id,
-                        'company' => ['name'=>$o->company->name ?? 'Company','person'=>$o->company->person_name ?? 'Owner','initials'=>strtoupper(substr($o->company->name ?? 'C',0,2))],
-                        'creator' => $o->creator ? ['name'=>$o->creator->name,'handle'=>$o->creator->handle,'img'=>$o->creator->avatarUrl(),'rating'=>number_format($o->creator->rating,1),'available'=>$o->creator->is_available] : ['name'=>'Priya Sharma','handle'=>'@priyaedits','img'=>'https://i.pravatar.cc/100?img=5','rating'=>'4.9','available'=>true],
-                        'service' => ['title'=>$o->service->title ?? 'Service','price'=>$o->service->price ?? $o->total,'time'=>$o->turnaround ?? '1 Day', 'category'=>$o->service->category ?? '', 'price_type'=>$o->service->price_type ?? 'paid', 'display_price'=>$o->service ? $o->service->displayPrice() : '₹'.number_format($o->total)],
-                        'total' => $o->total,
-                        'escrow_status' => $o->escrow_status,
-                        'status' => $o->status,
-                        'progress' => $o->progress,
-                        'brief' => $o->brief,
-                    ]
-                ]);
-            }
-        } catch (\Throwable $e) {}
+        $o = Order::with(['company','creator','service'])
+            ->where(fn($q) => $q->where('uid', $order)->orWhere('id', $order))
+            ->firstOrFail();
 
-        // Dummy fallback
+        $this->authorizeOrder($request, $o);
+
         return view('orders.show', [
             'order' => [
-                'id' => $order,
-                'company' => ['name'=>'Avante Studio','person'=>'Rohan Sharma','initials'=>'AS'],
-                'creator' => ['name'=>'Priya Sharma','handle'=>'@priyaedits','img'=>'https://i.pravatar.cc/100?img=5','rating'=>'4.9','available'=>true],
-                'service' => ['title'=>'Engaging Talking-Head Reel','price'=>2499,'time'=>'1 Day','category'=>'Reel','price_type'=>'paid','display_price'=>'₹2,499'],
-                'total' => 2374,
-                'escrow_status' => 'held',
-                'status' => 'working',
-                'progress' => 25,
-                'brief' => 'Need reel',
-            ]
+                'id'      => $o->uid ?? $o->id,
+                'company' => [
+                    'name'     => $o->company->name ?? 'Company',
+                    'person'   => $o->company->person_name ?? 'Owner',
+                    'initials' => strtoupper(substr($o->company->name ?? 'C', 0, 2)),
+                ],
+                'creator' => $o->creator ? [
+                    'name'      => $o->creator->name,
+                    'handle'    => $o->creator->handle,
+                    'img'       => $o->creator->avatarUrl(),
+                    'rating'    => number_format($o->creator->rating, 1),
+                    'available' => $o->creator->is_available,
+                ] : null,
+                'service' => [
+                    'title'         => $o->service->title ?? 'Service',
+                    'price'         => $o->service->price ?? $o->total,
+                    'time'          => $o->turnaround ?? '1 Day',
+                    'category'      => $o->service->category ?? '',
+                    'price_type'    => $o->service->price_type ?? 'paid',
+                    'display_price' => $o->service ? $o->service->displayPrice() : '₹'.number_format($o->total),
+                ],
+                'total'         => $o->total,
+                'escrow_status' => $o->escrow_status,
+                'status'        => $o->status,
+                'progress'      => $o->progress,
+                'brief'         => $o->brief,
+            ],
         ]);
     }
 
     public function approve(Request $request, $order)
     {
-        try {
-            $o = Order::where('uid',$order)->orWhere('id',$order)->first();
-            if ($o) {
-                if ($o->escrow_status === 'barter') {
-                    $o->update(['status'=>'delivered','escrow_status'=>'barter_done']);
-                    return back()->with('toast', 'Barter approved — collaboration complete ✓ (no escrow)');
-                }
-                $o->update(['status'=>'delivered','escrow_status'=>'released']);
-                return back()->with('toast', 'Approved — ₹'.number_format($o->total).' released to creator (escrow)');
-            }
-        } catch (\Throwable $e) {}
-        return back()->with('toast', 'Approved — ₹2,374 released to creator (escrow)');
+        $o = Order::where(fn($q) => $q->where('uid', $order)->orWhere('id', $order))->firstOrFail();
+
+        $this->authorizeOrder($request, $o);
+
+        // Only the buying business (or staff) may approve a delivery.
+        $user = $request->user();
+        abort_unless($user->isAdmin() || $user->company_id === $o->company_id, 403, 'Only the buyer can approve this order.');
+
+        if ($o->escrow_status === 'barter') {
+            $o->update(['status' => 'delivered', 'escrow_status' => 'barter_done']);
+
+            return back()->with('toast', 'Barter approved — collaboration complete ✓ (no escrow)');
+        }
+
+        $o->update(['status' => 'delivered', 'escrow_status' => 'released']);
+
+        return back()->with('toast', 'Approved — ₹'.number_format($o->total).' released to creator (escrow)');
     }
 
     public function message(Request $request, $order)
     {
-        $request->validate(['message'=>'required|string|min:1']);
+        $request->validate(['message' => 'required|string|min:1|max:2000']);
+
+        $o = Order::where(fn($q) => $q->where('uid', $order)->orWhere('id', $order))->firstOrFail();
+
+        $this->authorizeOrder($request, $o);
+
+        // TODO: persist to an order_messages table once real-time chat lands.
         return back();
     }
 }

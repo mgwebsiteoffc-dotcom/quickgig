@@ -64,6 +64,26 @@ All five hardcoded admin controllers now query Eloquent:
 
 ---
 
+## 🔒 Auth hole closed (latest commit)
+
+The `/creator/*` and `/business/*` areas were **completely unauthenticated** and identity came from
+`session('creator_id', 1)` — any anonymous visitor was creator #1 and could edit that profile (UPI
+included), delete portfolio items, read orders and upload deliveries.
+
+- `App\Http\Controllers\Concerns\ResolvesActor` — resolves the acting creator/company from
+  `auth()->user()->creator_id` / `company_id`; staff may act on behalf of others for support
+- All 13 business/creator/order routes moved inside `middleware('auth')`; only the landing page,
+  blog, service detail and the numeric public creator profile stay open
+- Ownership enforced: an order is visible only to its buyer, its assigned creator, or staff; only the
+  buyer can approve; you can only order for / switch to a business you belong to
+- `session('creator_id', 1)` eliminated — **0 occurrences** remain
+- Onboarding now signs the new user in (`Auth::login`) and emails a set-password link, so the
+  now-locked routes stay reachable
+- Dummy fallbacks removed from `BusinessController` (all four `fallback*()` arrays), the public
+  `OrderController` (`UNJ-####` / `TEAM-####` fake orders) and the creator dashboard
+- `tests/Feature/ActorAuthorizationTest.php` — 14 tests covering guest redirects, the old
+  session-key exploit, cross-creator and cross-company access, and staff impersonation
+
 ## 🔜 Still open
 
 1. **Run it.** Nothing here has been executed — expect to fix a typo or two on first `phpunit` run.
@@ -73,5 +93,6 @@ All five hardcoded admin controllers now query Eloquent:
 5. **2FA** — rate limits and reset are in; TOTP enrolment/challenge is not.
 6. **Email verification** — `users.email_verified_at` exists but no flow is wired.
 7. **Live RazorpayX run** — the client, webhook and reconciliation exist but have only ever been exercised against `Http::fake()`. Needs real test-mode keys and one end-to-end payout.
-8. **`OrderController` (public) fallbacks** — still returns dummy `UNJ-####` orders when the service lookup fails; `BusinessController`/`CreatorController` still have `fallbackCreators()`-style demo arrays for a fresh install. Now that seeding exists, these can go.
-9. **Custom error pages** — `withExceptions()` in `bootstrap/app.php` is still empty.
+8. **`Admin\CreatorController` / `Admin\ServiceController`** still carry "fallback dummy for fresh install" branches (the last demo arrays in the codebase).
+9. **Prompt-a-team** (`POST /teams`) now returns an honest "we'll confirm scope" message instead of a fake order — the real fulfilment flow is unbuilt.
+10. **Custom error pages** — `withExceptions()` in `bootstrap/app.php` is still empty.

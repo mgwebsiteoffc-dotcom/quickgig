@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Creator;
 use App\Models\OrderDelivery;
+use App\Models\User;
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -13,10 +15,27 @@ class BoardScreensTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function creatorUser(int $creatorId): User
+    {
+        return User::create([
+            'name' => 'Creator User', 'email' => 'cu'.uniqid().'@test.local',
+            'password' => \Illuminate\Support\Facades\Hash::make('Password123'),
+            'role' => 'creator', 'creator_id' => $creatorId, 'is_active' => true,
+        ]);
+    }
+
+    private function businessUser(int $companyId): User
+    {
+        return User::create([
+            'name' => 'Buyer', 'email' => 'bu'.uniqid().'@test.local',
+            'password' => \Illuminate\Support\Facades\Hash::make('Password123'),
+            'role' => 'business', 'company_id' => $companyId, 'is_active' => true,
+        ]);
+    }
+
     public function test_public_pages_render(): void
     {
         $this->get('/')->assertOk();
-        $this->get('/business')->assertOk();
         $this->get('/blog')->assertOk();
         $this->get('/login')->assertOk();
         $this->get('/health')->assertOk()->assertJsonPath('status', 'ok');
@@ -43,7 +62,7 @@ class BoardScreensTest extends TestCase
     {
         $order = $this->makeOrder();
 
-        $this->withSession(['creator_id' => $order->creator_id])
+        $this->actingAs($this->creatorUser($order->creator_id))
             ->get('/creator/orders/'.$order->uid)
             ->assertOk()
             ->assertSee($order->uid)
@@ -56,7 +75,7 @@ class BoardScreensTest extends TestCase
 
         $order = $this->makeOrder();
 
-        $this->withSession(['creator_id' => $order->creator_id])
+        $this->actingAs($this->creatorUser($order->creator_id))
             ->post('/creator/orders/'.$order->uid.'/deliver', [
                 'file' => UploadedFile::fake()->create('final-cut.mp4', 512, 'video/mp4'),
                 'note' => 'Hook added at 0:02.',
@@ -76,7 +95,7 @@ class BoardScreensTest extends TestCase
 
         $order = $this->makeOrder();
 
-        $this->withSession(['creator_id' => $order->creator_id])
+        $this->actingAs($this->creatorUser($order->creator_id))
             ->post('/creator/orders/'.$order->uid.'/deliver', [
                 'file' => UploadedFile::fake()->create('payload.php', 10, 'application/x-php'),
             ])
@@ -89,7 +108,7 @@ class BoardScreensTest extends TestCase
     {
         $order = $this->makeOrder();
 
-        $this->withSession(['creator_id' => $order->creator_id])
+        $this->actingAs($this->creatorUser($order->creator_id))
             ->post('/creator/orders/'.$order->uid.'/deliver', ['note' => 'nothing attached'])
             ->assertSessionHasErrors('delivery_url');
     }
@@ -99,12 +118,22 @@ class BoardScreensTest extends TestCase
         $order   = $this->makeOrder();
         $service = Service::first();
 
-        $this->post('/orders', [
-            'service_id' => $service->id,
-            'company_id' => $order->company_id,
-            'brief'      => 'A brief that is definitely long enough.',
-        ])->assertRedirect();
+        $this->actingAs($this->businessUser($order->company_id))
+            ->post('/orders', [
+                'service_id' => $service->id,
+                'company_id' => $order->company_id,
+                'brief'      => 'A brief that is definitely long enough.',
+            ])->assertRedirect();
 
         $this->assertSame(2, \App\Models\Order::count());
+    }
+
+    public function test_the_marketplace_renders_for_a_signed_in_buyer(): void
+    {
+        $order = $this->makeOrder();
+
+        $this->actingAs($this->businessUser($order->company_id))
+            ->get('/business')
+            ->assertOk();
     }
 }
