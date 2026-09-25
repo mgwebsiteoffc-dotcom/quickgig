@@ -76,9 +76,9 @@
             <p class="mt-3 text-[13px] leading-6 text-mut line-clamp-2">{{ $o->brief }}</p>
 
             @if($o->status !== 'delivered')
-              <form method="POST" action="{{ route('creator.deliver', $o->uid) }}" class="mt-4 flex flex-col sm:flex-row gap-2.5">
+              <form method="POST" enctype="multipart/form-data" action="{{ route('creator.deliver', $o->uid) }}" class="mt-4 flex flex-col sm:flex-row gap-2.5">
                 @csrf
-                <input name="delivery_url" type="url" required class="field flex-1" placeholder="https://drive.google.com/… delivery link">
+                <div class="flex-1"><input name="delivery_url" type="url" class="field w-full" placeholder="https://drive.google.com/… delivery link"><input name="delivery_file" type="file" class="field w-full mt-1"></div>
                 <button class="h-12 px-5 rounded-xl btn-grad font-semibold text-[13.5px] shrink-0">Deliver for review</button>
               </form>
             @endif

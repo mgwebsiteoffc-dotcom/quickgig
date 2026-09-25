@@ -1,0 +1,6 @@
+@extends('admin.layout')
+@section('title','Audit log')
+@section('breadcrumb','Security / Audit log')
+@section('content')
+<div class="bg-white border border-[#E8E8E6] rounded-2xl overflow-hidden"><div class="p-5 border-b border-[#E8E8E6]"><h2 class="font-black">Admin activity</h2><p class="text-sm text-[#7A7A78] mt-1">Immutable operational trail for settings, money and content changes.</p></div><div class="overflow-x-auto"><table class="w-full text-left text-[13px]"><thead class="bg-[#F8F8F7] text-[11px] uppercase tracking-wider"><tr><th class="p-3">When</th><th class="p-3">Actor</th><th class="p-3">Action</th><th class="p-3">IP</th><th class="p-3">Details</th></tr></thead><tbody>@forelse($logs as $log)<tr class="border-t border-[#F0F0EE]"><td class="p-3 whitespace-nowrap">{{ $log->created_at->format('d M Y H:i') }}</td><td class="p-3 font-bold">{{ $log->user->email ?? 'Deleted user' }}</td><td class="p-3 font-semibold">{{ $log->action }}</td><td class="p-3">{{ $log->ip }}</td><td class="p-3 text-xs text-[#7A7A78]">{{ json_encode($log->metadata) }}</td></tr>@empty<tr><td colspan="5" class="p-8 text-center text-[#7A7A78]">No admin activity recorded yet.</td></tr>@endforelse</tbody></table></div><div class="p-4">{{ $logs->links() }}</div></div>
+@endsection

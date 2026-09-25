@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'audit.admin' => \App\Http\Middleware\AuditAdminActions::class,
         ]);
 
         // gateways sign their callbacks instead of carrying a session token
