@@ -99,6 +99,15 @@ class OrderController extends Controller
 
         $o->update(['status' => $status, 'progress' => $progress]);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status'        => $o->status,
+                'progress'      => $o->progress,
+                'escrow_status' => $o->escrow_status,
+                'message'       => $message,
+            ]);
+        }
+
         return back()->with('toast', $message);
     }
 
@@ -108,7 +117,9 @@ class OrderController extends Controller
         $this->authorizeOrder($request, $o);
 
         if ($o->escrow_status === 'released') {
-            return back()->with('toast', 'This order was already approved.');
+            return $request->expectsJson()
+                ? response()->json(['status' => $o->status, 'progress' => $o->progress, 'escrow_status' => $o->escrow_status, 'message' => 'This order was already approved.'])
+                : back()->with('toast', 'This order was already approved.');
         }
 
         $o->update([
@@ -121,9 +132,19 @@ class OrderController extends Controller
             $o->creator->increment('orders_count');
         }
 
-        $payout = $o->total - $o->fee;
+        $payout  = $o->total - $o->fee;
+        $message = 'Approved — ₹' . number_format($payout) . ' released to the creator.';
 
-        return back()->with('toast', 'Approved — ₹' . number_format($payout) . ' released to the creator.');
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status'        => $o->status,
+                'progress'      => $o->progress,
+                'escrow_status' => $o->escrow_status,
+                'message'       => $message,
+            ]);
+        }
+
+        return back()->with('toast', $message);
     }
 
     public function message(Request $request, $order)

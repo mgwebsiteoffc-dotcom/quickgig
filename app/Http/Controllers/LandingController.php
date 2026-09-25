@@ -121,6 +121,54 @@ class LandingController extends Controller
             ])->values()->all(),
         ];
 
+        // Who we are actually built for — colour-coded segments.
+        $audiences = [
+            [
+                'label' => 'D2C brands', 'tone' => 'violet',
+                'body'  => 'Launch creatives, offer reels and product videos shipped the same week you plan them.',
+                'stat'  => '4.2×', 'statLabel' => 'more creatives per month',
+                'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M9 13h6"/></svg>',
+            ],
+            [
+                'label' => 'Agencies', 'tone' => 'pink',
+                'body'  => 'Absorb client spikes without hiring. White-label delivery, one invoice, your brand on top.',
+                'stat'  => '0', 'statLabel' => 'new salaries needed',
+                'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6M7 11h.01M12 11h.01M17 11h.01"/></svg>',
+            ],
+            [
+                'label' => 'Founders & creators', 'tone' => 'amber',
+                'body'  => 'You film it, we finish it. Hooks, captions and thumbnails without touching an editor.',
+                'stat'  => '3 h', 'statLabel' => 'from raw file to post',
+                'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>',
+            ],
+            [
+                'label' => 'Educators & coaches', 'tone' => 'teal',
+                'body'  => 'Turn one long lesson into a month of shorts, carousels and thumbnails.',
+                'stat'  => '18', 'statLabel' => 'assets from one recording',
+                'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5"/></svg>',
+            ],
+        ];
+
+        // Colourful browse tiles.
+        $categories = [
+            ['name' => 'Short-form reels',  'count' => '420 gigs', 'from' => '₹1,299', 'tone' => 'from-violet/90 to-violet-deep', 'q' => 'Reel'],
+            ['name' => 'Thumbnails',        'count' => '180 gigs', 'from' => '₹999',   'tone' => 'from-pink/90 to-pink',        'q' => 'Thumbnail'],
+            ['name' => 'UGC videos',        'count' => '260 gigs', 'from' => '₹3,999', 'tone' => 'from-amber/90 to-amber',      'q' => 'UGC Video'],
+            ['name' => 'AI video ads',      'count' => '95 gigs',  'from' => '₹6,499', 'tone' => 'from-teal/90 to-cyan',        'q' => 'AI Video'],
+            ['name' => 'Brand & design',    'count' => '140 gigs', 'from' => '₹7,499', 'tone' => 'from-violet/80 to-pink',      'q' => 'Bundle'],
+            ['name' => 'Podcast clips',     'count' => '75 gigs',  'from' => '₹4,499', 'tone' => 'from-cyan/80 to-violet',      'q' => 'Reel'],
+        ];
+
+        // Recently delivered strip.
+        $gallery = [
+            ['img' => 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=500&q=80', 'label' => 'Launch reel',      'meta' => '3h 12m'],
+            ['img' => 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&q=80', 'label' => 'Thumbnail pack',   'meta' => '5h 40m'],
+            ['img' => 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=500&q=80', 'label' => 'UGC unboxing',     'meta' => '1 day'],
+            ['img' => 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&q=80', 'label' => 'AI product ad',    'meta' => '2 days'],
+            ['img' => 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=500&q=80', 'label' => 'Podcast clips',    'meta' => '1 day'],
+            ['img' => 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500&q=80', 'label' => 'Brand kit',        'meta' => '2 days'],
+        ];
+
         $plans = [
             [
                 'slug' => 'starter', 'name' => 'Starter', 'price' => 1299, 'retainer' => 9999, 'unit' => '/ gig',
@@ -166,6 +214,9 @@ class LandingController extends Controller
         return view('landing', [
             'stats'        => $stats,
             'usps'         => $usps,
+            'audiences'    => $audiences,
+            'categories'   => $categories,
+            'gallery'      => $gallery,
             'comparison'   => PageController::comparison(),
             'heroStats'    => $heroStats,
             'logos'        => $logos,

@@ -16,7 +16,7 @@
 
 @section('content')
 
-<section class="pt-16 pb-12" x-data="{ mode:'gig' }">
+<section class="band-light pt-16 pb-16" x-data="{ mode:'gig' }">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="text-center max-w-[680px] mx-auto">
       <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-violet-soft">Pricing</div>
@@ -184,7 +184,7 @@
 </section>
 
 {{-- ── pricing FAQ ── --}}
-<section class="py-16 border-t border-white/8">
+<section class="band-lav py-16">
   <div class="max-w-[820px] mx-auto px-5 lg:px-8" x-data="{ open: 0 }">
     <h2 class="font-display text-[30px] font-semibold text-center">Pricing questions</h2>
     <div class="mt-10 space-y-3">

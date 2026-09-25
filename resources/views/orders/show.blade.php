@@ -41,67 +41,62 @@
 
       {{-- pipeline --}}
       <div class="space-y-5">
-        <div class="glass rounded-3xl p-6 sm:p-7">
+        <div class="glass rounded-3xl p-6 sm:p-7"
+             x-data="orderPipeline({ progress: {{ $progress }}, status: @js($order->status), released: {{ $released ? 'true' : 'false' }}, payout: {{ $payout }}, creator: @js($order->creator->name ?? 'A verified pro'), uid: @js($order->uid) })">
           <div class="flex items-center justify-between">
-            <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">Live pipeline</div>
-            <div class="text-[12px] font-mono text-mut">{{ $progress }}% complete</div>
+            <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-white/45">
+              <span class="w-1.5 h-1.5 rounded-full transition-colors" :class="released ? 'bg-lime' : 'bg-pink pulse-dot text-pink'"></span>
+              Live pipeline
+            </div>
+            <div class="text-[12px] font-mono text-mut"><span x-text="progress"></span>% complete</div>
           </div>
 
           <div class="mt-4 h-1.5 rounded-full bg-white/8 overflow-hidden">
-            <div class="h-full btn-grad transition-all duration-700" style="width: {{ max(5, $progress) }}%"></div>
+            <div class="h-full btn-grad transition-all duration-700 ease-out" :style="`width:${Math.max(5, progress)}%`"></div>
           </div>
 
           <div class="mt-7 space-y-5">
-            @foreach($steps as $i => $s)
-              <div class="flex gap-4 {{ $i <= $current ? '' : 'opacity-40' }}">
+            <template x-for="(s, i) in steps" :key="i">
+              <div class="flex gap-4 transition-all duration-500" :class="i <= current ? 'opacity-100' : 'opacity-40'">
                 <div class="flex flex-col items-center">
-                  <div class="w-8 h-8 rounded-xl grid place-items-center shrink-0
-                    {{ $i < $current ? 'bg-lime/18 text-lime' : ($i === $current ? 'btn-grad text-ink' : 'bg-white/6 text-white/35') }}">
-                    @if($i < $current)
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
-                    @else
-                      <span class="text-[11px] font-mono">{{ $i + 1 }}</span>
-                    @endif
+                  <div class="w-8 h-8 rounded-xl grid place-items-center shrink-0 transition-all duration-500"
+                       :class="i < current ? 'bg-lime/20 text-lime' : (i === current ? 'btn-grad text-white scale-110' : 'bg-white/6 text-white/35')">
+                    <template x-if="i < current"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></template>
+                    <template x-if="i >= current"><span class="text-[11px] font-mono" x-text="i + 1"></span></template>
                   </div>
-                  @if(!$loop->last)<div class="w-px flex-1 my-1 {{ $i < $current ? 'bg-lime/30' : 'bg-white/10' }}"></div>@endif
+                  <div x-show="i < steps.length - 1" class="w-px flex-1 my-1 transition-colors duration-500" :class="i < current ? 'bg-lime/35' : 'bg-white/10'"></div>
                 </div>
                 <div class="pb-1">
-                  <div class="text-[14.5px] font-medium">{{ $s['label'] }}</div>
-                  <div class="text-[12.5px] text-mut mt-0.5">
-                    @switch($s['key'])
-                      @case('placed')   Brief received and queued for matching. @break
-                      @case('matched')  {{ $order->creator->name ?? 'A verified pro' }} accepted this gig. @break
-                      @case('working')  Cutting, sound, captions and export. @break
-                      @case('review')   {{ $order->status === 'review' || $released ? 'Files are ready — review and approve.' : 'You will get a preview link here.' }} @break
-                      @default          {{ $released ? '₹'.number_format($payout).' paid out to the creator.' : 'Escrow releases the moment you approve.' }}
-                    @endswitch
-                  </div>
+                  <div class="text-[14.5px] font-medium" x-text="s.label"></div>
+                  <div class="text-[12.5px] text-mut mt-0.5" x-text="s.detail(this)"></div>
                 </div>
               </div>
-            @endforeach
+            </template>
           </div>
 
-          {{-- actions --}}
-          <div class="mt-7 pt-6 border-t border-white/8 flex flex-wrap gap-3">
-            @if(!$released)
-              @if($order->status === 'review')
-                <form method="POST" action="{{ route('orders.approve', $order->uid) }}">
-                  @csrf
-                  <button class="h-11 px-6 rounded-xl btn-grad font-semibold text-[14px]">Approve & release ₹{{ number_format($payout) }}</button>
-                </form>
-              @endif
-              <form method="POST" action="{{ route('orders.simulate', $order->uid) }}">
-                @csrf
-                <button class="h-11 px-5 rounded-xl glass font-medium text-[13.5px] hover:border-white/30 transition">
-                  ▸ Advance demo pipeline
+          {{-- actions: everything happens here, no page change --}}
+          <div class="mt-7 pt-6 border-t border-white/8 flex flex-wrap items-center gap-3">
+            <template x-if="!released">
+              <div class="flex flex-wrap gap-3">
+                <button x-show="status === 'review'" x-cloak x-on:click="approve()" :disabled="busy"
+                        class="h-11 px-6 rounded-xl btn-grad font-semibold text-[14px] disabled:opacity-60">
+                  <span x-show="!busy">Approve & release ₹<span x-text="payout.toLocaleString('en-IN')"></span></span>
+                  <span x-show="busy" x-cloak>Releasing…</span>
                 </button>
-              </form>
-            @else
-              <div class="flex items-center gap-2.5 text-[13.5px] text-lime">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>
-                Escrow released — ₹{{ number_format($payout) }} paid to {{ $order->creator->name ?? 'the creator' }}.
+                <button x-on:click="advance()" :disabled="busy"
+                        class="h-11 px-5 rounded-xl glass btn-ghost font-medium text-[13.5px] hover:border-white/30 disabled:opacity-60">
+                  <span x-show="!busy">▸ Advance demo pipeline</span>
+                  <span x-show="busy" x-cloak>Working…</span>
+                </button>
               </div>
-            @endif
+            </template>
+
+            <template x-if="released">
+              <div class="flex items-center gap-2.5 text-[13.5px] text-lime animate-popIn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>
+                Escrow released — ₹<span x-text="payout.toLocaleString('en-IN')"></span> paid to <span x-text="creator"></span>.
+              </div>
+            </template>
           </div>
         </div>
 
@@ -188,3 +183,41 @@
   </div>
 </section>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('orderPipeline', (init) => ({
+    ...init,
+    busy: false,
+    steps: [
+      { label: 'Order placed',        detail: () => 'Brief received and queued for matching.' },
+      { label: 'Creator assigned',    detail: (c) => c.creator + ' accepted this gig.' },
+      { label: 'In production',       detail: () => 'Cutting, sound, captions and export.' },
+      { label: 'Delivered for review',detail: (c) => (c.status === 'review' || c.released) ? 'Files are ready — review and approve.' : 'You will get a preview link here.' },
+      { label: 'Approved · escrow released', detail: (c) => c.released ? '₹' + c.payout.toLocaleString('en-IN') + ' paid out to the creator.' : 'Escrow releases the moment you approve.' },
+    ],
+    get current() {
+      if (this.released) return 4;
+      if (this.status === 'review') return 3;
+      return this.progress >= 40 ? 2 : 1;
+    },
+    async call(path) {
+      this.busy = true;
+      try {
+        const res = await window.qg.post(path, {});
+        this.progress = res.progress;
+        this.status = res.status;
+        this.released = res.escrow_status === 'released';
+        window.qg.toast(res.message);
+      } catch (e) {
+        window.qg.toast('Something went wrong — refresh and try again.');
+      }
+      this.busy = false;
+    },
+    advance() { return this.call('/orders/' + this.uid + '/simulate'); },
+    approve() { return this.call('/orders/' + this.uid + '/approve'); },
+  }));
+});
+</script>
+@endpush

@@ -71,7 +71,14 @@ class TaskController extends Controller
         $request->session()->put('brief.draft', $task['description']);
 
         if ($request->expectsJson()) {
-            return response()->json(['task' => $this->publicFields($task), 'meta' => ['source' => $task['source'], 'model' => $task['model']]]);
+            return response()->json([
+                'task' => $this->publicFields($task),
+                'meta' => [
+                    'source' => $task['source'],
+                    'model'  => $task['model'],
+                    'error'  => $task['refine_error'] ?? null,
+                ],
+            ]);
         }
 
         return back()->with('toast', $task['refine_error'] ?? 'Task updated.');
@@ -81,7 +88,7 @@ class TaskController extends Controller
     {
         $request->session()->forget('task.state');
 
-        return back();
+        return $request->expectsJson() ? response()->json(['ok' => true]) : back();
     }
 
     /** @return array<string,mixed> */
@@ -93,6 +100,9 @@ class TaskController extends Controller
             'end_date'    => $task['end_date'],
             'description' => $task['description'],
             'client'      => $task['client'],
+            'warnings'    => $task['warnings'] ?? [],
+            'gig_url'     => ! empty($task['gig_id']) ? route('gigs.show', $task['gig_id']) : null,
+            'brief_url'   => route('brief-builder') . '?idea=' . urlencode($task['title']),
         ];
     }
 

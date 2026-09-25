@@ -19,7 +19,7 @@
 </section>
 
 {{-- ── the table ── --}}
-<section class="pb-8">
+<section class="band-light py-16">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="glass rounded-3xl overflow-hidden">
       <div class="overflow-x-auto">

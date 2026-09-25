@@ -257,7 +257,7 @@
 </section>
 
 {{-- ── model card / honesty ── --}}
-<section class="py-16">
+<section class="band-light py-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="grid lg:grid-cols-[0.8fr_1.2fr] gap-10">
       <div>

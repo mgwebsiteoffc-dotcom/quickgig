@@ -72,7 +72,7 @@
 </section>
 
 {{-- ── guarantees ── --}}
-<section class="py-20">
+<section class="band-light py-24">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 items-start">
       <div>

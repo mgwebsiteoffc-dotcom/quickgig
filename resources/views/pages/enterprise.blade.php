@@ -88,7 +88,7 @@
 </section>
 
 {{-- ── operating model ── --}}
-<section class="py-16 border-y border-white/8">
+<section class="band-light py-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
       <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Operating model</div>

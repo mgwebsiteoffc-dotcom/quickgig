@@ -64,6 +64,10 @@ class BriefBuilderController extends Controller
 
         $this->store($request, $input, $state, $engine, $composer);
 
+        if ($request->expectsJson()) {
+            return $this->json($request, $state);
+        }
+
         return redirect()->route('brief-builder')->withFragment('result');
     }
 
@@ -85,6 +89,10 @@ class BriefBuilderController extends Controller
 
         $this->store($request, $input, $state, $engine, $composer);
 
+        if ($request->expectsJson()) {
+            return $this->json($request, $state);
+        }
+
         return redirect()->route('brief-builder')->withFragment('result')
             ->with('toast', $state['refine_error'] ?? 'Brief updated.');
     }
@@ -93,7 +101,37 @@ class BriefBuilderController extends Controller
     {
         $request->session()->forget(['brief.input', 'brief.state', 'brief.matches', 'brief.gig_id', 'brief.draft']);
 
-        return redirect()->route('brief-builder');
+        return $request->expectsJson()
+            ? response()->json(['ok' => true])
+            : redirect()->route('brief-builder');
+    }
+
+    /** Rendered brief for the in-page (no reload) flow. */
+    private function json(Request $request, array $state)
+    {
+        $html = view('tools.partials.result', [
+            'brief'   => $state['brief'],
+            'meta'    => [
+                'source'       => $state['source'] ?? 'rules',
+                'model'        => $state['model'] ?? null,
+                'error'        => $state['error'] ?? null,
+                'latency_ms'   => $state['latency_ms'] ?? null,
+                'refinable'    => ! empty($state['messages']),
+                'refine_error' => $state['refine_error'] ?? null,
+            ],
+            'matches' => $request->session()->get('brief.matches', collect()),
+            'gig'     => $request->session()->get('brief.gig_id') ? \App\Models\Service::find($request->session()->get('brief.gig_id')) : null,
+        ])->render();
+
+        return response()->json([
+            'html' => $html,
+            'meta' => [
+                'source'       => $state['source'] ?? 'rules',
+                'model'        => $state['model'] ?? null,
+                'refinable'    => ! empty($state['messages']),
+                'refine_error' => $state['refine_error'] ?? null,
+            ],
+        ]);
     }
 
     /* ───────────────────────── helpers ───────────────────────── */

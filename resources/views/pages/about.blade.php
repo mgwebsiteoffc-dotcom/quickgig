@@ -38,7 +38,7 @@
 </section>
 
 {{-- ── principles ── --}}
-<section class="py-16 border-y border-white/8">
+<section class="band-lav py-20">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px]">
       <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-cyan">Principles</div>
