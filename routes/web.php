@@ -10,7 +10,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\OnboardingController;
-use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\Admin\DashboardController as AdminDash;
 use App\Http\Controllers\Admin\OrderController as AdminOrder;
 use App\Http\Controllers\Admin\CreatorController as AdminCreator;
@@ -49,51 +48,37 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 // ── Auth (file session, no Redis) ──
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1')->name('login.post');
-
-// Password reset (throttled — see AuthController for the per-email limiter too)
-Route::get('/forgot-password', [AuthController::class, 'showForgot'])->name('password.request');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->middleware('throttle:6,1')->name('password.email');
-Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:6,1')->name('password.update');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ── Authenticated app: business + creator ──
-Route::middleware('auth')->group(function () {
+// ── Business — marketplace + PROFILE (real DB) ──
+Route::get('/business', [BusinessController::class, 'home'])->name('business.home');
+Route::get('/app', [BusinessController::class, 'home'])->name('app');
+Route::post('/business/switch', [BusinessController::class, 'switch'])->name('business.switch');
+Route::get('/business/profile', [BusinessController::class, 'profile'])->name('business.profile');
+Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->name('business.profile.update');
 
-    // Business — marketplace + profile
-    Route::get('/business', [BusinessController::class, 'home'])->name('business.home');
-    Route::get('/app', [BusinessController::class, 'home'])->name('app');
-    Route::post('/business/switch', [BusinessController::class, 'switch'])->name('business.switch');
-    Route::get('/business/profile', [BusinessController::class, 'profile'])->name('business.profile');
-    Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->name('business.profile.update');
-
-    // Orders
-    Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:20,1')->name('orders.store');
-    Route::post('/teams', [OrderController::class, 'storeTeam'])->name('teams.store');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
-    Route::post('/orders/{order}/message', [OrderController::class, 'message'])->name('orders.message');
-
-    // Creator — dashboard, profile, portfolio, deliveries
-    Route::get('/creator', [CreatorController::class, 'dashboard'])->name('creator.dashboard');
-    Route::get('/creator/profile', [CreatorController::class, 'profile'])->name('creator.profile');
-    Route::post('/creator/profile', [CreatorController::class, 'updateProfile'])->name('creator.profile.update');
-    Route::post('/creator/availability', [CreatorController::class, 'toggleAvailability'])->name('creator.availability');
-    Route::post('/creator/portfolio', [CreatorController::class, 'storePortfolio'])->name('creator.portfolio.store');
-    Route::delete('/creator/portfolio/{id}', [CreatorController::class, 'destroyPortfolio'])->name('creator.portfolio.destroy');
-    Route::get('/creator/orders/{order}', [CreatorController::class, 'order'])->name('creator.order');
-    Route::post('/creator/orders/{order}/deliver', [CreatorController::class, 'deliver'])->middleware('throttle:30,1')->name('creator.deliver');
-});
-
-// ── Public ──
-// Service detail (browsable without an account; ordering requires auth)
+// Services
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
-// Public creator profile (SEO Person JSON-LD) — numeric only so /creator/profile stays safe
-Route::get('/creator/{id}', [CreatorController::class, 'publicProfile'])->where('id', '[0-9]+')->name('creator.public');
 
-// ── Webhooks (no CSRF — signature verified instead) ──
-Route::post('/webhooks/razorpayx', [WebhookController::class, 'razorpayx'])->name('webhooks.razorpayx');
+// Orders — file queue, no Redis
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+Route::post('/teams', [OrderController::class, 'storeTeam'])->name('teams.store');
+Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
+Route::post('/orders/{order}/message', [OrderController::class, 'message'])->name('orders.message');
+
+// Creator — dashboard + PROFILE + portfolio (real DB)
+Route::get('/creator', [CreatorController::class, 'dashboard'])->name('creator.dashboard');
+Route::get('/creator/profile', [CreatorController::class, 'profile'])->name('creator.profile');
+Route::post('/creator/profile', [CreatorController::class, 'updateProfile'])->name('creator.profile.update');
+Route::post('/creator/availability', [CreatorController::class, 'toggleAvailability'])->name('creator.availability');
+Route::post('/creator/portfolio', [CreatorController::class, 'storePortfolio'])->name('creator.portfolio.store');
+Route::delete('/creator/portfolio/{id}', [CreatorController::class, 'destroyPortfolio'])->name('creator.portfolio.destroy');
+Route::get('/creator/orders/{order}', [CreatorController::class, 'order'])->name('creator.order');
+Route::post('/creator/orders/{order}/deliver', [CreatorController::class, 'deliver'])->name('creator.deliver');
+// Public creator profile (SEO Person JSON-LD) — numeric only so /creator/profile stays safe
+Route::get('/creator/{id}', function($id){ $c=\App\Models\Creator::findOrFail($id); return view('creator.public', compact('c')); })->where('id','[0-9]+')->name('creator.public');
 
 // Health
 Route::get('/health', fn() => response()->json(['status'=>'ok','app'=>"QuickContent — India's First Quick Content Delivery",'host'=>'hostinger-shared-ready']));

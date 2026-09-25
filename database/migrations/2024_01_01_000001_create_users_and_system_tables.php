@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
     public function up(): void
@@ -40,9 +42,36 @@ return new class extends Migration {
             $table->integer('last_activity')->index();
         });
 
-        // NOTE: staff accounts are NOT created here any more — publishing known
-        // passwords in a migration is unsafe. Run `php artisan db:seed --class=AdminUserSeeder`
-        // (honours ADMIN_EMAIL / ADMIN_PASSWORD) instead.
+        // Seed default super admin + demo staff (for Hostinger — change password after first login)
+        DB::table('users')->insert([
+            [
+                'name' => 'Super Admin',
+                'email' => 'admin@quickcontent.in',
+                'password' => Hash::make('Admin@12345'),
+                'role' => 'super_admin',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Manager',
+                'email' => 'manager@quickcontent.in',
+                'password' => Hash::make('Manager@123'),
+                'role' => 'manager',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Support',
+                'email' => 'support@quickcontent.in',
+                'password' => Hash::make('Support@123'),
+                'role' => 'support',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
 
         // Queue table for database driver (Hostinger-safe — no Redis)
         Schema::create('jobs', function (Blueprint $table) {

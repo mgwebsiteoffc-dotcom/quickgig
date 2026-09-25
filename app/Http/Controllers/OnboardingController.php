@@ -7,8 +7,6 @@ use App\Models\Company;
 use App\Models\Creator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Password;
 use App\Models\User;
 
 class OnboardingController extends Controller
@@ -71,27 +69,21 @@ class OnboardingController extends Controller
             'bio' => $data['need'],
         ]);
 
-        // Create (or reuse) the login for this business and sign them straight in.
-        $user = User::firstOrCreate(
-            ['email' => $data['email']],
-            [
-                'name'      => $data['person_name'],
-                'password'  => Hash::make(Str::random(32)),
-                'role'      => 'business',
-                'is_active' => true,
-            ]
-        );
+        // Also create a business user for login (optional)
+        try {
+            if (!User::where('email',$data['email'])->exists()) {
+                User::create([
+                    'name' => $data['person_name'],
+                    'email' => $data['email'],
+                    'password' => Hash::make(Str::random(12)),
+                    'role' => 'business',
+                    'company_id' => $company->id,
+                    'is_active' => true,
+                ]);
+            }
+        } catch (\Throwable $e) {}
 
-        if (! $user->company_id) {
-            $user->update(['company_id' => $company->id]);
-        }
-
-        Auth::login($user);
-        $request->session()->regenerate();
         $request->session()->put('company_id', $company->id);
-
-        // They never chose a password — email them a link to set one.
-        Password::sendResetLink(['email' => $user->email]);
 
         // If need is custom, we could create an order stub — for now just toast
         return redirect()->route('business.home')->with('toast', 'Welcome, '.$company->name.'! Your workspace is ready — as easy as ordering food. ✓');
@@ -171,28 +163,22 @@ class OnboardingController extends Controller
             'orders_count' => 0,
         ]);
 
-        // Create (or reuse) the creator's login and sign them straight in.
-        $user = User::firstOrCreate(
-            ['email' => $data['email']],
-            [
-                'name'      => $data['name'],
-                'password'  => Hash::make(Str::random(32)),
-                'role'      => 'creator',
-                'is_active' => true,
-            ]
-        );
+        // Create user link
+        try {
+            if (!User::where('email',$data['email'])->exists()) {
+                $user = User::create([
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => Hash::make(Str::random(12)),
+                    'role' => 'creator',
+                    'creator_id' => $creator->id,
+                    'is_active' => true,
+                ]);
+                $creator->update(['user_id'=>$user->id]);
+            }
+        } catch (\Throwable $e) {}
 
-        if (! $user->creator_id) {
-            $user->update(['creator_id' => $creator->id]);
-        }
-
-        $creator->update(['user_id' => $user->id]);
-
-        Auth::login($user);
-        $request->session()->regenerate();
         $request->session()->put('creator_id', $creator->id);
-
-        Password::sendResetLink(['email' => $user->email]);
 
         return redirect()->route('creator.dashboard')->with('toast', 'Welcome, '.$creator->name.'! Profile created — we’ll verify your tick (14px perfect circle) shortly. You’re now discoverable. ✓');
     }

@@ -37,8 +37,6 @@ class Order extends Model
     public function company(){ return $this->belongsTo(Company::class); }
     public function creator(){ return $this->belongsTo(Creator::class); }
     public function service(){ return $this->belongsTo(Service::class); }
-    public function deliveries(){ return $this->hasMany(OrderDelivery::class)->latest(); }
-    public function payout(){ return $this->hasOne(Payout::class); }
 
     public function isBarter(): bool { return $this->escrow_status === 'barter' || $this->total == 0; }
 }

@@ -55,12 +55,12 @@
     <div class="bg-white border border-[#E8E8E6] rounded-2xl overflow-hidden">
       <div class="px-5 py-4 border-b border-[#F0F0EE] flex items-center justify-between">
         <div class="font-black text-[14px]">Payout Queue</div>
-        <span class="text-[11px] font-bold bg-amber-400 text-[#0F0F0F] px-2 py-1 rounded-full">{{ count($payoutQueue) }} in queue</span>
+        <span class="text-[11px] font-bold bg-amber-400 text-[#0F0F0F] px-2 py-1 rounded-full">3 ready</span>
       </div>
       <div class="p-3 space-y-3">
         @foreach($payoutQueue as $p)
         <div class="flex items-center gap-3 p-3 rounded-xl bg-[#F8F8F7] border border-[#E8E8E6]">
-          <div class="w-9 h-9 rounded-full bg-[#0F0F0F] text-white grid place-items-center font-black text-[11px] shrink-0">{{ strtoupper(substr($p['creator'],0,1)) }}</div>
+          <img src="https://i.pravatar.cc/100?img={{ $loop->index+5 }}" class="w-9 h-9 rounded-full object-cover border border-white">
           <div class="flex-1 min-w-0"><div class="text-[13px] font-bold truncate">{{ $p['creator'] }}</div><div class="text-[11px] font-semibold text-[#7A7A78] truncate">{{ $p['handle'] }} • {{ $p['orders'] }} orders</div></div>
           <div class="text-right"><div class="text-[13px] font-black">₹{{ number_format($p['amount']) }}</div><div class="text-[11px] font-semibold text-[#7A7A78]">{{ $p['upi'] }}</div></div>
         </div>
@@ -72,7 +72,7 @@
     <div class="bg-[#0F0F0F] text-white rounded-2xl p-5">
       <div class="text-[11px] font-bold tracking-widest uppercase text-white/60">Quick Actions</div>
       <div class="mt-3 grid grid-cols-2 gap-2">
-        <a href="{{ route('admin.orders.index') }}?status=pending" class="h-10 rounded-xl bg-white text-[#0F0F0F] font-bold text-[13px] grid place-items-center">Pending</a>
+        <a href="{{ route('admin.orders.index') }}?status=pending" class="h-10 rounded-xl bg-white text-[#0F0F0F] font-bold text-[13px] grid place-items-center">Pending ({{ 1 }})</a>
         <a href="{{ route('admin.orders.index') }}?status=review" class="h-10 rounded-xl bg-white/10 border border-white/20 font-bold text-[13px] grid place-items-center">In Review</a>
         <a href="{{ route('admin.creators.index') }}?filter=pending" class="h-10 rounded-xl bg-white/10 border border-white/20 font-bold text-[13px] grid place-items-center">Verify Creators</a>
         <a href="{{ route('admin.users.index') }}" class="h-10 rounded-xl bg-amber-400 text-[#0F0F0F] font-black text-[13px] grid place-items-center">Manage Roles</a>

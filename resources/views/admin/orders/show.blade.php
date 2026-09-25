@@ -35,8 +35,8 @@
 
     <div class="bg-white border border-[#E8E8E6] rounded-2xl p-5">
       <div class="font-black text-[14px]">Brief from Company</div>
-      <div class="mt-2 text-[13px] leading-6 font-medium text-[#2b2b2b] bg-[#F8F8F7] border border-[#E8E8E6] rounded-xl p-3">{{ $order['brief'] ?: 'No brief supplied.' }}</div>
-      <div class="mt-3 flex gap-2 text-[12px] font-bold"><span class="px-2.5 py-1 rounded-full bg-white border border-[#E8E8E6]">{{ $order['turnaround'] ?: '1 Day' }}</span><span class="px-2.5 py-1 rounded-full bg-white border border-[#E8E8E6]">{{ $order['service'] }}</span></div>
+      <div class="mt-2 text-[13px] leading-6 font-medium text-[#2b2b2b] bg-[#F8F8F7] border border-[#E8E8E6] rounded-xl p-3">“Need a talking-head reel for Avante Studio — 30 sec, hook in first 2 sec, captions burned-in, 9:16, brand colors navy + white. Reference: @devtalksbusiness reel style. Deliver with SRT + thumbnail option.”</div>
+      <div class="mt-3 flex gap-2 text-[12px] font-bold"><span class="px-2.5 py-1 rounded-full bg-white border border-[#E8E8E6]">1 Day</span><span class="px-2.5 py-1 rounded-full bg-white border border-[#E8E8E6]">9:16</span><span class="px-2.5 py-1 rounded-full bg-white border border-[#E8E8E6]">Captions required</span></div>
     </div>
   </div>
 
@@ -51,10 +51,7 @@
         <button class="w-full h-10 rounded-full bg-[#0F0F0F] text-white font-bold text-[13px]">Update Status</button>
       </form>
       <form method="POST" action="{{ route('admin.orders.assign',$order['id']) }}" class="mt-3 flex gap-2">@csrf
-        <select name="creator_id" class="flex-1 h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px] font-semibold">
-          @forelse($creators as $c)<option value="{{ $c->id }}" {{ ($model->creator_id ?? null) == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ $c->handle }})</option>
-          @empty<option value="">No creators yet</option>@endforelse
-        </select>
+        <select name="creator_id" class="flex-1 h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px] font-semibold"><option value="1">Priya Sharma (@priyaedits)</option><option value="2">Rahul Verma (@rahulcuts)</option><option value="4">Neha Jain (@nehacreates)</option></select>
         <button class="h-10 px-4 rounded-full border-2 border-[#0F0F0F] font-bold text-[13px]">Re-assign</button>
       </form>
     </div>

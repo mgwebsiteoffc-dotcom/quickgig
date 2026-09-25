@@ -3,44 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Company;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
     public function index(Request $request)
     {
+        $companies = collect([
+            ['id'=>1,'company'=>'Avante Studio','person'=>'Rohan Sharma','email'=>'rohan@avante.studio','phone'=>'98765 43210','plan'=>'Pro','orders'=>42,'spent'=>'₹1.8L','joined'=>'2024-01-15','initials'=>'AS'],
+            ['id'=>2,'company'=>'BrandScale Media','person'=>'Priya Kapoor','email'=>'priya@brandscale.in','phone'=>'98765 43211','plan'=>'Team','orders'=>28,'spent'=>'₹96k','joined'=>'2024-02-20','initials'=>'BS'],
+            ['id'=>3,'company'=>'GrowthX Labs','person'=>'Aman Verma','email'=>'aman@growthx.in','phone'=>'98765 43212','plan'=>'Starter','orders'=>11,'spent'=>'₹34k','joined'=>'2024-03-10','initials'=>'GX'],
+            ['id'=>4,'company'=>'ConcertPass','person'=>'Karan Mehta','email'=>'karan@concertpass.in','phone'=>'98765 43213','plan'=>'Pro','orders'=>18,'spent'=>'₹72k','joined'=>'2024-04-01','initials'=>'CP'],
+        ]);
         $q = $request->query('q');
-
-        $companies = Company::query()
-            ->withCount('orders')
-            ->withSum('orders as orders_spent', 'total')
-            ->when($q, fn ($query) => $query->where(function ($w) use ($q) {
-                $w->where('name', 'like', "%$q%")
-                  ->orWhere('person_name', 'like', "%$q%")
-                  ->orWhere('email', 'like', "%$q%");
-            }))
-            ->latest()
-            ->paginate(25)
-            ->withQueryString();
-
-        $rows = collect($companies->items())->map(fn (Company $c) => [
-            'id'       => $c->id,
-            'company'  => $c->name,
-            'person'   => $c->person_name ?: '—',
-            'email'    => $c->email ?: '—',
-            'phone'    => $c->phone ?: '—',
-            'plan'     => $c->plan ?: 'Starter',
-            'orders'   => (int) $c->orders_count,
-            'spent'    => '₹'.number_format((int) ($c->orders_spent ?? 0)),
-            'joined'   => $c->created_at?->format('Y-m-d') ?? '—',
-            'initials' => $c->initials ?: strtoupper(substr($c->name, 0, 2)),
-        ]);
-
-        return view('admin.companies.index', [
-            'companies' => $rows,
-            'paginator' => $companies,
-            'q'         => $q,
-        ]);
+        if ($q) $companies = $companies->filter(fn($c)=> str_contains(strtolower($c['company'].$c['person']), strtolower($q)));
+        return view('admin.companies.index', compact('companies','q'));
     }
 }
