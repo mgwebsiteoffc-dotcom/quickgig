@@ -90,8 +90,13 @@ class RazorpayGateway
     public function fetchPayment(string $paymentId): array
     {
         $this->assertEnabled();
-
         return $this->request('get', '/payments/' . $paymentId);
+    }
+
+    public function fetchPayout(string $payoutId): array
+    {
+        $this->assertEnabled();
+        return $this->request('get', '/payouts/' . $payoutId);
     }
 
     /** RazorpayX payouts need a funding account on top of the checkout keys. */

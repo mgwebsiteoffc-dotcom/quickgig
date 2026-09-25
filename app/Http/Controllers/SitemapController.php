@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use App\Models\Creator;
 use App\Models\Service;
+use Illuminate\Support\Facades\Cache;
 
 class SitemapController extends Controller
 {
     public function index()
     {
+        if ($cached = Cache::get('quickgig:sitemap')) {
+            return response($cached, 200)->header('Content-Type', 'application/xml');
+        }
         $urls = collect();
 
         $statics = [
@@ -80,6 +84,7 @@ class SitemapController extends Controller
 
         $xml .= '</urlset>';
 
+        Cache::put('quickgig:sitemap', $xml, now()->addDay());
         return response($xml, 200)->header('Content-Type', 'application/xml');
     }
 

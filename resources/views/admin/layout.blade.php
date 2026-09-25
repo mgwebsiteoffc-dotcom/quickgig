@@ -35,6 +35,7 @@
           ['label'=>'FAQs','icon'=>'help','route'=>'admin.faqs.index','roles'=>['super_admin','admin','manager']],
           ['label'=>'Payouts','icon'=>'wallet','route'=>'admin.payouts.index','roles'=>['super_admin','admin','finance']],
           ['label'=>'Users & Roles','icon'=>'shield','route'=>'admin.users.index','roles'=>['super_admin','admin']],
+          ['label'=>'Audit log','icon'=>'shield','route'=>'admin.audit.index','roles'=>['super_admin','admin']],
           ['label'=>'Settings','icon'=>'settings','route'=>'admin.settings.index','roles'=>['super_admin']],
         ];
         $current = Route::currentRouteName();

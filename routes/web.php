@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\BriefBuilderController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Admin\SettingController as AdminSetting;
 use App\Http\Controllers\Admin\BlogController as AdminBlog;
 use App\Http\Controllers\Admin\FaqController as AdminFaq;
 use App\Http\Controllers\Admin\SkillController as AdminSkill;
+use App\Http\Controllers\Admin\AuditLogController as AdminAudit;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +74,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', fn () => view('auth.verify-email'))->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) { $request->fulfill(); return redirect()->route('business.home')->with('toast','Email verified.'); })->middleware('signed')->name('verification.verify');
+    Route::post('/email/verification-notification', function (\Illuminate\Http\Request $request) { $request->user()->sendEmailVerificationNotification(); return back()->with('toast','Verification link sent.'); })->middleware('throttle:6,1')->name('verification.send');
+});
 
 // Legacy onboarding links now point at the single sign-up flow.
 Route::get('/onboarding/business', fn () => redirect()->route('register', ['type' => 'business']))->name('onboarding.business');
@@ -143,7 +150,7 @@ Route::get('/health', fn () => response()->json([
 ]));
 
 /* ── Admin ── */
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,admin,manager,support,finance'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,admin,manager,support,finance', 'audit.admin'])->group(function () {
     Route::get('/', [AdminDash::class, 'index'])->name('dashboard');
 
     Route::get('/orders', [AdminOrder::class, 'index'])->name('orders.index');
@@ -209,6 +216,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,ad
     Route::post('/payouts/{id}/hold', [AdminPayout::class, 'hold'])->middleware('role:super_admin,admin,finance')->name('payouts.hold');
     Route::post('/payouts/{id}/retry', [AdminPayout::class, 'retry'])->middleware('role:super_admin,admin,finance')->name('payouts.retry');
 
+    Route::get('/audit-log', [AdminAudit::class, 'index'])->middleware('role:super_admin,admin')->name('audit.index');
     Route::get('/settings',        [AdminSetting::class, 'index'])->middleware('role:super_admin')->name('settings.index');
     Route::post('/settings',       [AdminSetting::class, 'update'])->middleware('role:super_admin')->name('settings.update');
     Route::post('/settings/clear', [AdminSetting::class, 'clear'])->middleware('role:super_admin')->name('settings.clear');

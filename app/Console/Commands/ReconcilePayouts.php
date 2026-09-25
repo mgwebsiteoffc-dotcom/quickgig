@@ -1,0 +1,4 @@
+<?php
+namespace App\Console\Commands;
+use Illuminate\Console\Command; use App\Models\Payout; use App\Services\Payments\RazorpayGateway;
+class ReconcilePayouts extends Command { protected $signature='payouts:reconcile'; protected $description='Reconcile processing payouts with RazorpayX'; public function handle(RazorpayGateway $gateway){ foreach(Payout::where('status','processing')->whereNotNull('reference')->get() as $p){ try { $r=$gateway->fetchPayout($p->reference); $s=$r['status']??null; if(in_array($s,['processed','successful'])) $p->update(['status'=>'paid','processed_at'=>$p->processed_at?:now(),'notes'=>null]); elseif(in_array($s,['reversed','failed','rejected'])) $p->update(['status'=>'failed','notes'=>'Provider status: '.$s]); $this->line($p->uid.': '.($s??'unknown')); } catch(\Throwable $e){ $this->warn($p->uid.': '.$e->getMessage()); } } return self::SUCCESS; } }
