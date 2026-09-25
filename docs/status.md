@@ -35,6 +35,10 @@ Last reviewed: 25 September 2026.
 
 ## Pending — ordered by how much it matters
 
+### Implementation update — 25 September 2026
+
+Added in this pass: delivery file uploads with version counters, signed email verification flow, admin audit-log UI and write middleware, scheduled blog publishing, cached sitemap invalidation, and a scheduled RazorpayX payout reconciliation command. These are code-complete but require deployment configuration and live smoke testing.
+
 ### 1. Payout execution against a real bank
 The ledger, queue and RazorpayX call are built, but nothing has been run against live RazorpayX credentials,
 and there is no reconciliation job that polls payout status or handles partial failures and reversals.

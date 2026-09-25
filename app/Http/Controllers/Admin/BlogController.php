@@ -44,6 +44,7 @@ class BlogController extends Controller
             'cover_alt'=>'nullable|string|max:120',
             'is_published'=>'nullable|boolean',
             'is_featured'=>'nullable|boolean',
+            'publish_at'=>'nullable|date|after:now',
             'reading_minutes'=>'nullable|integer|min:1|max:60',
             'faq_json'=>'nullable|string', // JSON string from hidden
         ]);
@@ -58,7 +59,8 @@ class BlogController extends Controller
         $data['author_id'] = auth()->id();
         $data['is_published'] = $request->boolean('is_published', true);
         $data['is_featured'] = $request->boolean('is_featured');
-        $data['published_at'] = $data['is_published'] ? now() : null;
+        $data['published_at'] = ($data['is_published'] && empty($data['publish_at'])) ? now() : null;
+        if (!empty($data['publish_at'])) $data['is_published'] = false;
 
         if ($request->hasFile('cover')) {
             try { $data['cover'] = $request->file('cover')->store('blogs', 'public'); }
@@ -92,6 +94,7 @@ class BlogController extends Controller
             'cover_alt'=>'nullable|string|max:120',
             'is_published'=>'nullable|boolean',
             'is_featured'=>'nullable|boolean',
+            'publish_at'=>'nullable|date|after:now',
             'reading_minutes'=>'nullable|integer|min:1|max:60',
             'faq_json'=>'nullable|string',
         ]);

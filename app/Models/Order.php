@@ -10,7 +10,7 @@ class Order extends Model
     protected $fillable = [
         'uid','company_id','creator_id','service_id','brief','references','turnaround',
         'subtotal','fee','discount','total','status','escrow_status','progress','due_at',
-        'payment_provider','payment_order_id','payment_id','payment_status','paid_at','payout_reference',
+        'payment_provider','payment_order_id','payment_id','payment_status','paid_at','payout_reference','delivery_url','delivery_path','delivery_version','currency','tax_amount',
     ];
     protected $casts = [
         'references'=>'array',
