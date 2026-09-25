@@ -26,7 +26,7 @@ return new class extends Migration {
         });
 
         // Seed base services (paid) — FK-safe, after creators seeded in previous migration
-        // Hostinger: runs once; safe to re-run check by slug
+        // Runs once; safe to re-run — checked by slug
         try {
             $priya = DB::table('creators')->where('handle','@priyaedits')->first();
             $rahul = DB::table('creators')->where('handle','@rahulcuts')->first();

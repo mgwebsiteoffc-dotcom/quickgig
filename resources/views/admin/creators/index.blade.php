@@ -67,7 +67,7 @@
       </div>
     </div>
     @empty
-      <div class="col-span-3 text-center py-12 bg-white border border-dashed border-[#E8E8E6] rounded-2xl"><div class="font-black">No creators found</div><div class="text-[13px] text-[#7A7A78] font-medium">Try clearing filters or create via onboarding.</div></div>
+      <div class="col-span-3 text-center py-12 bg-white border border-dashed border-[#E8E8E6] rounded-2xl"><div class="font-black">No creators found</div><div class="text-[13px] text-[#7A7A78] font-medium">Try clearing the filters, or invite a creator to sign up.</div></div>
     @endforelse
   </div>
   <div class="mt-4">{{ $creators->links() }}</div>

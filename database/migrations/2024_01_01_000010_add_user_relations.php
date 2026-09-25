@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
         // Adds FK constraints from users -> companies / creators after all tables exist.
-        // Hostinger shared compatible: runs after companies, creators are created; safe to add.
+        // Runs after companies and creators exist; safe to add.
         Schema::table('users', function (Blueprint $table) {
             // Add foreign keys if not already present (fresh install will not have them)
             // Use try/catch for shared hosting where FK names may already exist on rerun

@@ -5,91 +5,320 @@ namespace App\Http\Controllers;
 use App\Models\Faq;
 use App\Models\Blog;
 use App\Models\Creator;
+use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class LandingController extends Controller
 {
     public function index(Request $request)
     {
-        // Try DB, fallback to hardcoded for fresh install before migrate
-        try {
-            $faqs = Faq::published()->ordered()->get();
-            if ($faqs->isEmpty()) throw new \Exception('empty');
-        } catch (\Throwable $e) {
-            $faqs = collect([
-                (object)['question'=>'How is this different from Unjob.ai, Fiverr or Upwork?','answer'=>'Unjob is instant-assign only with no choice. Fiverr takes 20% + bidding chaos, Upwork is 50+ proposals & pay-to-bid. QuickContent gives you 3 paths (Instant / Choose Pro / Prompt-a-Team), live tracking — easy like ordering food — and escrow — pay only when you approve. Verified creators with live availability, not random freelancers.'],
-                (object)['question'=>'How fast is delivery really?','answer'=>'Talking-head reels & thumbnails: next-day delivery is standard. Instant-assign orders are assigned in ~12 minutes. AI videos & team packs: 2 days. You get a countdown + live updates like ordering food.'],
-                (object)['question'=>'What if I don’t like the work?','answer'=>'You get 2 free revisions in every order. Payment is held in Razorpay escrow — we release to the creator only when you click Approve. 100% guarantee.'],
-                (object)['question'=>'Who are the creators? Are they verified?','answer'=>'All pros are ID-verified, portfolio-checked, and rated by real companies (Avante, BrandScale etc). Blue tick = verified. You see live availability (green dot) before you book.'],
-                (object)['question'=>'Can I run this on Hostinger shared hosting?','answer'=>'Yes. Built for shared hosting: no Redis, no Node, no Supervisor needed. File cache, database queue (cron), Tailwind via CDN. Works on Hostinger Single/Premium/Business.'],
-                (object)['question'=>'What does it cost?','answer'=>'Flat, upfront pricing: Reels from ₹1,299, Thumbnails from ₹1,299, AI Ads from ₹6,499. Platform fee 5%. No bidding, no Connects, no hidden 20%. Creators keep 90%.'],
-            ]);
-        }
-
-        try {
-            $blogs = Blog::published()->orderByDesc('is_featured')->orderByDesc('published_at')->limit(3)->get();
-        } catch (\Throwable $e) { $blogs = collect(); }
-
-        try {
-            $creatorsRaw = Creator::where('is_verified',true)->orderByDesc('is_featured')->orderByDesc('rating')->limit(4)->get();
-            if ($creatorsRaw->isEmpty()) throw new \Exception('empty');
-            // Map to landing view shape: img, available, role, price, name, handle
-            $creators = $creatorsRaw->map(function($c){
-                return [
-                    'name'=>$c->name,
-                    'handle'=>$c->handle,
-                    'img'=>$c->avatarUrl(),
-                    'role'=>$c->headline ?: ($c->bio ? \Illuminate\Support\Str::limit($c->bio,40) : 'Verified Creator'),
-                    'price'=>'₹'.number_format($c->price_from),
-                    'available'=>$c->is_available,
-                    'is_verified'=>$c->is_verified,
-                ];
-            });
-        } catch (\Throwable $e) {
-            $creators = collect([
-                ['name'=>'Priya Sharma','handle'=>'@priyaedits','role'=>'Talking-Head • 4.9★ • For @devtalksbusiness','price'=>'₹2,499','img'=>'https://i.pravatar.cc/150?img=5','available'=>true],
-                ['name'=>'Rahul Verma','handle'=>'@rahulcuts','role'=>'Retention Editing • 4.9★ • For @priyanksingh','price'=>'₹2,499','img'=>'https://i.pravatar.cc/150?img=12','available'=>true],
-                ['name'=>'Aman Khan','handle'=>'@amanmotion','role'=>'Motion + AI • 4.8★ • For @fullstackmodiji','price'=>'₹2,799','img'=>'https://i.pravatar.cc/150?img=15','available'=>false],
-                ['name'=>'Neha Jain','handle'=>'@nehacreates','role'=>'Thumbnail CTR • 4.9★ • 2k delivered','price'=>'₹1,299','img'=>'https://i.pravatar.cc/150?img=9','available'=>true],
-            ]);
-        }
+        $faqs   = $this->faqs();
+        $blogs  = $this->blogs();
+        $gigs   = $this->gigs();
+        $people = $this->creators();
 
         $stats = [
-            ['value' => '12 min', 'label' => 'Avg. assign time'],
-            ['value' => '1,400+', 'label' => 'Videos delivered'],
-            ['value' => '4.8/5', 'label' => 'Avg. rating'],
-            ['value' => '200+', 'label' => 'Companies trust us'],
+            'match_time'      => '4 min 12 sec',
+            'online_creators' => '1,284',
+            'gig_count'       => \App\Models\Service::where('is_active', true)->count() ?: 19,
         ];
-        $logos = ['Avante Studio','BrandScale','GrowthX','Razorpay Rize','Jindal Steel','ConcertPass'];
-        $paths = [
-            ['id'=>'instant','badge'=>'Most Popular','icon'=>'zap','title'=>'Instant Assign','time'=>'~12 min','price'=>'From ₹1,299','desc'=>'Describe what you need → we assign the best verified pro in 12 minutes. As easy as ordering food.','for'=>'Urgent reels, thumbnails, fixes'],
-            ['id'=>'choose','badge'=>'Full Control','icon'=>'users','title'=>'Choose Your Pro','time'=>'~1 hour','price'=>'From ₹1,299','desc'=>'See top 3 matched pros with portfolio + rating. Pick who you trust. No bidding, no noise.','for'=>'When you want to choose'],
-            ['id'=>'team','badge'=>'Best Value','icon'=>'layers','title'=>'Prompt-a-Team','time'=>'~2 hours','price'=>'From ₹6,499','desc'=>'One prompt → Reel + Thumbnail + Captions. A micro-team (editor + designer + AI) works as one.','for'=>'YouTube packs, campaigns'],
+
+        // Product differentiators — each links to the page that proves it.
+        $usps = [
+            [
+                'title' => 'Brief engine', 'tag' => 'Free tool', 'tagTone' => 'bg-violet/15 text-violet-soft',
+                'body'  => 'One sentence becomes hooks, a timed beat sheet, deliverables and a spec — before a freelancer is even matched.',
+                'cta'   => 'Write a brief', 'href' => route('brief-builder'),
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16M4 10h16M4 15h9"/><circle cx="18" cy="17" r="4"/><path d="M18 15.5v3"/></svg>',
+            ],
+            [
+                'title' => 'Explainable matching', 'tag' => 'Auditable', 'tagTone' => 'bg-violet/15 text-violet-soft',
+                'body'  => 'A score out of 100 with the five factors behind it. Re-weight what matters and watch the ranking change.',
+                'cta'   => 'See the scoring', 'href' => route('ai'),
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19V5M9 19v-8M14 19v-5M19 19V9"/></svg>',
+            ],
+            [
+                'title' => 'Automated QA gate', 'tag' => '6 checks', 'tagTone' => 'bg-lime/15 text-lime',
+                'body'  => 'Hook timing, caption coverage, loudness, aspect, resolution and licensing are verified before you ever see the file.',
+                'cta'   => 'Run the gate', 'href' => route('ai').'#m02',
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l8 3v6c0 4.5-3.2 7.9-8 9-4.8-1.1-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+            ],
+            [
+                'title' => 'Revision translator', 'tag' => 'Fewer rounds', 'tagTone' => 'bg-violet/15 text-violet-soft',
+                'body'  => '"Make it punchier" becomes timestamped instructions an editor can execute without a single call.',
+                'cta'   => 'Try it live', 'href' => route('ai').'#m03',
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 0 1-12.5 7.5L3 21l2-5.5A8.5 8.5 0 1 1 21 11.5z"/></svg>',
+            ],
+            [
+                'title' => 'Auto-repurpose', 'tag' => '6 formats', 'tagTone' => 'bg-violet/15 text-violet-soft',
+                'body'  => 'One approved master forks into vertical, square, 16:9, thumbnail frames and caption files automatically.',
+                'cta'   => 'See the pipeline', 'href' => route('how-it-works'),
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><path d="M13 7h5a3 3 0 0 1 3 3M11 17H6a3 3 0 0 1-3-3"/></svg>',
+            ],
+            [
+                'title' => 'Escrow with SLA credit', 'tag' => 'No lock-in', 'tagTone' => 'bg-lime/15 text-lime',
+                'body'  => 'No commitment fee and no retainer. Miss the promised window and the express premium is credited back.',
+                'cta'   => 'See pricing', 'href' => route('pricing'),
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M8 8V6a4 4 0 0 1 8 0v2M12 13v3"/></svg>',
+            ],
         ];
-        $services = [
-            ['title'=>'Talking-Head Reel','price'=>'₹1,299','time'=>'1 Day','img'=>'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=500&q=80','badge'=>'Best seller','orders'=>'5k+'],
-            ['title'=>'Retention Reel','price'=>'₹2,499','time'=>'1 Day','img'=>'https://images.unsplash.com/photo-1536243287037-7f1444775910?w=500&q=80','badge'=>'Popular','orders'=>'1k+'],
-            ['title'=>'AI UGC Ad','price'=>'₹6,499','time'=>'2 Days','img'=>'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&q=80','badge'=>'AI','orders'=>'420'],
-            ['title'=>'High CTR Thumbnail','price'=>'₹1,299','time'=>'1 Day','img'=>'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&q=80','badge'=>'Thumbnail','orders'=>'2k+'],
-            ['title'=>'UGC Unboxing 30s','price'=>'₹1,999','time'=>'1 Day','img'=>'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=500&q=80','badge'=>'UGC • Real use','orders'=>'860'],
-            ['title'=>'Barter Reel Collab','price'=>'Barter','time'=>'2 Days','img'=>'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500&q=80','badge'=>'Barter • Product','orders'=>'310'],
+
+        $heroStats = [
+            ['value' => '4 min',   'label' => 'Average match time'],
+            ['value' => '18,400+', 'label' => 'Gigs delivered'],
+            ['value' => '4.9/5',   'label' => 'Client rating'],
+            ['value' => '100%',    'label' => 'Escrow protected'],
         ];
+
+        $logos = ['Avante Studio', 'BrandScale', 'GrowthX Labs', 'Nova Foods', 'ConcertPass', 'Lumen AI', 'Peppermint', 'Studio 91'];
+
+        $steps = [
+            [
+                'title' => 'Describe the gig',
+                'body'  => 'One short brief — format, deadline, references. Takes about 40 seconds. No calls, no proposals to read.',
+                'meta'  => 'Free to post',
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16M4 10h16M4 15h9"/><circle cx="18" cy="17" r="4"/><path d="M18 15.5v3"/></svg>',
+            ],
+            [
+                'title' => 'We match the right pro',
+                'body'  => 'Our engine ranks verified freelancers on skill, live availability, on-time record and rating, then locks in the best fit.',
+                'meta'  => 'Matched in minutes',
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5 19 19M19 5l-2.5 2.5M7.5 16.5 5 19"/></svg>',
+            ],
+            [
+                'title' => 'Approve, then pay',
+                'body'  => 'Watch production live, request up to 2 free revisions, and release escrow only when the delivery is right.',
+                'meta'  => 'Escrow protected',
+                'icon'  => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l8 3v6c0 4.5-3.2 7.9-8 9-4.8-1.1-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+            ],
+        ];
+
+        // Interactive demo simulation config (prices in ₹)
+        $sim = [
+            'pool' => 2431,
+            'categories' => [
+                ['id' => 'reel',      'label' => 'Short-form reel',   'base' => 2499],
+                ['id' => 'thumbnail', 'label' => 'Thumbnail pack',    'base' => 1299],
+                ['id' => 'ai_ad',     'label' => 'AI video ad',       'base' => 6499],
+                ['id' => 'ugc',       'label' => 'UGC product video', 'base' => 3999],
+            ],
+            'speeds' => [
+                ['id' => 'express',  'label' => 'Express · 3 hours',  'mult' => 1.6, 'eta' => '3h 00m'],
+                ['id' => 'standard', 'label' => 'Standard · 24 hours','mult' => 1.0, 'eta' => '24h 00m'],
+                ['id' => 'relaxed',  'label' => 'Relaxed · 48 hours', 'mult' => 0.85,'eta' => '48h 00m'],
+            ],
+            'addons' => [
+                ['id' => 'captions', 'label' => 'Burned-in captions', 'price' => 299],
+                ['id' => 'hooks',    'label' => '3 hook variants',    'price' => 499],
+                ['id' => 'raw',      'label' => 'Raw project files',  'price' => 699],
+                ['id' => 'vertical', 'label' => 'Vertical + square',  'price' => 399],
+            ],
+            'talent' => $people->take(4)->map(fn ($c) => [
+                'name'   => $c['name'],
+                'role'   => Str::limit($c['role'], 38),
+                'img'    => $c['img'],
+                'rating' => '4.9',
+            ])->values()->all(),
+        ];
+
+        // Who we are actually built for — colour-coded segments.
+        $audiences = [
+            [
+                'label' => 'D2C brands', 'tone' => 'accent',
+                'body'  => 'Launch creatives, offer reels and product videos shipped the same week you plan them.',
+                'stat'  => '4.2×', 'statLabel' => 'more creatives per month',
+                'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M9 13h6"/></svg>',
+            ],
+            [
+                'label' => 'Agencies', 'tone' => 'accent',
+                'body'  => 'Absorb client spikes without hiring. White-label delivery, one invoice, your brand on top.',
+                'stat'  => '0', 'statLabel' => 'new salaries needed',
+                'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6M7 11h.01M12 11h.01M17 11h.01"/></svg>',
+            ],
+            [
+                'label' => 'Founders & solo teams', 'tone' => 'accent',
+                'body'  => 'You film it, we finish it. Hooks, captions and thumbnails without touching an editor.',
+                'stat'  => '3 h', 'statLabel' => 'from raw file to post',
+                'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>',
+            ],
+            [
+                'label' => 'Educators & coaches', 'tone' => 'accent',
+                'body'  => 'Turn one long lesson into a month of shorts, carousels and thumbnails.',
+                'stat'  => '18', 'statLabel' => 'assets from one recording',
+                'icon'  => '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5"/></svg>',
+            ],
+        ];
+
+        // Browse tiles — the whole freelancer catalogue, not just video.
+        $categories = [
+            ['name' => 'Video & editing',  'count' => '420 gigs', 'from' => '₹1,299', 'q' => 'Reel',       'icon' => 'M2 5h14v14H2zM16 11l6-4v10l-6-4'],
+            ['name' => 'Design & brand',   'count' => '310 gigs', 'from' => '₹999',   'q' => 'Thumbnail',  'icon' => 'M12 19l7-7-4-4-7 7v4zM3 21h6M5 3l2 4 4 2-4 2-2 4-2-4-4-2 4-2z'],
+            ['name' => 'Content & copy',   'count' => '190 gigs', 'from' => '₹899',   'q' => 'Writing',    'icon' => 'M4 5h16M4 10h16M4 15h10M4 20h7'],
+            ['name' => 'Web & app dev',    'count' => '165 gigs', 'from' => '₹4,999', 'q' => 'Development','icon' => 'm8 8-4 4 4 4M16 8l4 4-4 4M13 5l-2 14'],
+            ['name' => 'AI & automation',  'count' => '95 gigs',  'from' => '₹6,499', 'q' => 'AI Video',   'icon' => 'M12 3a4 4 0 0 1 4 4v1a4 4 0 0 1 0 8v1a4 4 0 0 1-8 0v-1a4 4 0 0 1 0-8V7a4 4 0 0 1 4-4zM12 3v18'],
+            ['name' => 'Marketing & UGC',  'count' => '260 gigs', 'from' => '₹3,999', 'q' => 'UGC Video',  'icon' => 'M3 11v2a1 1 0 0 0 1 1h3l4 4V6L7 10H4a1 1 0 0 0-1 1zM16 8a5 5 0 0 1 0 8'],
+        ];
+
+        // Recently delivered strip.
+        $gallery = [
+            ['img' => 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=500&q=80', 'label' => 'Launch reel',      'meta' => '3h 12m'],
+            ['img' => 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&q=80', 'label' => 'Thumbnail pack',   'meta' => '5h 40m'],
+            ['img' => 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=500&q=80', 'label' => 'UGC unboxing',     'meta' => '1 day'],
+            ['img' => 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&q=80', 'label' => 'AI product ad',    'meta' => '2 days'],
+            ['img' => 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=500&q=80', 'label' => 'Podcast clips',    'meta' => '1 day'],
+            ['img' => 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500&q=80', 'label' => 'Brand kit',        'meta' => '2 days'],
+        ];
+
+        $plans = [
+            [
+                'slug' => 'starter', 'name' => 'Starter', 'price' => 1299, 'retainer' => 9999, 'unit' => '/ gig',
+                'tagline' => 'Thumbnails, edits and quick fixes.',
+                'features' => ['1-day delivery', '2 free revisions', 'Verified freelancer + chat', 'Escrow protection'],
+                'cta' => 'Start at ₹1,299', 'featured' => false,
+            ],
+            [
+                'slug' => 'pro', 'name' => 'Pro', 'price' => 2499, 'retainer' => 24999, 'unit' => '/ gig',
+                'tagline' => 'Retention reels and UGC that convert.',
+                'features' => ['Express lane — from 3 hours', 'Priority AI matching', 'Live production tracking', 'Dedicated freelancer shortlist', 'Escrow protection'],
+                'cta' => 'Get matched now', 'featured' => true,
+            ],
+            [
+                'slug' => 'studio', 'name' => 'Studio', 'price' => 8999, 'retainer' => 74999, 'unit' => '/ pack',
+                'tagline' => 'A micro-team for full campaigns.',
+                'features' => ['Editor + designer + AI pipeline', 'Reel + thumbnail + captions', '2-day turnaround', 'Account manager on chat', 'Volume pricing'],
+                'cta' => 'Build a team pack', 'featured' => false,
+            ],
+        ];
+
+        $feeNotes = [
+            ['title' => '10% platform fee', 'body' => 'Freelancers keep 90% of every gig. No connects, no bidding credits, no listing fees.'],
+            ['title' => 'Escrow by default', 'body' => 'Funds are held the moment you order and released to the freelancer only after you approve.'],
+            ['title' => 'Free to post',      'body' => 'Posting briefs, browsing freelancers and getting matched costs nothing.'],
+        ];
+
         $testimonials = [
-            ['name'=>'Rohan Sharma','company'=>'Avante Studio','text'=>'We went from 3-day delays to same-day reels. Live tracking — easy like ordering food — is genius. I know exactly when my reel will land.','rating'=>5],
-            ['name'=>'Priya Kapoor','company'=>'BrandScale Media','text'=>'No more Fiverr spam. 3 verified pros, pick one, escrow till I approve. Fees are half of Upwork.','rating'=>5],
-            ['name'=>'Aman Verma','company'=>'GrowthX Labs','text'=>'Prompt-a-Team saved us 8 hours/week. One brief → reel + thumb + caption. Insane value.','rating'=>5],
+            ['name' => 'Rohan Sharma',  'company' => 'Avante Studio',    'text' => 'We went from three-day turnarounds to same-day reels. The live pipeline means I never have to ask for a status update again.'],
+            ['name' => 'Priya Kapoor',  'company' => 'BrandScale Media', 'text' => 'No proposal spam, no negotiating. I pick the gig, the price is on the card, and the money only moves when I approve.'],
+            ['name' => 'Aman Verma',    'company' => 'GrowthX Labs',     'text' => 'The team pack saves us about eight hours a week. One brief comes back as a reel, a thumbnail and captions.'],
         ];
 
-        // SEO/AEO for landing — no brand mentions, food-ordering analogy
         $seo = [
-            'title' => "QuickContent — India's First Quick Content Delivery Platform | Work, Delivered. In Hours, Not Weeks.",
-            'description' => "India's First Quick Content Delivery — as easy as ordering food. Get Reels, Thumbnails & AI Videos in hours with 12-min matching, live tracking, and escrow — pay only when you approve. From ₹1,299. Hostinger-ready.",
-            'canonical' => url('/'),
-            'image' => url('/og-home.jpg'),
-            'type' => 'website',
-            'keywords' => 'quick content delivery, reels, thumbnails, AI video, Unjob alternative, Fiverr alternative, Hostinger',
+            'title'       => 'Quick GIGS — Hire verified freelancers in minutes, not weeks',
+            'description' => 'Quick GIGS writes your brief in one second and matches it to a verified freelancer or creator in minutes — video, design, copy, code, voice, UGC and marketing. Live tracking, flat pricing from ₹1,299, escrow-protected payments.',
+            'canonical'   => url('/'),
+            'image'       => url('/og-home.jpg'),
+            'type'        => 'website',
+            'keywords'    => 'quick gigs, gig marketplace india, hire video editor, reel editing, thumbnail design, AI video ads, UGC freelancers, escrow freelance',
         ];
 
-        return view('landing', compact('stats','logos','paths','creators','services','testimonials','faqs','blogs','seo'));
+        return view('landing', [
+            'stats'        => $stats,
+            'usps'         => $usps,
+            'audiences'    => $audiences,
+            'categories'   => $categories,
+            'gallery'      => $gallery,
+            'comparison'   => PageController::comparison(),
+            'heroStats'    => $heroStats,
+            'logos'        => $logos,
+            'steps'        => $steps,
+            'sim'          => $sim,
+            'gigs'         => $gigs,
+            'creators'     => $people,
+            'plans'        => $plans,
+            'feeNotes'     => $feeNotes,
+            'testimonials' => $testimonials,
+            'faqs'         => $faqs,
+            'blogs'        => $blogs,
+            'seo'          => $seo,
+            'liveOrderId'  => 4820,
+        ]);
+    }
+
+    /** FAQs from DB with a sensible fallback before seeding. */
+    private function faqs()
+    {
+        try {
+            $faqs = Faq::published()->ordered()->get();
+            if ($faqs->isNotEmpty()) return $faqs;
+        } catch (\Throwable $e) {
+            // table not migrated yet
+        }
+
+        return collect([
+            (object) ['question' => 'How is Quick GIGS different from a normal freelance site?', 'answer' => 'You never post a job and wait for proposals. You pick a fixed-price gig or post a brief, and our matching engine assigns a verified freelancer in minutes. Payment sits in escrow until you approve the delivery.'],
+            (object) ['question' => 'How fast is delivery, really?', 'answer' => 'Express gigs start in minutes and land in about three hours. Standard reels and thumbnails are next-day. Team packs and AI ads take up to two days.'],
+            (object) ['question' => 'What if I do not like the work?', 'answer' => 'Every gig includes two free revisions. If the delivery still misses the brief, raise a dispute before you approve and the escrow is refunded.'],
+            (object) ['question' => 'How are freelancers verified?', 'answer' => 'Every freelancer submits ID, portfolio and past client references. Our team reviews each profile manually and tracks on-time delivery, rating and response time after that.'],
+            (object) ['question' => 'What does it cost?', 'answer' => 'Gigs start at ₹1,299. The platform fee is a flat 10% — freelancers keep 90%. Posting briefs and browsing freelancers is free.'],
+            (object) ['question' => 'How do freelancers get paid?', 'answer' => 'The moment you approve a delivery, the escrow is released and paid out to the freelancer’s UPI or bank account, usually within minutes.'],
+        ]);
+    }
+
+    private function blogs()
+    {
+        try {
+            return Blog::published()->orderByDesc('is_featured')->orderByDesc('published_at')->limit(3)->get();
+        } catch (\Throwable $e) {
+            return collect();
+        }
+    }
+
+    /** Featured marketplace gigs, DB-first with a demo fallback. */
+    private function gigs()
+    {
+        try {
+            $services = Service::with('creator')->where('is_active', true)->orderByDesc('sold_count')->limit(4)->get();
+            if ($services->isNotEmpty()) {
+                return $services->map(fn ($s) => [
+                    'id'     => $s->id,
+                    'title'  => $s->title,
+                    'price'  => $s->displayPrice(),
+                    'mrp'    => $s->compareAt() ? '₹' . number_format($s->compareAt()) : null,
+                    'off'    => $s->discountPercent(),
+                    'time'   => $s->delivery_days . ($s->delivery_days > 1 ? ' days' : ' day'),
+                    'img'    => $s->coverUrl(),
+                    'badge'  => $s->badge ?: $s->category,
+                    'rating' => number_format((float) $s->rating, 1),
+                    'sold'   => ($s->sold_count ?: 0) . ' sold',
+                ])->values()->all();
+            }
+        } catch (\Throwable $e) {
+            // fall through
+        }
+
+        return [
+            ['id' => 1, 'title' => 'Talking-head reel with retention cuts', 'price' => '₹2,499', 'time' => '1 day',  'img' => 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=600&q=80', 'badge' => 'Best seller', 'rating' => '4.9', 'sold' => '5.1k sold'],
+            ['id' => 2, 'title' => 'High-CTR thumbnail pack (3 variants)',  'price' => '₹1,299', 'time' => '1 day',  'img' => 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&q=80', 'badge' => 'Design',      'rating' => '4.8', 'sold' => '2.4k sold'],
+            ['id' => 3, 'title' => 'AI-generated product ad, 30 seconds',   'price' => '₹6,499', 'time' => '2 days', 'img' => 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80', 'badge' => 'AI',          'rating' => '4.9', 'sold' => '420 sold'],
+            ['id' => 4, 'title' => 'UGC unboxing video by a real freelancer',  'price' => '₹3,999', 'time' => '1 day',  'img' => 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=600&q=80', 'badge' => 'UGC',         'rating' => '4.9', 'sold' => '860 sold'],
+        ];
+    }
+
+    /** Verified freelancers, DB-first with a demo fallback. */
+    private function creators()
+    {
+        try {
+            $creators = Creator::where('is_verified', true)->orderByDesc('is_featured')->orderByDesc('rating')->limit(4)->get();
+            if ($creators->isNotEmpty()) {
+                return $creators->map(fn ($c) => [
+                    'name'       => $c->name,
+                    'discipline' => $c->profileLabel(),
+                    'img'       => $c->avatarUrl(),
+                    'role'      => $c->headline ?: 'Verified creator',
+                    'price'     => '₹' . number_format($c->price_from),
+                    'available' => (bool) $c->is_available,
+                ])->values();
+            }
+        } catch (\Throwable $e) {
+            // fall through
+        }
+
+        return collect([
+            ['name' => 'Priya Sharma', 'discipline' => 'Video editor',   'role' => 'Talking-head & retention editing',   'price' => '₹2,499', 'img' => 'https://i.pravatar.cc/200?img=5',  'available' => true],
+            ['name' => 'Rahul Verma',  'discipline' => 'Video editor',    'role' => 'Long-form to short-form repurposing','price' => '₹2,499', 'img' => 'https://i.pravatar.cc/200?img=12', 'available' => true],
+            ['name' => 'Aman Khan',    'discipline' => 'Motion designer',   'role' => 'Motion graphics & AI video',         'price' => '₹2,799', 'img' => 'https://i.pravatar.cc/200?img=15', 'available' => false],
+            ['name' => 'Neha Jain',    'discipline' => 'Designer',  'role' => 'Thumbnails with 12% avg CTR lift',   'price' => '₹1,299', 'img' => 'https://i.pravatar.cc/200?img=9',  'available' => true],
+        ]);
     }
 }

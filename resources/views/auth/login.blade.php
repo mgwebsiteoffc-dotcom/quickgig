@@ -1,53 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login — QuickContent</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>*{font-family:Inter,sans-serif}</style>
-</head>
-<body class="min-h-screen bg-[#F8F8F7] flex items-center justify-center p-4">
-<div class="w-full max-w-[420px] bg-white border border-[#E8E8E6] rounded-2xl p-6 sm:p-7 shadow-sm">
-  <a href="{{ route('landing') }}" class="flex items-center gap-2.5">
-    <div class="w-9 h-9 rounded-xl bg-[#0F0F0F] text-white grid place-items-center font-black text-[13px]">QC</div>
-    <div><div class="font-extrabold text-[14px] leading-none">QuickContent</div><div class="text-[11px] font-semibold text-[#7A7A78]">India's First Quick Delivery</div></div>
-  </a>
-  <h1 class="mt-5 text-[20px] font-black tracking-tight">Welcome back</h1>
-  <p class="text-[13px] font-medium text-[#7A7A78]">Login to manage orders. Hostinger-safe — file session, no Redis.</p>
+@extends('layouts.site')
 
-  @if($errors->any())
-    <div class="mt-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-3 py-2.5 text-[13px] font-semibold">{{ $errors->first() }}</div>
-  @endif
-  @if(session('error'))
-    <div class="mt-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-3 py-2.5 text-[13px] font-semibold">{{ session('error') }}</div>
-  @endif
+@section('content')
+<section class="py-16 sm:py-24">
+  <div class="max-w-[440px] mx-auto px-5">
 
-  <form method="POST" action="{{ route('login.post') }}" class="mt-5 space-y-3">
-    @csrf
-    <div>
-      <label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Email</label>
-      <input name="email" type="email" value="{{ old('email','admin@quickcontent.in') }}" required class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px] font-medium outline-none focus:bg-white focus:border-[#0F0F0F]">
+    <div class="text-center">
+      <h1 class="font-display text-[32px] font-semibold">Welcome back</h1>
+      <p class="mt-2 text-[14.5px] text-mut">Log in to track gigs, releases and payouts.</p>
     </div>
-    <div>
-      <label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Password</label>
-      <input name="password" type="password" value="Admin@12345" required class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[14px] font-medium outline-none focus:bg-white focus:border-[#0F0F0F]">
-    </div>
-    <label class="flex items-center gap-2 text-[13px] font-semibold"><input type="checkbox" name="remember" value="1" class="rounded"> Remember me</label>
-    <button class="w-full h-11 rounded-full bg-[#0F0F0F] text-white font-extrabold text-[14px] hover:bg-black">Login →</button>
-  </form>
 
-  <div class="mt-5 bg-[#F8F8F7] border border-[#E8E8E6] rounded-xl p-3">
-    <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Demo logins (change after first login)</div>
-    <div class="mt-2 grid grid-cols-1 gap-1.5 text-[12px] font-mono">
-      <div class="flex justify-between bg-white border border-[#E8E8E6] rounded-lg px-2.5 py-1.5"><span>admin@quickcontent.in / Admin@12345</span><span class="font-bold">super_admin</span></div>
-      <div class="flex justify-between bg-white border border-[#E8E8E6] rounded-lg px-2.5 py-1.5"><span>manager@quickcontent.in / Manager@123</span><span class="font-bold">manager</span></div>
-      <div class="flex justify-between bg-white border border-[#E8E8E6] rounded-lg px-2.5 py-1.5"><span>support@quickcontent.in / Support@123</span><span class="font-bold">support</span></div>
+    @if($errors->any())
+      <div class="mt-6 rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-[13.5px] text-rose-200">
+        {{ $errors->first() }}
+      </div>
+    @endif
+
+    <form method="POST" action="{{ route('login.post') }}" class="mt-7 glass rounded-3xl p-6 sm:p-7 space-y-5">
+      @csrf
+
+      <div>
+        <label class="label" for="email">Email</label>
+        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="email" class="field" placeholder="you@company.com">
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between">
+          <label class="label" for="password">Password</label>
+          <a href="#" class="text-[11.5px] text-mut hover:text-ink mb-[7px]">Forgot?</a>
+        </div>
+        <input id="password" name="password" type="password" required autocomplete="current-password" class="field" placeholder="••••••••">
+      </div>
+
+      <label class="flex items-center gap-2.5 text-[13.5px] text-mut">
+        <input type="checkbox" name="remember" value="1" class="w-4 h-4 rounded border-line bg-tint accent-violet">
+        Keep me logged in
+      </label>
+
+      <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Log in</button>
+
+      <div class="text-center text-[13.5px] text-mut">
+        New to Quick GIGS? <a href="{{ route('register') }}" class="text-ink font-medium underline decoration-mint decoration-2 underline-offset-4 hover:text-mint-deep">Create a free account</a>
+      </div>
+    </form>
+
+    {{-- demo accounts --}}
+    <div x-data="{ fill(e,p){ document.getElementById('email').value=e; document.getElementById('password').value=p; } }" class="mt-5 glass rounded-3xl p-5">
+      <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Demo accounts — tap to fill</div>
+      <div class="mt-3 space-y-2">
+        @foreach([
+          ['label' => 'Business', 'email' => 'business@quickgigs.in', 'pass' => 'Business@123'],
+          ['label' => 'Freelancer',  'email' => 'creator@quickgigs.in',  'pass' => 'Freelancer@123'],
+          ['label' => 'Admin',    'email' => 'admin@quickgigs.in',    'pass' => 'Admin@12345'],
+        ] as $d)
+          <button type="button" x-on:click="fill(@js($d['email']), @js($d['pass']))"
+                  class="w-full flex items-center justify-between gap-3 rounded-2xl border border-line bg-tint px-4 py-2.5 hover:border-mint transition text-left">
+            <span class="text-[12.5px] font-mono text-body truncate">{{ $d['email'] }}</span>
+            <span class="text-[11px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2.5 py-1 shrink-0">{{ $d['label'] }}</span>
+          </button>
+        @endforeach
+      </div>
+      <div class="mt-3 text-[11.5px] text-mut">Seeded by <span class="font-mono text-faint">php artisan migrate --seed</span>.</div>
     </div>
   </div>
-
-  <div class="mt-4 text-center text-[12px] font-semibold text-[#7A7A78]">Go to <a href="{{ route('landing') }}" class="text-[#0F0F0F] underline">Landing</a> • <a href="{{ route('business.home') }}" class="text-[#0F0F0F] underline">Marketplace</a></div>
-</div>
-</body>
-</html>
+</section>
+@endsection

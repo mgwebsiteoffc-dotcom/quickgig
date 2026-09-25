@@ -16,16 +16,16 @@
     <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Reading Minutes</label><input name="reading_minutes" type="number" value="{{ old('reading_minutes',4) }}" class="mt-1 w-full h-11 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
   </div>
 
-  <div class="mt-4"><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Content * — Quill Editor (Hostinger: file upload, no S3)</label>
+  <div class="mt-4"><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Content * — rich text editor</label>
     <div id="editor" class="mt-1 bg-white border border-[#E8E8E6] rounded-xl overflow-hidden">{!! old('content','<h2>Why this matters</h2><p>Start with the answer — AEO first.</p>') !!}</div>
     <input type="hidden" name="content" id="content">
-    <div class="text-[11px] font-medium text-[#7A7A78] mt-1">Images: drag/paste or toolbar image → uploads to <code class="bg-[#F8F8F7] border px-1 py-0.5 rounded">/storage/blogs/content</code> or <code class="bg-[#F8F8F7] px-1 py-0.5 rounded">/uploads/blogs</code> (Hostinger fallback). No Redis.</div>
+    <div class="text-[11px] font-medium text-[#7A7A78] mt-1">Images: drag/paste or toolbar image → uploads to <code class="bg-[#F8F8F7] border px-1 py-0.5 rounded">/storage/blogs/content</code> or <code class="bg-[#F8F8F7] px-1 py-0.5 rounded">/uploads/blogs</code> (local fallback).</div>
   </div>
 
   <div class="mt-4 p-4 bg-[#F8F8F7] border border-[#E8E8E6] rounded-2xl">
     <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">SEO / AEO (optional but recommended)</div>
     <div class="mt-3 grid sm:grid-cols-2 gap-3">
-      <div class="sm:col-span-2"><label class="text-[11px] font-semibold text-[#7A7A78]">Meta Title (70 chars)</label><input name="meta_title" id="meta_title" value="{{ old('meta_title') }}" maxlength="70" placeholder="Leave blank = Title | QuickContent" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px]"><div class="text-[11px] text-[#7A7A78] font-mono"><span id="mtCount">0</span>/70</div></div>
+      <div class="sm:col-span-2"><label class="text-[11px] font-semibold text-[#7A7A78]">Meta Title (70 chars)</label><input name="meta_title" id="meta_title" value="{{ old('meta_title') }}" maxlength="70" placeholder="Leave blank = Title | Quick GIGS" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px]"><div class="text-[11px] text-[#7A7A78] font-mono"><span id="mtCount">0</span>/70</div></div>
       <div class="sm:col-span-2"><label class="text-[11px] font-semibold text-[#7A7A78]">Meta Description (155 chars, for Google + AEO)</label><textarea name="meta_description" id="meta_desc" rows="2" maxlength="165" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-white text-[13px]">{{ old('meta_description') }}</textarea><div class="text-[11px] text-[#7A7A78] font-mono"><span id="mdCount">0</span>/165</div></div>
       <div class="sm:col-span-2"><label class="text-[11px] font-semibold text-[#7A7A78]">Canonical URL (leave blank for auto)</label><input name="canonical_url" value="{{ old('canonical_url') }}" placeholder="https://yourdomain.com/blog/your-slug" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-white text-[13px]"></div>
       <div><label class="text-[11px] font-semibold text-[#7A7A78]">Cover Image (OG)</label><input type="file" name="cover" accept="image/*" class="mt-1 w-full text-[13px]"></div>
@@ -56,7 +56,7 @@ const quill = new Quill('#editor', { theme:'snow', modules:{ toolbar:{ container
 function imageHandler(){
   const input=document.createElement('input'); input.setAttribute('type','file'); input.setAttribute('accept','image/*'); input.click();
   input.onchange=()=>{ const file=input.files[0]; if(!file) return; const fd=new FormData(); fd.append('image', file); fd.append('_token','{{ csrf_token() }}');
-    fetch('{{ route('admin.blogs.upload') }}',{method:'POST', body:fd}).then(r=>r.json()).then(d=>{ if(d.url){ const range=quill.getSelection(true); quill.insertEmbed(range.index,'image', d.url); } }).catch(()=>alert('Upload failed — try smaller image (<3MB). Hostinger path: public/uploads/blogs'));
+    fetch('{{ route('admin.blogs.upload') }}',{method:'POST', body:fd}).then(r=>r.json()).then(d=>{ if(d.url){ const range=quill.getSelection(true); quill.insertEmbed(range.index,'image', d.url); } }).catch(()=>alert('Upload failed — try smaller image (<3MB). upload path: public/uploads/blogs'));
   };
 }
 document.getElementById('title').addEventListener('input', e=>{

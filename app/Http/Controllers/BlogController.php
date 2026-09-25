@@ -22,17 +22,18 @@ class BlogController extends Controller
             ->paginate(9)->withQueryString();
 
         $categories = BlogCategory::withCount('blogs')->get();
+        $faqs = \App\Models\Faq::published()->ordered()->limit(6)->get();
         $featured = Blog::published()->featured()->orderByDesc('published_at')->limit(3)->get();
 
         // SEO for blog listing
         $seo = [
-            'title' => 'Blog — Reels, Thumbnails & AI Video Playbooks | QuickContent',
-            'description' => 'Playbooks from verified creators: retention cuts, CTR thumbs, Veo 3 UGC ads. Hostinger-safe SOPs you can ship tomorrow.',
+            'title' => 'Blog — Reels, Thumbnails & AI Video Playbooks | Quick GIGS',
+            'description' => 'Playbooks from verified freelancers: retention cuts, CTR thumbs, Veo 3 UGC ads. -safe SOPs you can ship tomorrow.',
             'canonical' => url('/blog'),
             'image' => url('/og-blog.jpg'),
         ];
 
-        return view('blogs.index', compact('blogs','categories','featured','seo','q','cat'));
+        return view('blogs.index', compact('blogs','categories','featured','seo','q','cat','faqs'));
     }
 
     public function show(string $slug)
@@ -51,7 +52,7 @@ class BlogController extends Controller
             'image' => $blog->cover ? (filter_var($blog->cover, FILTER_VALIDATE_URL) ? $blog->cover : asset('storage/'.$blog->cover)) : url('/og-blog.jpg'),
             'type' => 'article',
             'published' => $blog->published_at,
-            'author' => $blog->author->name ?? 'QuickContent Team',
+            'author' => $blog->author->name ?? 'Quick GIGS Team',
             'tags' => $blog->tags,
         ];
 
@@ -62,6 +63,8 @@ class BlogController extends Controller
             ['name'=>$blog->title,'url'=>$blog->canonical()],
         ];
 
-        return view('blogs.show', compact('blog','related','seo','breadcrumbs'));
+        $faqs = \App\Models\Faq::published()->ordered()->limit(5)->get();
+
+        return view('blogs.show', compact('blog','related','seo','breadcrumbs','faqs'));
     }
 }

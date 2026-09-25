@@ -9,12 +9,17 @@ class Order extends Model
 {
     protected $fillable = [
         'uid','company_id','creator_id','service_id','brief','references','turnaround',
-        'subtotal','fee','discount','total','status','escrow_status','progress','due_at'
+        'subtotal','fee','discount','total','status','escrow_status','progress','due_at',
+        'payment_provider','payment_order_id','payment_id','payment_status','paid_at','payout_reference',
     ];
     protected $casts = [
         'references'=>'array',
         'due_at'=>'datetime',
+        'paid_at'=>'datetime',
     ];
+
+    public function isPaid(): bool { return $this->payment_status === 'paid'; }
+    public function awaitingPayment(): bool { return $this->payment_provider === 'razorpay' && ! $this->isPaid(); }
     const STATUS_WORKING='working', STATUS_REVIEW='review', STATUS_DELIVERED='delivered';
 
     protected static function booted()

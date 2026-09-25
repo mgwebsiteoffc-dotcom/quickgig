@@ -44,7 +44,7 @@ class Blog extends Model
     public function incrementViews(){ $this->increment('views'); }
 
     // SEO helpers
-    public function seoTitle(): string { return $this->meta_title ?: $this->title . ' | QuickContent'; }
+    public function seoTitle(): string { return $this->meta_title ?: $this->title . ' | Quick GIGS'; }
     public function seoDescription(): string { return $this->meta_description ?: Str::limit(strip_tags($this->excerpt ?: $this->content), 155); }
     public function canonical(): string { return $this->canonical_url ?: url('/blog/'.$this->slug); }
 
@@ -57,8 +57,8 @@ class Blog extends Model
             'headline'=>$this->title,
             'description'=>$this->seoDescription(),
             'image'=>$this->cover ? url($this->cover) : url('/og-default.jpg'),
-            'author'=>['@type'=>'Person','name'=>$this->author->name ?? 'QuickContent Team'],
-            'publisher'=>['@type'=>'Organization','name'=>'QuickContent','logo'=>['@type'=>'ImageObject','url'=>url('/logo.png')]],
+            'author'=>['@type'=>'Person','name'=>$this->author->name ?? 'Quick GIGS Team'],
+            'publisher'=>['@type'=>'Organization','name'=>'Quick GIGS','logo'=>['@type'=>'ImageObject','url'=>url('/logo.png')]],
             'datePublished'=> optional($this->published_at)->toIso8601String(),
             'dateModified'=> $this->updated_at->toIso8601String(),
             'mainEntityOfPage'=>['@type'=>'WebPage','@id'=>$this->canonical()],

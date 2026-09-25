@@ -20,7 +20,7 @@ class Service extends Model
         'rating'=>'decimal:1',
     ];
 
-    const CATEGORIES = ['Reel','Thumbnail','AI Video','UGC Video','Barter Collab','Bundle'];
+    const CATEGORIES = ['Reel','Thumbnail','AI Video','UGC Video','Writing','Development','Design','Voice Over','Marketing','Bundle'];
     const PROFILE_TYPES = ['video_editor','ugc_creator','influencer','designer','hybrid','any'];
     const PRICE_TYPES = ['paid','barter','hybrid'];
 
@@ -45,4 +45,32 @@ class Service extends Model
     }
 
     public function isBarter(): bool { return $this->price_type === 'barter' || $this->is_barter; }
+
+    /** Cover image URL with a graceful fallback. */
+    public function coverUrl(): string
+    {
+        if ($this->cover && filter_var($this->cover, FILTER_VALIDATE_URL)) return $this->cover;
+        if ($this->cover) return asset('storage/'.$this->cover);
+        return 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=800&q=80';
+    }
+
+    /** Strike-through price, when the gig has an MRP above the selling price. */
+    public function compareAt(): ?int
+    {
+        $mrp = (int) ($this->compare_price ?: $this->mrp);
+
+        return $mrp > (int) $this->price ? $mrp : null;
+    }
+
+    public function discountPercent(): ?int
+    {
+        $mrp = $this->compareAt();
+
+        return $mrp ? (int) round((($mrp - (int) $this->price) / $mrp) * 100) : null;
+    }
+
+    public function deliveryLabel(): string
+    {
+        return $this->delivery_days.($this->delivery_days > 1 ? ' days' : ' day');
+    }
 }

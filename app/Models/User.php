@@ -21,7 +21,7 @@ class User extends Authenticatable
         'is_active' => 'boolean',
     ];
 
-    // Roles for Hostinger-safe RBAC (no extra package)
+    // Roles for -safe RBAC (no extra package)
     const ROLES = [
         'super_admin' => 'Super Admin',
         'admin'       => 'Admin',

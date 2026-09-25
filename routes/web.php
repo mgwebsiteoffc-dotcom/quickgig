@@ -2,14 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\BriefBuilderController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\BoardController;
+use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CreatorController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SitemapController;
-use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Admin\DashboardController as AdminDash;
 use App\Http\Controllers\Admin\OrderController as AdminOrder;
 use App\Http\Controllers\Admin\CreatorController as AdminCreator;
@@ -20,125 +23,194 @@ use App\Http\Controllers\Admin\PayoutController as AdminPayout;
 use App\Http\Controllers\Admin\SettingController as AdminSetting;
 use App\Http\Controllers\Admin\BlogController as AdminBlog;
 use App\Http\Controllers\Admin\FaqController as AdminFaq;
+use App\Http\Controllers\Admin\SkillController as AdminSkill;
 
 /*
 |--------------------------------------------------------------------------
-| QuickContent — India's First Quick Content Delivery Platform
-| Hostinger Shared Ready: file/database, Tailwind CDN, no Redis
+| Quick GIGS — marketplace routes
 |--------------------------------------------------------------------------
 */
 
-// ── SEO: sitemap & robots ──
+/* ── SEO ── */
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
-// ── Landing — clear positioning + JSON-LD FAQ/Blog ──
+/* ── Public ── */
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
-// ── Onboarding — beautiful 3-step (business & creator) — easy like ordering food ──
-Route::get('/onboarding/business', [OnboardingController::class, 'business'])->name('onboarding.business');
-Route::post('/onboarding/business', [OnboardingController::class, 'storeBusiness'])->name('onboarding.business.store');
-Route::get('/onboarding/creator', [OnboardingController::class, 'creator'])->name('onboarding.creator');
-Route::post('/onboarding/creator', [OnboardingController::class, 'storeCreator'])->name('onboarding.creator.store');
-Route::get('/onboarding', fn()=> redirect()->route('onboarding.business'))->name('onboarding');
+Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
+Route::get('/gigs/{id}', [MarketplaceController::class, 'show'])->whereNumber('id')->name('gigs.show');
+Route::get('/services/{id}', fn ($id) => redirect()->route('gigs.show', $id))->whereNumber('id')->name('services.show');
 
-// ── Blog (SEO/AEO) — public ──
+/* ── Product & company pages ── */
+Route::get('/how-it-works', [PageController::class, 'howItWorks'])->name('how-it-works');
+Route::get('/ai-engine',    [PageController::class, 'ai'])->name('ai');
+Route::get('/pricing',      [PageController::class, 'pricing'])->name('pricing');
+Route::get('/for-creators', [PageController::class, 'forCreators'])->name('for-creators');
+Route::get('/for-business', [PageController::class, 'forBusiness'])->name('for-business');
+Route::get('/compare',      [PageController::class, 'compare'])->name('compare');
+Route::get('/enterprise',   [PageController::class, 'enterprise'])->name('enterprise');
+Route::get('/about',        [PageController::class, 'about'])->name('about');
+Route::get('/faq',          [PageController::class, 'faq'])->name('faq');
+Route::get('/contact',      [PageController::class, 'contact'])->name('contact');
+Route::post('/contact',     [PageController::class, 'storeLead'])->name('leads.store');
+
+/* ── Free tool: brief builder ── */
+Route::get('/brief-builder',        [BriefBuilderController::class, 'show'])->name('brief-builder');
+Route::post('/brief-builder',       [BriefBuilderController::class, 'generate'])->name('brief-builder.generate');
+Route::post('/brief-builder/refine', [BriefBuilderController::class, 'refine'])->name('brief-builder.refine');
+Route::post('/brief-builder/reset',  [BriefBuilderController::class, 'reset'])->name('brief-builder.reset');
+
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
-// ── Auth (file session, no Redis) ──
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+/* ── Auth ── */
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+});
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ── Business — marketplace + PROFILE (real DB) ──
-Route::get('/business', [BusinessController::class, 'home'])->name('business.home');
-Route::get('/app', [BusinessController::class, 'home'])->name('app');
-Route::post('/business/switch', [BusinessController::class, 'switch'])->name('business.switch');
-Route::get('/business/profile', [BusinessController::class, 'profile'])->name('business.profile');
-Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->name('business.profile.update');
+// Legacy onboarding links now point at the single sign-up flow.
+Route::get('/onboarding/business', fn () => redirect()->route('register', ['type' => 'business']))->name('onboarding.business');
+Route::get('/onboarding/creator', fn () => redirect()->route('register', ['type' => 'creator']))->name('onboarding.creator');
+Route::get('/onboarding', fn () => redirect()->route('register'))->name('onboarding');
 
-// Services
-Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+/* ── Business workspace ── */
+Route::middleware('auth')->group(function () {
+    Route::get('/business', [BusinessController::class, 'home'])->name('business.home');
+    Route::get('/app', fn () => redirect()->route('business.home'))->name('app');
+    Route::post('/business/switch', [BusinessController::class, 'switch'])->name('business.switch');
+    Route::get('/business/profile', [BusinessController::class, 'profile'])->name('business.profile');
+    Route::post('/business/profile', [BusinessController::class, 'updateProfile'])->name('business.profile.update');
 
-// Orders — file queue, no Redis
-Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-Route::post('/teams', [OrderController::class, 'storeTeam'])->name('teams.store');
-Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
-Route::post('/orders/{order}/message', [OrderController::class, 'message'])->name('orders.message');
+    /* ── Business task board ── */
+    Route::get('/business/board',                    [BoardController::class, 'index'])->name('board');
+    Route::post('/business/board/tasks',             [BoardController::class, 'store'])->name('board.store');
+    Route::post('/business/board/{task}/status',     [BoardController::class, 'updateStatus'])->name('board.status');
+    Route::post('/business/board/{task}/priority',   [BoardController::class, 'updatePriority'])->name('board.priority');
+    Route::post('/business/board/{task}/convert',    [BoardController::class, 'convert'])->name('board.convert');
+    Route::delete('/business/board/{task}',          [BoardController::class, 'destroy'])->name('board.destroy');
 
-// Creator — dashboard + PROFILE + portfolio (real DB)
-Route::get('/creator', [CreatorController::class, 'dashboard'])->name('creator.dashboard');
-Route::get('/creator/profile', [CreatorController::class, 'profile'])->name('creator.profile');
-Route::post('/creator/profile', [CreatorController::class, 'updateProfile'])->name('creator.profile.update');
-Route::post('/creator/availability', [CreatorController::class, 'toggleAvailability'])->name('creator.availability');
-Route::post('/creator/portfolio', [CreatorController::class, 'storePortfolio'])->name('creator.portfolio.store');
-Route::delete('/creator/portfolio/{id}', [CreatorController::class, 'destroyPortfolio'])->name('creator.portfolio.destroy');
-Route::get('/creator/orders/{order}', [CreatorController::class, 'order'])->name('creator.order');
-Route::post('/creator/orders/{order}/deliver', [CreatorController::class, 'deliver'])->name('creator.deliver');
-// Public creator profile (SEO Person JSON-LD) — numeric only so /creator/profile stays safe
-Route::get('/creator/{id}', function($id){ $c=\App\Models\Creator::findOrFail($id); return view('creator.public', compact('c')); })->where('id','[0-9]+')->name('creator.public');
+    /* ── Natural-language task capture (also a JSON endpoint) ── */
+    Route::post('/tasks/parse',  [TaskController::class, 'parse'])->name('tasks.parse');
+    Route::post('/tasks/refine', [TaskController::class, 'refine'])->name('tasks.refine');
+    Route::post('/tasks/clear',  [TaskController::class, 'clear'])->name('tasks.clear');
 
-// Health
-Route::get('/health', fn() => response()->json(['status'=>'ok','app'=>"QuickContent — India's First Quick Content Delivery",'host'=>'hostinger-shared-ready']));
+    /* ── Orders ── */
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
+    Route::post('/orders/{order}/simulate', [OrderController::class, 'simulate'])->name('orders.simulate');
+    Route::post('/orders/{order}/message', [OrderController::class, 'message'])->name('orders.message');
+    Route::post('/orders/{order}/payment/verify', [OrderController::class, 'verifyPayment'])->name('orders.payment.verify');
 
-// ── Admin — roles: super_admin, admin, manager, support, finance ──
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/', [AdminDash::class, 'index'])->name('dashboard');
+    /* ── Creator studio ── */
+    Route::get('/creator', [CreatorController::class, 'dashboard'])->name('creator.dashboard');
+    Route::get('/creator/profile', [CreatorController::class, 'profile'])->name('creator.profile');
+    Route::post('/creator/profile', [CreatorController::class, 'updateProfile'])->name('creator.profile.update');
+    Route::post('/creator/availability', [CreatorController::class, 'toggleAvailability'])->name('creator.availability');
+    Route::post('/creator/portfolio', [CreatorController::class, 'storePortfolio'])->name('creator.portfolio.store');
+    Route::delete('/creator/portfolio/{id}', [CreatorController::class, 'destroyPortfolio'])->name('creator.portfolio.destroy');
+    Route::get('/creator/orders/{order}', [CreatorController::class, 'order'])->name('creator.order');
+    Route::post('/creator/orders/{order}/deliver', [CreatorController::class, 'deliver'])->name('creator.deliver');
+});
 
-        Route::get('/orders', [AdminOrder::class, 'index'])->name('orders.index');
-        Route::get('/orders/{id}', [AdminOrder::class, 'show'])->name('orders.show');
-        Route::post('/orders/{id}/status', [AdminOrder::class, 'updateStatus'])->middleware('role:super_admin,admin,manager')->name('orders.status');
-        Route::post('/orders/{id}/assign', [AdminOrder::class, 'assign'])->middleware('role:super_admin,admin,manager')->name('orders.assign');
-        Route::post('/orders/{id}/release', [AdminOrder::class, 'releaseEscrow'])->middleware('role:super_admin,admin,finance')->name('orders.release');
+/* ── Public creator profile (numeric ids only so /creator/profile stays safe) ── */
+Route::get('/creators/{id}', function ($id) {
+    $c = \App\Models\Creator::with('portfolio')->findOrFail($id);
+    return view('creator.public', [
+        'c'   => $c,
+        'seo' => [
+            'title'       => $c->seoTitle(),
+            'description' => \Illuminate\Support\Str::limit($c->bio ?: ($c->headline ?: 'Verified creator on Quick GIGS'), 150),
+            'canonical'   => url('/creators/' . $c->id),
+            'image'       => $c->avatarUrl(),
+        ],
+    ]);
+})->whereNumber('id')->name('creator.public');
 
-        Route::get('/creators', [AdminCreator::class, 'index'])->name('creators.index');
-        Route::get('/creators/{id}', [AdminCreator::class, 'show'])->name('creators.show');
-        Route::post('/creators/{id}/verify', [AdminCreator::class, 'toggleVerify'])->middleware('role:super_admin,admin,manager')->name('creators.verify');
-        Route::post('/creators/{id}/availability', [AdminCreator::class, 'toggleAvailability'])->middleware('role:super_admin,admin,manager')->name('creators.availability');
-        Route::post('/creators/{id}/featured', [AdminCreator::class, 'toggleFeatured'])->middleware('role:super_admin,admin')->name('creators.featured');
-        Route::post('/creators/{id}/profile-type', [AdminCreator::class, 'updateProfileType'])->middleware('role:super_admin,admin,manager')->name('creators.profileType');
-        Route::delete('/creators/{id}', [AdminCreator::class, 'destroy'])->middleware('role:super_admin,admin')->name('creators.destroy');
+/* ── Payment webhooks (signature verified, no session) ── */
+Route::post('/webhooks/razorpay', [OrderController::class, 'webhook'])->name('webhooks.razorpay');
 
-        Route::get('/companies', [AdminCompany::class, 'index'])->name('companies.index');
+/* ── Health ── */
+Route::get('/health', fn () => response()->json([
+    'status' => 'ok',
+    'app'    => 'Quick GIGS',
+    'time'   => now()->toIso8601String(),
+]));
 
-        // Services — dynamic, includes UGC & Barter, managed by category + profile type
-        Route::get('/services', [AdminService::class, 'index'])->name('services.index');
-        Route::get('/services/create', [AdminService::class, 'create'])->middleware('role:super_admin,admin,manager')->name('services.create');
-        Route::post('/services', [AdminService::class, 'store'])->middleware('role:super_admin,admin,manager')->name('services.store');
-        Route::get('/services/{id}/edit', [AdminService::class, 'edit'])->middleware('role:super_admin,admin,manager')->name('services.edit');
-        Route::put('/services/{id}', [AdminService::class, 'update'])->middleware('role:super_admin,admin,manager')->name('services.update');
-        Route::post('/services/{id}/toggle', [AdminService::class, 'toggle'])->middleware('role:super_admin,admin,manager')->name('services.toggle');
-        Route::delete('/services/{id}', [AdminService::class, 'destroy'])->middleware('role:super_admin,admin')->name('services.destroy');
+/* ── Admin ── */
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,admin,manager,support,finance'])->group(function () {
+    Route::get('/', [AdminDash::class, 'index'])->name('dashboard');
 
-        // Blogs — Hostinger CDN editor (Quill), file uploads
-        Route::get('/blogs', [AdminBlog::class, 'index'])->middleware('role:super_admin,admin,manager')->name('blogs.index');
-        Route::get('/blogs/create', [AdminBlog::class, 'create'])->middleware('role:super_admin,admin,manager')->name('blogs.create');
-        Route::post('/blogs', [AdminBlog::class, 'store'])->middleware('role:super_admin,admin,manager')->name('blogs.store');
-        Route::get('/blogs/{blog}/edit', [AdminBlog::class, 'edit'])->middleware('role:super_admin,admin,manager')->name('blogs.edit');
-        Route::put('/blogs/{blog}', [AdminBlog::class, 'update'])->middleware('role:super_admin,admin,manager')->name('blogs.update');
-        Route::delete('/blogs/{blog}', [AdminBlog::class, 'destroy'])->middleware('role:super_admin,admin')->name('blogs.destroy');
-        Route::post('/blogs/upload', [AdminBlog::class, 'uploadImage'])->middleware('role:super_admin,admin,manager')->name('blogs.upload');
+    Route::get('/orders', [AdminOrder::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [AdminOrder::class, 'show'])->name('orders.show');
+    Route::post('/orders/{id}/status', [AdminOrder::class, 'updateStatus'])->middleware('role:super_admin,admin,manager')->name('orders.status');
+    Route::post('/orders/{id}/assign', [AdminOrder::class, 'assign'])->middleware('role:super_admin,admin,manager')->name('orders.assign');
+    Route::post('/orders/{id}/release', [AdminOrder::class, 'releaseEscrow'])->middleware('role:super_admin,admin,finance')->name('orders.release');
 
-        // FAQs — JSON-LD auto updates landing FAQPage
-        Route::get('/faqs', [AdminFaq::class, 'index'])->middleware('role:super_admin,admin,manager')->name('faqs.index');
-        Route::post('/faqs', [AdminFaq::class, 'store'])->middleware('role:super_admin,admin,manager')->name('faqs.store');
-        Route::put('/faqs/{faq}', [AdminFaq::class, 'update'])->middleware('role:super_admin,admin,manager')->name('faqs.update');
-        Route::delete('/faqs/{faq}', [AdminFaq::class, 'destroy'])->middleware('role:super_admin,admin')->name('faqs.destroy');
+    Route::get('/creators', [AdminCreator::class, 'index'])->name('creators.index');
+    Route::get('/creators/{id}', [AdminCreator::class, 'show'])->name('creators.show');
+    Route::post('/creators/{id}/verify', [AdminCreator::class, 'toggleVerify'])->middleware('role:super_admin,admin,manager')->name('creators.verify');
+    Route::post('/creators/{id}/availability', [AdminCreator::class, 'toggleAvailability'])->middleware('role:super_admin,admin,manager')->name('creators.availability');
+    Route::post('/creators/{id}/featured', [AdminCreator::class, 'toggleFeatured'])->middleware('role:super_admin,admin')->name('creators.featured');
+    Route::post('/creators/{id}/profile-type', [AdminCreator::class, 'updateProfileType'])->middleware('role:super_admin,admin,manager')->name('creators.profileType');
+    Route::delete('/creators/{id}', [AdminCreator::class, 'destroy'])->middleware('role:super_admin,admin')->name('creators.destroy');
 
-        Route::get('/users', [AdminUser::class, 'index'])->middleware('role:super_admin,admin')->name('users.index');
-        Route::post('/users', [AdminUser::class, 'store'])->middleware('role:super_admin,admin')->name('users.store');
-        Route::post('/users/{id}/role', [AdminUser::class, 'updateRole'])->middleware('role:super_admin,admin')->name('users.role');
-        Route::post('/users/{id}/toggle', [AdminUser::class, 'toggleActive'])->middleware('role:super_admin,admin')->name('users.toggle');
-        Route::delete('/users/{id}', [AdminUser::class, 'destroy'])->middleware('role:super_admin')->name('users.destroy');
+    Route::get('/companies', [AdminCompany::class, 'index'])->name('companies.index');
 
-        Route::get('/payouts', [AdminPayout::class, 'index'])->middleware('role:super_admin,admin,finance')->name('payouts.index');
-        Route::post('/payouts/{id}/paid', [AdminPayout::class, 'markPaid'])->middleware('role:super_admin,admin,finance')->name('payouts.paid');
-        Route::post('/payouts/{id}/hold', [AdminPayout::class, 'hold'])->middleware('role:super_admin,admin,finance')->name('payouts.hold');
+    Route::get('/leads', function () {
+        return view('admin.leads.index', ['leads' => \App\Models\Lead::latest()->paginate(20)]);
+    })->name('leads.index');
+    Route::post('/leads/{id}/handled', function ($id) {
+        \App\Models\Lead::whereKey($id)->update(['is_handled' => true]);
+        return back()->with('toast', 'Lead marked as handled');
+    })->name('leads.handled');
 
-        Route::get('/settings', [AdminSetting::class, 'index'])->middleware('role:super_admin')->name('settings.index');
-        Route::post('/settings', [AdminSetting::class, 'update'])->middleware('role:super_admin')->name('settings.update');
-    });
+    Route::get('/services', [AdminService::class, 'index'])->name('services.index');
+    Route::get('/services/create', [AdminService::class, 'create'])->middleware('role:super_admin,admin,manager')->name('services.create');
+    Route::post('/services', [AdminService::class, 'store'])->middleware('role:super_admin,admin,manager')->name('services.store');
+    Route::get('/services/{id}/edit', [AdminService::class, 'edit'])->middleware('role:super_admin,admin,manager')->name('services.edit');
+    Route::put('/services/{id}', [AdminService::class, 'update'])->middleware('role:super_admin,admin,manager')->name('services.update');
+    Route::post('/services/{id}/toggle', [AdminService::class, 'toggle'])->middleware('role:super_admin,admin,manager')->name('services.toggle');
+    Route::delete('/services/{id}', [AdminService::class, 'destroy'])->middleware('role:super_admin,admin')->name('services.destroy');
+
+    Route::get('/blogs', [AdminBlog::class, 'index'])->middleware('role:super_admin,admin,manager')->name('blogs.index');
+    Route::get('/blogs/create', [AdminBlog::class, 'create'])->middleware('role:super_admin,admin,manager')->name('blogs.create');
+    Route::post('/blogs', [AdminBlog::class, 'store'])->middleware('role:super_admin,admin,manager')->name('blogs.store');
+    Route::get('/blogs/{blog}/edit', [AdminBlog::class, 'edit'])->middleware('role:super_admin,admin,manager')->name('blogs.edit');
+    Route::put('/blogs/{blog}', [AdminBlog::class, 'update'])->middleware('role:super_admin,admin,manager')->name('blogs.update');
+    Route::delete('/blogs/{blog}', [AdminBlog::class, 'destroy'])->middleware('role:super_admin,admin')->name('blogs.destroy');
+    Route::post('/blogs/upload', [AdminBlog::class, 'uploadImage'])->middleware('role:super_admin,admin,manager')->name('blogs.upload');
+
+    Route::get('/faqs', [AdminFaq::class, 'index'])->middleware('role:super_admin,admin,manager')->name('faqs.index');
+    Route::post('/faqs', [AdminFaq::class, 'store'])->middleware('role:super_admin,admin,manager')->name('faqs.store');
+    Route::put('/faqs/{faq}', [AdminFaq::class, 'update'])->middleware('role:super_admin,admin,manager')->name('faqs.update');
+    Route::delete('/faqs/{faq}', [AdminFaq::class, 'destroy'])->middleware('role:super_admin,admin')->name('faqs.destroy');
+
+    Route::get('/skills',              [AdminSkill::class, 'index'])->middleware('role:super_admin,admin,manager')->name('skills.index');
+    Route::post('/skills',             [AdminSkill::class, 'store'])->middleware('role:super_admin,admin,manager')->name('skills.store');
+    Route::post('/skills/bulk',        [AdminSkill::class, 'bulk'])->middleware('role:super_admin,admin,manager')->name('skills.bulk');
+    Route::put('/skills/{skill}',      [AdminSkill::class, 'update'])->middleware('role:super_admin,admin,manager')->name('skills.update');
+    Route::post('/skills/{skill}/toggle', [AdminSkill::class, 'toggle'])->middleware('role:super_admin,admin,manager')->name('skills.toggle');
+    Route::delete('/skills/{skill}',   [AdminSkill::class, 'destroy'])->middleware('role:super_admin,admin')->name('skills.destroy');
+
+    Route::get('/users', [AdminUser::class, 'index'])->middleware('role:super_admin,admin')->name('users.index');
+    Route::post('/users', [AdminUser::class, 'store'])->middleware('role:super_admin,admin')->name('users.store');
+    Route::post('/users/{id}/role', [AdminUser::class, 'updateRole'])->middleware('role:super_admin,admin')->name('users.role');
+    Route::post('/users/{id}/toggle', [AdminUser::class, 'toggleActive'])->middleware('role:super_admin,admin')->name('users.toggle');
+    Route::delete('/users/{id}', [AdminUser::class, 'destroy'])->middleware('role:super_admin')->name('users.destroy');
+
+    Route::get('/payouts', [AdminPayout::class, 'index'])->middleware('role:super_admin,admin,finance')->name('payouts.index');
+    Route::post('/payouts/{id}/paid', [AdminPayout::class, 'markPaid'])->middleware('role:super_admin,admin,finance')->name('payouts.paid');
+    Route::post('/payouts/{id}/hold', [AdminPayout::class, 'hold'])->middleware('role:super_admin,admin,finance')->name('payouts.hold');
+    Route::post('/payouts/{id}/retry', [AdminPayout::class, 'retry'])->middleware('role:super_admin,admin,finance')->name('payouts.retry');
+
+    Route::get('/settings',        [AdminSetting::class, 'index'])->middleware('role:super_admin')->name('settings.index');
+    Route::post('/settings',       [AdminSetting::class, 'update'])->middleware('role:super_admin')->name('settings.update');
+    Route::post('/settings/clear', [AdminSetting::class, 'clear'])->middleware('role:super_admin')->name('settings.clear');
+    Route::post('/settings/test',  [AdminSetting::class, 'test'])->middleware('role:super_admin')->name('settings.test');
 });

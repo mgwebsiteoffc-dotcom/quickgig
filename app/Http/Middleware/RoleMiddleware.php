@@ -10,7 +10,7 @@ class RoleMiddleware
 {
     /**
      * Usage: ->middleware('role:super_admin,admin')
-     * Works on Hostinger shared — no Redis, just session/file.
+     * Works on shared hosting — no Redis, just session/file.
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {

@@ -56,7 +56,7 @@ class Creator extends Model
     }
 
     public function handleClean(): string { return ltrim($this->handle, '@'); }
-    public function seoTitle(): string { return $this->seo_title ?: $this->name.' ('.$this->handle.') — '.($this->headline ?: 'Verified Creator') . ' | QuickContent'; }
+    public function seoTitle(): string { return $this->seo_title ?: $this->name.' ('.$this->handle.') — '.($this->headline ?: 'Verified Creator') . ' | Quick GIGS'; }
 
     public function profileLabel(): string { return self::PROFILE_TYPES[$this->profile_type] ?? ucfirst(str_replace('_',' ',$this->profile_type)); }
     public function isBarter(): bool { return $this->barter_available || $this->collab_type === 'barter' || $this->collab_type === 'both'; }
