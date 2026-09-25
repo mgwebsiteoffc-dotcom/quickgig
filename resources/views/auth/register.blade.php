@@ -68,8 +68,13 @@
         </div>
 
         <div x-show="type==='creator'" x-cloak>
-          <label class="label" for="skills">Your skills <span class="normal-case tracking-normal text-faint">(comma separated)</span></label>
-          <input id="skills" name="skills" value="{{ old('skills') }}" class="field" placeholder="Reels, Retention editing, Captions">
+          <label class="label">Your skills <span class="normal-case tracking-normal text-faint">pick up to 8 — you can change them later</span></label>
+          @include('partials.skill-picker', [
+            'selected' => old('skills', []),
+            'groups'   => $skillGroups,
+            'name'     => 'skills',
+            'max'      => 8,
+          ])
         </div>
 
         <div class="grid sm:grid-cols-2 gap-4">

@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\PayoutController as AdminPayout;
 use App\Http\Controllers\Admin\SettingController as AdminSetting;
 use App\Http\Controllers\Admin\BlogController as AdminBlog;
 use App\Http\Controllers\Admin\FaqController as AdminFaq;
+use App\Http\Controllers\Admin\SkillController as AdminSkill;
 
 /*
 |--------------------------------------------------------------------------
@@ -185,6 +186,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,ad
     Route::post('/faqs', [AdminFaq::class, 'store'])->middleware('role:super_admin,admin,manager')->name('faqs.store');
     Route::put('/faqs/{faq}', [AdminFaq::class, 'update'])->middleware('role:super_admin,admin,manager')->name('faqs.update');
     Route::delete('/faqs/{faq}', [AdminFaq::class, 'destroy'])->middleware('role:super_admin,admin')->name('faqs.destroy');
+
+    Route::get('/skills',              [AdminSkill::class, 'index'])->middleware('role:super_admin,admin,manager')->name('skills.index');
+    Route::post('/skills',             [AdminSkill::class, 'store'])->middleware('role:super_admin,admin,manager')->name('skills.store');
+    Route::post('/skills/bulk',        [AdminSkill::class, 'bulk'])->middleware('role:super_admin,admin,manager')->name('skills.bulk');
+    Route::put('/skills/{skill}',      [AdminSkill::class, 'update'])->middleware('role:super_admin,admin,manager')->name('skills.update');
+    Route::post('/skills/{skill}/toggle', [AdminSkill::class, 'toggle'])->middleware('role:super_admin,admin,manager')->name('skills.toggle');
+    Route::delete('/skills/{skill}',   [AdminSkill::class, 'destroy'])->middleware('role:super_admin,admin')->name('skills.destroy');
 
     Route::get('/users', [AdminUser::class, 'index'])->middleware('role:super_admin,admin')->name('users.index');
     Route::post('/users', [AdminUser::class, 'store'])->middleware('role:super_admin,admin')->name('users.store');

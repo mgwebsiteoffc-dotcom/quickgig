@@ -60,9 +60,14 @@
           <label class="label" for="price_from">Starting price (₹)</label>
           <input id="price_from" name="price_from" type="number" min="0" value="{{ old('price_from', $creator->price_from) }}" class="field font-mono">
         </div>
-        <div>
-          <label class="label" for="skills">Skills <span class="normal-case tracking-normal text-faint">(comma separated)</span></label>
-          <input id="skills" name="skills" value="{{ old('skills', is_array($creator->skills) ? implode(', ', $creator->skills) : $creator->skills) }}" placeholder="Reels, Retention editing, Captions" class="field">
+        <div class="sm:col-span-2">
+          <label class="label">Skills <span class="normal-case tracking-normal text-faint">pick from the Quick GIGS library — these drive your match score</span></label>
+          @include('partials.skill-picker', [
+            'selected' => old('skills', is_array($creator->skills) ? $creator->skills : array_filter(array_map('trim', explode(',', (string) $creator->skills)))),
+            'groups'   => $skillGroups,
+            'name'     => 'skills',
+            'max'      => 12,
+          ])
         </div>
         <div>
           <label class="label" for="languages">Languages</label>

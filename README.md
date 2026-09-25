@@ -67,7 +67,7 @@ Extra staff logins: `manager@quickgigs.in` / `Manager@123`, `support@quickgigs.i
 | Profiles | `/business/profile`, `/creator/profile`, `/creators/{id}` | Editable and persisted, with portfolio CRUD for creators. |
 | Insights | `/blog`, `/blog/{slug}` | Article + FAQ JSON-LD, categories, search, and a Quick answers accordion on both the index and every post. |
 | FAQ | `/faq` | Every published answer grouped by category, with FAQPage structured data. |
-| Admin | `/admin` | Orders, creators, companies, **leads**, services, blogs, FAQs, users & roles, payouts, settings. |
+| Admin | `/admin` | Orders, freelancers, companies, leads, **skills**, services, blogs, FAQs, users & roles, payouts, settings. |
 | SEO | `/sitemap.xml`, `/robots.txt` | Organization, FAQPage, BreadcrumbList and BlogPosting JSON-LD via `components/seo.blade.php`. |
 
 ### Differentiators (and where they live in the code)
@@ -90,6 +90,15 @@ to hire someone else.
 `/how-it-works` · `/ai-engine` · `/brief-builder` · `/pricing` · `/compare` · `/for-creators` ·
 `/enterprise` (lead form) · `/about` · `/contact` (lead form). Enquiries are stored in the `leads`
 table and reviewed at `/admin/leads`.
+
+### Skill library
+
+Skills are curated by admin at `/admin/skills` (add, bulk add, rename, re-file under a discipline,
+hide or delete, with live usage counts). Freelancers pick from that list with a searchable
+multi-select — `resources/views/partials/skill-picker.blade.php` — on sign-up (max 8) and in their
+profile (max 12). Selections are stored on `creators.skills` as a JSON array of names, so the match
+engine and every existing view keep working. Hiding a skill removes it from the picker but leaves it
+on profiles that already use it.
 
 ### Business plans
 

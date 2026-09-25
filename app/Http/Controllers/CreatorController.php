@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Creator;
 use App\Models\Order;
 use App\Models\PortfolioItem;
+use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -44,8 +45,9 @@ class CreatorController extends Controller
         $creator = $this->creator($request);
 
         return view('creator.profile', [
-            'creator'   => $creator,
-            'portfolio' => $creator->portfolio()->orderBy('sort_order')->get(),
+            'creator'     => $creator,
+            'skillGroups' => Skill::grouped(),
+            'portfolio'   => $creator->portfolio()->orderBy('sort_order')->get(),
             'seo'       => ['title' => 'Freelancer profile — Quick GIGS', 'canonical' => url('/creator/profile')],
         ]);
     }
@@ -56,14 +58,15 @@ class CreatorController extends Controller
 
         $data = $request->validate([
             'name'            => ['required', 'string', 'max:80'],
-            'handle'          => ['required', 'string', 'max:40', 'unique:freelancers,handle,' . $creator->id],
-            'email'           => ['nullable', 'email', 'max:120', 'unique:freelancers,email,' . $creator->id],
+            'handle'          => ['required', 'string', 'max:40', 'unique:creators,handle,' . $creator->id],
+            'email'           => ['nullable', 'email', 'max:120', 'unique:creators,email,' . $creator->id],
             'phone'           => ['nullable', 'string', 'max:20'],
             'bio'             => ['nullable', 'string', 'max:800'],
             'headline'        => ['nullable', 'string', 'max:120'],
             'location'        => ['nullable', 'string', 'max:80'],
             'price_from'      => ['nullable', 'integer', 'min:0', 'max:100000'],
-            'skills'          => ['nullable', 'string', 'max:300'],
+            'skills'          => ['nullable', 'array', 'max:12'],
+            'skills.*'        => ['string', 'max:60'],
             'languages'       => ['nullable', 'string', 'max:200'],
             'upi_id'          => ['nullable', 'string', 'max:60'],
             'portfolio_url'   => ['nullable', 'url', 'max:200'],
@@ -78,7 +81,12 @@ class CreatorController extends Controller
             'ugc_niches'      => ['nullable', 'string', 'max:300'],
         ]);
 
-        foreach (['skills', 'languages', 'ugc_niches'] as $listField) {
+        // skills arrive from the picker as an array; languages and niches are still free text
+        if (array_key_exists('skills', $data)) {
+            $data['skills'] = array_values(array_unique(array_filter(array_map('trim', (array) $data['skills']))));
+        }
+
+        foreach (['languages', 'ugc_niches'] as $listField) {
             if (isset($data[$listField])) {
                 $data[$listField] = array_values(array_filter(array_map('trim', explode(',', $data[$listField]))));
             }

@@ -10,6 +10,7 @@ use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Creator;
+use App\Models\Skill;
 
 class AuthController extends Controller
 {
@@ -70,8 +71,9 @@ class AuthController extends Controller
             : 'business';
 
         return view('auth.register', [
-            'type' => $type,
-            'plan' => $request->query('plan'),
+            'type'        => $type,
+            'plan'        => $request->query('plan'),
+            'skillGroups' => Skill::grouped(),
             'seo'  => [
                 'title'       => 'Create your free account — Quick GIGS',
                 'description' => 'Sign up in 30 seconds. Hire verified freelancers or start earning as a pro on Quick GIGS. Free to join, escrow protected.',
@@ -90,7 +92,8 @@ class AuthController extends Controller
             'password'      => ['required', 'confirmed', Password::min(8)],
             'company_name'  => ['nullable', 'required_if:account_type,business', 'string', 'max:80'],
             'handle'        => ['nullable', 'string', 'max:40'],
-            'skills'        => ['nullable', 'string', 'max:200'],
+            'skills'        => ['nullable', 'array', 'max:8'],
+            'skills.*'      => ['string', 'max:60'],
             'terms'         => ['accepted'],
         ], [
             'company_name.required_if' => 'Tell us your company or brand name.',
@@ -122,7 +125,7 @@ class AuthController extends Controller
             $user->update(['company_id' => $company->id]);
             $request->session()->put('company_id', $company->id);
         } else {
-            $handle = Str::of($data['handle'] ?: $data['name'])->slug('')->lower()->limit(30, '');
+            $handle = Str::of(($data['handle'] ?? '') ?: $data['name'])->slug('')->lower()->limit(30, '');
             $handle = '@' . ($handle->isEmpty() ? 'creator' . $user->id : (string) $handle);
 
             if (Creator::where('handle', $handle)->exists()) {
@@ -137,7 +140,7 @@ class AuthController extends Controller
                 'phone'        => $data['phone'] ?? null,
                 'headline'     => 'New on Quick GIGS',
                 'profile_type' => 'video_editor',
-                'skills'       => array_values(array_filter(array_map('trim', explode(',', (string) ($data['skills'] ?? ''))))),
+                'skills'       => array_values(array_unique(array_filter(array_map('trim', (array) ($data['skills'] ?? []))))),
                 'price_from'   => 1299,
                 'rating'       => 5.0,
                 'is_available' => true,

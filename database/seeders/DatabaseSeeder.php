@@ -7,6 +7,7 @@ use App\Models\Creator;
 use App\Models\Faq;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\Skill;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->staff();
+        $this->skills();
         $this->creatorStats();
         $this->extraFreelancers();
         $this->faqs();
@@ -54,6 +56,30 @@ class DatabaseSeeder extends Seeder
                     'is_active' => true,
                 ]
             );
+        }
+    }
+
+    /* ── the admin-managed skill library the pickers read from ── */
+    private function skills(): void
+    {
+        $library = [
+            'Video'       => ['Reels', 'Retention editing', 'Long-form editing', 'Podcast clips', 'Colour grading', 'Sound design', 'Captions & subtitles', 'Talking-head editing'],
+            'Design'      => ['Thumbnails', 'Social posts', 'Brand identity', 'Logo design', 'Packaging', 'Presentation design', 'UI design', 'Design systems', 'Figma'],
+            'Writing'     => ['Copywriting', 'SEO articles', 'Scriptwriting', 'Email & newsletters', 'Landing page copy', 'Product descriptions'],
+            'Development' => ['Laravel', 'React', 'WordPress', 'Shopify', 'Webflow', 'APIs & integrations', 'Landing pages'],
+            'Voice'       => ['Voice over — English', 'Voice over — Hindi', 'Narration', 'Dubbing'],
+            'Marketing'   => ['Meta ads', 'Google ads', 'Performance marketing', 'Analytics & CRO', 'Influencer outreach', 'Social media management'],
+            'UGC & Creators' => ['UGC video', 'Product unboxing', 'Testimonial video', 'On-camera presenting', 'Barter collaborations'],
+            'General'     => ['Motion graphics', 'AI video', 'AI image generation', '3D & animation', 'Photo retouching'],
+        ];
+
+        foreach ($library as $discipline => $names) {
+            foreach (array_values($names) as $i => $name) {
+                Skill::firstOrCreate(
+                    ['slug' => \Illuminate\Support\Str::slug($name)],
+                    ['name' => $name, 'discipline' => $discipline, 'sort_order' => $i, 'is_active' => true]
+                );
+            }
         }
     }
 
