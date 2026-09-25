@@ -9,6 +9,9 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Payments\RazorpayGateway;
+use App\Support\Notifier;
+use App\Notifications\OrderPlaced;
+use App\Notifications\PayoutReleased;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -69,6 +72,9 @@ class OrderController extends Controller
         ]);
 
         $service->increment('sold_count');
+
+        Notifier::toUserOf($company, new OrderPlaced($order, 'buyer'));
+        Notifier::toFreelancer($order->creator, new OrderPlaced($order, 'freelancer'));
 
         $gateway = app(RazorpayGateway::class);
 
@@ -149,14 +155,20 @@ class OrderController extends Controller
         }
 
         $o->update([
-            'status'           => 'delivered',
-            'escrow_status'    => 'released',
-            'progress'         => 100,
-            'payout_reference' => $o->payout_reference ?: 'PO-' . strtoupper(\Illuminate\Support\Str::random(8)),
+            'status'        => 'delivered',
+            'escrow_status' => 'released',
+            'progress'      => 100,
         ]);
 
         if ($o->creator) {
             $o->creator->increment('orders_count');
+        }
+
+        $payout = \App\Models\Payout::raiseFor($o);
+
+        if ($payout) {
+            $o->forceFill(['payout_reference' => $payout->uid])->save();
+            Notifier::toFreelancer($o->creator, new PayoutReleased($payout));
         }
 
         $payout  = $o->total - $o->fee;

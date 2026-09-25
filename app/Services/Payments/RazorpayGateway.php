@@ -94,6 +94,50 @@ class RazorpayGateway
         return $this->request('get', '/payments/' . $paymentId);
     }
 
+    /** RazorpayX payouts need a funding account on top of the checkout keys. */
+    public function payoutsEnabled(): bool
+    {
+        return $this->enabled() && filled(setting('payments.razorpayx.account_number'));
+    }
+
+    /**
+     * Push a payout through RazorpayX. Falls over loudly so the admin screen can
+     * mark the row failed rather than silently pretending it went out.
+     */
+    public function createPayout(\App\Models\Payout $payout): array
+    {
+        if (! $this->payoutsEnabled()) {
+            throw new RuntimeException('RazorpayX is not configured — add the funding account number in Settings.');
+        }
+
+        $creator = $payout->creator;
+        $upi     = $payout->destination ?: $creator?->upi_id;
+
+        if (! $upi) {
+            throw new RuntimeException('This freelancer has no UPI id on file.');
+        }
+
+        return $this->request('post', '/payouts', [
+            'account_number'        => setting('payments.razorpayx.account_number'),
+            'amount'                => $payout->amount * 100,
+            'currency'              => 'INR',
+            'mode'                  => 'UPI',
+            'purpose'               => 'payout',
+            'queue_if_low_balance'  => true,
+            'reference_id'          => $payout->uid,
+            'narration'             => 'Quick GIGS payout',
+            'fund_account'          => [
+                'account_type' => 'vpa',
+                'vpa'          => ['address' => $upi],
+                'contact'      => [
+                    'name'  => $creator->name ?? 'Freelancer',
+                    'email' => $creator->email ?? null,
+                    'type'  => 'vendor',
+                ],
+            ],
+        ]);
+    }
+
     /** Release from escrow. Refunds are real; payouts need RazorpayX and are recorded as intents. */
     public function refund(Order $order, ?int $amount = null): array
     {

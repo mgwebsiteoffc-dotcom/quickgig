@@ -18,47 +18,55 @@ Last reviewed: 25 September 2026.
 | SEO | Per-page meta, Organization / FAQPage / BlogPosting / Breadcrumb JSON-LD, sitemap |
 | Dev tooling | `scripts/dev/` — offline bootstrap, contrast audit, Alpine audit, brief-flow check, skill-picker check, GIF generator, static router |
 
+## Recently closed
+
+* **Payout ledger** — `payouts` table with a real queue. Approving an order raises exactly one payout
+  (idempotent), held for `platform.escrow_hours`, addressed to the freelancer's UPI. `/admin/payouts`
+  filters by open/ready/paid/failed, shows held vs ready vs paid-this-month vs lifetime fees, and each row
+  can be paid (RazorpayX when the funding account is set, otherwise a manual UTR), held, or retried after a
+  failure. The freelancer studio shows the same ledger.
+* **Transactional email** — order placed (buyer + freelancer), delivery submitted (buyer), approval and
+  payout released (freelancer), dispatched through `App\Support\Notifier`, which swallows mail failures so a
+  checkout can never fail because of SMTP.
+* **Automated tests** — 22 PHPUnit tests, 73 assertions, covering the money flow, fee settings, payout
+  idempotency and hold window, authorisation boundaries, Razorpay signatures and webhooks, settings
+  encryption, provider selection, the brief engine, match ranking and the skill library.
+  Run with `php artisan test` (or `vendor/bin/phpunit`).
+
 ## Pending — ordered by how much it matters
 
-### 1. Money movement beyond capture
-Escrow capture is real; **payouts are not**. Approving an order marks the escrow released and records a
-`payout_reference`, but no money leaves the platform account. Needs RazorpayX (or bank transfer ops) plus
-a payout ledger, retry handling and reconciliation. `/admin/payouts` is currently a view over orders, not a
-real payout queue.
+### 1. Payout execution against a real bank
+The ledger, queue and RazorpayX call are built, but nothing has been run against live RazorpayX credentials,
+and there is no reconciliation job that polls payout status or handles partial failures and reversals.
 
-### 2. Notifications
-No email or WhatsApp yet. Nothing tells a freelancer they were matched, a buyer that a delivery landed, or
-finance that a payout is due. Mail is configured (`MAIL_MAILER=log`) but no Mailables or notifications exist.
-Highest-value additions: order placed, gig assigned, delivered for review, approval + payout, SLA breach.
-
-### 3. File delivery
+### 2. File delivery
 Deliveries are a URL in a text field. Real uploads (S3 or local disk), virus scanning, expiring links and
 version history are not built. The QA gate therefore scores a description of the file, not the file.
 
-### 4. Automated tests
-There is no PHPUnit suite — `phpunit` is in `require-dev` but no tests exist. The JS/contrast/flow auditors in
-`scripts/dev/` cover regressions we actually hit, but controller and service unit tests are missing.
+### 3. Test coverage gaps
+The suite covers money, auth and the engines. Still untested: the task board, the brief-builder HTTP
+endpoints, admin CRUD screens and the marketplace filters.
 
-### 5. Queue + scheduler in production
+### 4. Queue + scheduler in production
 `QUEUE_CONNECTION=database` with no worker documented beyond a cron line, and no scheduled jobs (SLA checks,
 credit resets on renewal date, digest emails, skill usage recount).
 
-### 6. Auth hardening
+### 5. Auth hardening
 No email verification, password reset is a dead link, no 2FA for admins, no rate limiting on login or the
 public brief builder, no audit log of admin actions.
 
-### 7. Multi-currency and tax
+### 6. Multi-currency and tax
 Everything is INR and GST is mentioned but not calculated. Invoice PDFs are not generated.
 
-### 8. Real-time
+### 7. Real-time
 Order tracking and chat poll on page load only. Broadcasting (Reverb/Pusher) would make the live pipeline
 genuinely live.
 
-### 9. Content operations
+### 8. Content operations
 Blog editor works, but no scheduled publishing, no image optimisation pipeline, and the sitemap is generated
 per request rather than cached.
 
-### 10. Accessibility and i18n
+### 9. Accessibility and i18n
 Keyboard traps in a few Alpine menus have not been audited, focus states are default, and all copy is
 hard-coded English.
 

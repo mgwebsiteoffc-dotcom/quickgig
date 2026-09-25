@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Creator;
 use App\Models\Order;
+use App\Models\Payout;
+use App\Support\Notifier;
+use App\Notifications\DeliverySubmitted;
 use App\Models\PortfolioItem;
 use App\Models\Skill;
 use Illuminate\Http\Request;
@@ -24,10 +27,12 @@ class CreatorController extends Controller
 
         $base = Order::where('creator_id', $creator->id);
 
+        $payouts = Payout::where('creator_id', $creator->id)->latest('id')->get();
+
         $stats = [
             'active'    => (clone $base)->whereIn('status', ['working', 'review'])->count(),
-            'pending'   => (int) (clone $base)->where('escrow_status', 'held')->sum('total'),
-            'earned'    => (int) ((clone $base)->where('escrow_status', 'released')->sum('total') * 0.9),
+            'pending'   => (int) $payouts->whereIn('status', ['pending', 'on_hold', 'processing'])->sum('amount'),
+            'earned'    => (int) $payouts->where('status', 'paid')->sum('amount'),
             'rating'    => number_format((float) $creator->rating, 1),
         ];
 
@@ -36,6 +41,7 @@ class CreatorController extends Controller
             'orders'    => $orders,
             'stats'     => $stats,
             'portfolio' => $creator->portfolio()->limit(6)->get(),
+            'payouts'   => $payouts->take(6),
             'seo'       => ['title' => 'Freelancer studio — Quick GIGS', 'canonical' => url('/creator')],
         ]);
     }
@@ -157,6 +163,8 @@ class CreatorController extends Controller
             ->firstOrFail();
 
         $o->update(['status' => 'review', 'progress' => 100]);
+
+        Notifier::toUserOf($o->company, new DeliverySubmitted($o));
 
         return back()->with('toast', 'Delivered for review — the client has been notified.');
     }

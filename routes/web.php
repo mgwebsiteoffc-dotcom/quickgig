@@ -207,6 +207,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,ad
     Route::get('/payouts', [AdminPayout::class, 'index'])->middleware('role:super_admin,admin,finance')->name('payouts.index');
     Route::post('/payouts/{id}/paid', [AdminPayout::class, 'markPaid'])->middleware('role:super_admin,admin,finance')->name('payouts.paid');
     Route::post('/payouts/{id}/hold', [AdminPayout::class, 'hold'])->middleware('role:super_admin,admin,finance')->name('payouts.hold');
+    Route::post('/payouts/{id}/retry', [AdminPayout::class, 'retry'])->middleware('role:super_admin,admin,finance')->name('payouts.retry');
 
     Route::get('/settings',        [AdminSetting::class, 'index'])->middleware('role:super_admin')->name('settings.index');
     Route::post('/settings',       [AdminSetting::class, 'update'])->middleware('role:super_admin')->name('settings.update');

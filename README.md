@@ -143,8 +143,12 @@ signature is verified server-side before anything is marked paid, and `POST /web
 signed `payment.captured` / `payment.failed` / `refund.processed` events (CSRF-exempt, signature-checked).
 
 **With no keys configured the platform runs in demo mode** — orders are marked held so the whole flow stays
-demonstrable. Note that payouts to freelancers are not automated yet; approval releases escrow and records a
-payout reference. See `docs/status.md`.
+demonstrable.
+
+Approving a delivery raises a payout in the `payouts` ledger, held for `platform.escrow_hours` and addressed
+to the freelancer's UPI. `/admin/payouts` is the finance queue: pay via RazorpayX when a funding account
+number is saved, otherwise record the transfer manually with a UTR. Hold and retry are there for the days
+when a transfer bounces. See `docs/status.md` for what is still open.
 
 ## AI (optional)
 
@@ -230,6 +234,21 @@ always gets a brief.
 `docs/competitor-audit.md` captures the September 2026 review of Unjob.ai (incl. business.unjob.ai),
 Elyvato and the wider field (Fiverr, Upwork, Superside, Design Pickle, Awesomic, Contra, Toptal) —
 their models, design language, weaknesses, and the gaps Quick GIGS targets.
+
+## Tests
+
+```bash
+php artisan test            # or vendor/bin/phpunit
+```
+
+22 feature tests cover the money flow (escrow, fee settings, express pricing, payout idempotency and hold
+window), authorisation boundaries, Razorpay signature and webhook handling, settings encryption, AI provider
+selection, the brief engine, match ranking and the skill library. They never touch the network — gateway
+calls are faked.
+
+Alongside them, `scripts/dev/` holds the auditors used during development: `contrast-audit.py` (colour
+collisions in Blade), `alpine-audit.mjs` (components that fail to initialise), `verify-brief-flow.mjs` and
+`verify-skill-picker.mjs`.
 
 ## Deployment notes
 

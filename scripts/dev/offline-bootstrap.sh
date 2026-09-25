@@ -40,13 +40,14 @@ for n in z.namelist():
 ")
 fi
 
-echo "▸ 3/6  vendor/ from GitHub"
+echo "▸ 3/6  vendor/ from GitHub${WITH_DEV:+ (with dev)}"
 python3 - "$ROOT" <<'PY'
 import json, os, io, sys, zipfile, urllib.request, shutil, subprocess, concurrent.futures
 ROOT = sys.argv[1]; VENDOR = os.path.join(ROOT, 'vendor')
 lock = json.load(open(os.path.join(ROOT, 'composer.lock')))
 token = subprocess.run(['gh','auth','token'], capture_output=True, text=True).stdout.strip()
-pkgs = lock['packages']; os.makedirs(VENDOR, exist_ok=True)
+pkgs = lock['packages'] + (lock.get('packages-dev', []) if os.environ.get('WITH_DEV') else [])
+os.makedirs(VENDOR, exist_ok=True)
 
 def fetch(pkg):
     name = pkg['name']; target = os.path.join(VENDOR, *name.split('/'))
@@ -82,7 +83,7 @@ ROOT, TOOLS = sys.argv[1], sys.argv[2]
 VENDOR = os.path.join(ROOT, 'vendor'); CDIR = os.path.join(VENDOR, 'composer')
 os.makedirs(CDIR, exist_ok=True)
 lock = json.load(open(os.path.join(ROOT, 'composer.lock'))); root = json.load(open(os.path.join(ROOT, 'composer.json')))
-byname = {p['name']: p for p in lock['packages']}
+byname = {p['name']: p for p in lock['packages'] + (lock.get('packages-dev', []) if os.environ.get('WITH_DEV') else [])}
 
 order, seen = [], set()
 def visit(n, stack=()):
@@ -125,6 +126,8 @@ def add(al, basedir, pkgname=''):
 
 for n in order: add(byname[n].get('autoload') or {}, os.path.join(VENDOR, *n.split('/')), n)
 add(root.get('autoload') or {}, ROOT, '__root__')
+if os.environ.get('WITH_DEV'):
+    add(root.get('autoload-dev') or {}, ROOT, '__root_dev__')
 
 def php_path(p):
     rel = os.path.relpath(p, VENDOR)

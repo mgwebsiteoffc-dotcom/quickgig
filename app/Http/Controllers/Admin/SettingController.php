@@ -22,6 +22,7 @@ class SettingController extends Controller
         'payments.razorpay.key_id'        => false,
         'payments.razorpay.key_secret'    => true,
         'payments.razorpay.webhook_secret'=> true,
+        'payments.razorpayx.account_number'=> false,
         // ai
         'ai.default_provider'             => false,
         'ai.openrouter.key'               => true,
@@ -42,6 +43,7 @@ class SettingController extends Controller
                 'platform.support_phone' => setting('platform.support_phone', '+91 98765 43210'),
                 'platform.maintenance'   => (bool) setting('platform.maintenance', false),
                 'payments.razorpay.key_id' => setting('payments.razorpay.key_id', ''),
+                'payments.razorpayx.account_number' => setting('payments.razorpayx.account_number', ''),
                 'ai.default_provider'    => setting('ai.default_provider', 'auto'),
                 'ai.openrouter.model'    => setting('ai.openrouter.model', config('openrouter.model')),
                 'ai.openai.model'        => setting('ai.openai.model', 'gpt-4o-mini'),
@@ -58,6 +60,7 @@ class SettingController extends Controller
             'aiActive' => $ai->label(),
             'razorpay' => [
                 'enabled' => $razorpay->enabled(),
+                'payouts' => $razorpay->payoutsEnabled(),
                 'mode'    => $razorpay->mode(),
                 'webhook' => url('/webhooks/razorpay'),
             ],
@@ -74,6 +77,7 @@ class SettingController extends Controller
             'payments.razorpay.key_id'         => ['nullable', 'string', 'max:80'],
             'payments.razorpay.key_secret'     => ['nullable', 'string', 'max:200'],
             'payments.razorpay.webhook_secret' => ['nullable', 'string', 'max:200'],
+            'payments.razorpayx.account_number' => ['nullable', 'string', 'max:40'],
             'ai.default_provider'    => ['required', 'in:auto,none,openrouter,openai,gemini'],
             'ai.openrouter.key'      => ['nullable', 'string', 'max:200'],
             'ai.openrouter.model'    => ['nullable', 'string', 'max:80'],

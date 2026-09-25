@@ -89,6 +89,15 @@
         @endforeach
       </div>
 
+      <label class="mt-4 block max-w-sm">
+        <span class="text-[12px] font-bold text-[#7A7A78]">RazorpayX account number <span class="font-medium">(enables automatic payouts)</span></span>
+        <input name="payments[razorpayx][account_number]" value="{{ $values['payments.razorpayx.account_number'] }}" placeholder="2323230000000000"
+               class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-mono">
+        <span class="mt-1 block text-[11px] text-[#7A7A78]">
+          Empty means payouts stay manual: the queue still tracks what is owed, finance marks each transfer paid with a UTR.
+        </span>
+      </label>
+
       <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-[12.5px] leading-5">
         <b>Webhook URL:</b> <code class="bg-white border border-blue-200 px-1.5 py-0.5 rounded font-mono text-[11.5px]">{{ $razorpay['webhook'] }}</code><br>
         Subscribe to <code>payment.captured</code>, <code>payment.failed</code> and <code>refund.processed</code> in the Razorpay dashboard,
