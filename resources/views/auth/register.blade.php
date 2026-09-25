@@ -22,8 +22,8 @@
         <button type="button" x-on:click="type='creator'"
                 class="rounded-2xl p-4 text-left border transition"
                 :class="type==='creator' ? 'border-mint bg-mint-wash' : 'border-line bg-tint hover:border-line'">
-          <div class="text-[14px] font-semibold">I'm a freelancer</div>
-          <div class="text-[12px] text-mut mt-0.5">Get matched to gigs</div>
+          <div class="text-[14px] font-semibold">I do the work</div>
+          <div class="text-[12px] text-mut mt-0.5">Freelancer or creator</div>
         </button>
       </div>
 
@@ -90,7 +90,7 @@
 
         <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">
           <span x-show="type==='business'">Create account & post a gig</span>
-          <span x-show="type==='creator'" x-cloak>Create freelancer account</span>
+          <span x-show="type==='creator'" x-cloak>Create talent account</span>
         </button>
 
         <div class="text-center text-[13.5px] text-mut">

@@ -35,12 +35,12 @@
 
       <div class="mt-4 flex flex-wrap items-center gap-2">
         <a href="{{ route('marketplace', array_filter(['q' => $filters['q'], 'sort' => $filters['sort']])) }}"
-           class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === '' ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-ink hover:border-line' }}">
+           class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === '' ? 'border-mint bg-mint-wash text-ink' : 'border-line text-mut hover:text-ink hover:border-line' }}">
           All categories
         </a>
         @foreach($categories as $cat => $count)
           <a href="{{ route('marketplace', array_filter(['q' => $filters['q'], 'sort' => $filters['sort'], 'category' => $cat])) }}"
-             class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === $cat ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-ink hover:border-line' }}">
+             class="rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition {{ $filters['category'] === $cat ? 'border-mint bg-mint-wash text-ink' : 'border-line text-mut hover:text-ink hover:border-line' }}">
             {{ $cat }} <span class="opacity-50">{{ $count }}</span>
           </a>
         @endforeach
@@ -138,7 +138,7 @@
               <img src="{{ $c->avatarUrl() }}" class="w-9 h-9 rounded-xl object-cover border border-line" alt="">
               <div class="min-w-0 flex-1">
                 <div class="text-[13px] font-medium truncate group-hover:text-mint-deep transition">{{ $c->name }}</div>
-                <div class="text-[11.5px] text-mut truncate">{{ $c->headline ?: $c->handle }}</div>
+                <div class="text-[11.5px] text-mut truncate">{{ $c->headline ?: $c->profileLabel() }}</div>
               </div>
               <span class="text-[11.5px] font-mono text-faint shrink-0">₹{{ number_format($c->price_from) }}</span>
             </a>

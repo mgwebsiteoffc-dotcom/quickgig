@@ -5,18 +5,19 @@
 <section class="pt-16 pb-12">
   <div class="max-w-shell mx-auto px-5 lg:px-8 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
     <div>
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">For freelancers</div>
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">For freelancers &amp; creators</div>
       <h1 class="mt-4 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">
         Stop bidding.<br><span class="grad-text">Start delivering.</span>
       </h1>
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[540px]">
-        No proposals, no connects, no racing to the bottom on price. Gigs arrive with a full brief
-        attached, the money is already in escrow, and you keep 90% of it.
+        Editors, designers, writers, developers, voice artists, UGC creators — no proposals, no connects,
+        no racing to the bottom. Gigs arrive with a full brief attached, the money is already in escrow,
+        and you keep 90% of it.
       </p>
 
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="{{ route('register') }}?type=creator" class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14.5px] inline-flex items-center gap-2 shadow-xl shadow-ink/10">
-          Apply as a freelancer
+          Apply to join
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <a href="#earnings" class="h-12 px-6 rounded-xl glass font-medium text-[14.5px] inline-flex items-center hover:border-line transition">See what you would earn</a>
@@ -201,7 +202,7 @@
   'tone'      => 'cyan',
   'title'     => 'Join ' . number_format($creatorCount) . '+ verified freelancers taking briefs today.',
   'body'      => 'Free to join. Verification usually takes under a day. You choose every gig you accept.',
-  'primary'   => ['Apply as a freelancer', route('register').'?type=creator'],
+  'primary'   => ['Apply to join', route('register').'?type=creator'],
   'secondary' => ['See how matching works', route('ai')],
 ])
 

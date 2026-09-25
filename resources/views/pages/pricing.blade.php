@@ -29,8 +29,8 @@
       </p>
 
       <div class="mt-8 inline-flex glass rounded-2xl p-1">
-        <button x-on:click="mode='gig'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition" :class="mode==='gig' ? 'btn-grad text-ink' : 'text-mut hover:text-ink'">Pay per gig</button>
-        <button x-on:click="mode='retainer'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition" :class="mode==='retainer' ? 'btn-grad text-ink' : 'text-mut hover:text-ink'">Monthly retainer <span class="text-[11px] opacity-70">−20%</span></button>
+        <button x-on:click="mode='gig'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition" :class="mode==='gig' ? 'btn-grad text-white' : 'text-mut hover:text-ink'">Pay per gig</button>
+        <button x-on:click="mode='retainer'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition" :class="mode==='retainer' ? 'btn-grad text-white' : 'text-mut hover:text-ink'">Monthly retainer <span class="text-[11px] opacity-70">−20%</span></button>
       </div>
     </div>
 
@@ -38,7 +38,7 @@
       @foreach($plans as $p)
         <div class="reveal rounded-3xl p-7 card-hover relative {{ $p['featured'] ? 'glass-strong ring-glow' : 'glass' }}">
           @if($p['featured'])
-            <span class="absolute -top-3 left-7 btn-grad text-ink text-[10.5px] font-bold tracking-wider uppercase px-3 py-1 rounded-full">Most popular</span>
+            <span class="absolute -top-3 left-7 btn-grad text-white text-[10.5px] font-bold tracking-wider uppercase px-3 py-1 rounded-full">Most popular</span>
           @endif
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">{{ $p['name'] }}</div>
           <div class="mt-4 flex items-baseline gap-1.5">
@@ -199,7 +199,7 @@
         <div class="glass rounded-2xl overflow-hidden" :class="open === {{ $i }} ? 'border-mint' : ''">
           <button type="button" x-on:click="open = open === {{ $i }} ? -1 : {{ $i }}" class="w-full flex items-center justify-between gap-5 p-5 text-left">
             <span class="text-[14.5px] font-medium">{{ $q }}</span>
-            <span class="w-7 h-7 rounded-full grid place-items-center shrink-0 transition" :class="open === {{ $i }} ? 'btn-grad text-ink rotate-180' : 'bg-tint text-faint'">
+            <span class="w-7 h-7 rounded-full grid place-items-center shrink-0 transition" :class="open === {{ $i }} ? 'btn-grad text-white rotate-180' : 'bg-tint text-faint'">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
             </span>
           </button>

@@ -21,7 +21,7 @@
             <div class="absolute bottom-5 left-5 right-5">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="text-[11px] font-semibold tracking-wider uppercase glass-strong rounded-full px-2.5 py-1">{{ $gig->category }}</span>
-                @if($gig->badge)<span class="text-[11px] font-semibold tracking-wider uppercase btn-grad text-ink rounded-full px-2.5 py-1">{{ $gig->badge }}</span>@endif
+                @if($gig->badge)<span class="text-[11px] font-semibold tracking-wider uppercase btn-grad text-white rounded-full px-2.5 py-1">{{ $gig->badge }}</span>@endif
                 <span class="text-[11px] font-mono glass-strong rounded-full px-2.5 py-1">{{ $gig->deliveryLabel() }} delivery</span>
               </div>
               <h1 class="mt-3 font-display text-[26px] sm:text-[32px] font-semibold leading-tight">{{ $gig->title }}</h1>
@@ -69,7 +69,7 @@
                     <span class="text-[10.5px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2 py-0.5">Available now</span>
                   @endif
                 </div>
-                <div class="text-[12.5px] text-mut mt-0.5">{{ $gig->creator->handle }} · {{ $gig->creator->headline }}</div>
+                <div class="text-[12.5px] text-mut mt-0.5">{{ $gig->creator->profileLabel() }} · {{ $gig->creator->headline }}</div>
                 <p class="mt-3 text-[13.5px] leading-6 text-mut">{{ Str::limit($gig->creator->bio ?: 'Verified Quick GIGS freelancer.', 220) }}</p>
 
                 <div class="mt-4 flex flex-wrap gap-2">

@@ -60,7 +60,7 @@
           <div class="mt-4 space-y-2.5">
             @foreach($brief['hooks'] as $i => $hook)
               <div class="flex gap-3.5 rounded-2xl border border-line bg-tint p-4">
-                <span class="w-7 h-7 rounded-lg btn-grad grid place-items-center text-[12px] font-bold text-ink shrink-0">{{ $i + 1 }}</span>
+                <span class="w-7 h-7 rounded-lg btn-grad grid place-items-center text-[12px] font-bold text-white shrink-0">{{ $i + 1 }}</span>
                 <span class="text-[14.5px] leading-6">{{ $hook }}</span>
               </div>
             @endforeach

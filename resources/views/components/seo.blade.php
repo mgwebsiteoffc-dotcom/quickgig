@@ -2,7 +2,7 @@
 @php
   $seo = $seo ?? [];
   $title = $seo['title'] ?? 'Quick GIGS — Hire verified freelancers in minutes, not weeks';
-  $desc = $seo['description'] ?? 'Quick GIGS is the fast gig marketplace for reels, thumbnails, AI video and design. Post a brief, get matched to a verified pro in minutes, track delivery live and pay only when you approve.';
+  $desc = $seo['description'] ?? 'Quick GIGS is the fast marketplace for content work — video editing, graphic design, copy, development, voice and UGC. Post a brief, get matched to a verified freelancer or creator in minutes, and pay only when you approve.';
   $canonical = $seo['canonical'] ?? url()->current();
   $image = $seo['image'] ?? url('/og-default.jpg');
   $type = $seo['type'] ?? 'website';

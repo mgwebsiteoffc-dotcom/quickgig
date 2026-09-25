@@ -205,7 +205,7 @@ class LandingController extends Controller
 
         $seo = [
             'title'       => 'Quick GIGS — Hire verified freelancers in minutes, not weeks',
-            'description' => 'Quick GIGS matches your brief to a verified freelancer in minutes. Reels, thumbnails, AI ads and design with live tracking, flat pricing from ₹1,299 and escrow-protected payments.',
+            'description' => 'Quick GIGS writes your brief in one second and matches it to a verified freelancer or creator in minutes — video, design, copy, code, voice, UGC and marketing. Live tracking, flat pricing from ₹1,299, escrow-protected payments.',
             'canonical'   => url('/'),
             'image'       => url('/og-home.jpg'),
             'type'        => 'website',
@@ -302,8 +302,8 @@ class LandingController extends Controller
             $creators = Creator::where('is_verified', true)->orderByDesc('is_featured')->orderByDesc('rating')->limit(4)->get();
             if ($creators->isNotEmpty()) {
                 return $creators->map(fn ($c) => [
-                    'name'      => $c->name,
-                    'handle'    => $c->handle,
+                    'name'       => $c->name,
+                    'discipline' => $c->profileLabel(),
                     'img'       => $c->avatarUrl(),
                     'role'      => $c->headline ?: 'Verified creator',
                     'price'     => '₹' . number_format($c->price_from),
@@ -315,10 +315,10 @@ class LandingController extends Controller
         }
 
         return collect([
-            ['name' => 'Priya Sharma', 'handle' => '@priyaedits',   'role' => 'Talking-head & retention editing',   'price' => '₹2,499', 'img' => 'https://i.pravatar.cc/200?img=5',  'available' => true],
-            ['name' => 'Rahul Verma',  'handle' => '@rahulcuts',    'role' => 'Long-form to short-form repurposing','price' => '₹2,499', 'img' => 'https://i.pravatar.cc/200?img=12', 'available' => true],
-            ['name' => 'Aman Khan',    'handle' => '@amanmotion',   'role' => 'Motion graphics & AI video',         'price' => '₹2,799', 'img' => 'https://i.pravatar.cc/200?img=15', 'available' => false],
-            ['name' => 'Neha Jain',    'handle' => '@nehacreates',  'role' => 'Thumbnails with 12% avg CTR lift',   'price' => '₹1,299', 'img' => 'https://i.pravatar.cc/200?img=9',  'available' => true],
+            ['name' => 'Priya Sharma', 'discipline' => 'Video editor',   'role' => 'Talking-head & retention editing',   'price' => '₹2,499', 'img' => 'https://i.pravatar.cc/200?img=5',  'available' => true],
+            ['name' => 'Rahul Verma',  'discipline' => 'Video editor',    'role' => 'Long-form to short-form repurposing','price' => '₹2,499', 'img' => 'https://i.pravatar.cc/200?img=12', 'available' => true],
+            ['name' => 'Aman Khan',    'discipline' => 'Motion designer',   'role' => 'Motion graphics & AI video',         'price' => '₹2,799', 'img' => 'https://i.pravatar.cc/200?img=15', 'available' => false],
+            ['name' => 'Neha Jain',    'discipline' => 'Designer',  'role' => 'Thumbnails with 12% avg CTR lift',   'price' => '₹1,299', 'img' => 'https://i.pravatar.cc/200?img=9',  'available' => true],
         ]);
     }
 }

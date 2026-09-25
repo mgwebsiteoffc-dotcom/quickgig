@@ -137,7 +137,7 @@ class PageController extends Controller
         return view('pages.for-creators', [
             'creatorCount' => max($count, 1),
             'seo' => [
-                'title'       => 'Work on Quick GIGS — keep 90%, get matched, get paid on approval',
+                'title'       => 'Work on Quick GIGS — freelancers and creators keep 90%',
                 'description' => 'Join Quick GIGS as a creator: no bidding, no connects, no proposals. Get matched by skill and availability, work from a generated brief and keep 90% of every gig.',
                 'canonical'   => route('for-creators'),
             ],

@@ -164,7 +164,7 @@
               <img src="{{ $order->creator->avatarUrl() }}" class="w-12 h-12 rounded-2xl object-cover border border-line" alt="">
               <div class="min-w-0">
                 <a href="{{ route('creator.public', $order->creator->id) }}" class="text-[14.5px] font-semibold hover:text-mint-deep transition">{{ $order->creator->name }}</a>
-                <div class="text-[12px] text-mut truncate">{{ $order->creator->handle }} · {{ number_format((float) $order->creator->rating, 1) }} ★</div>
+                <div class="text-[12px] text-mut truncate">{{ $order->creator->profileLabel() }} · {{ number_format((float) $order->creator->rating, 1) }} ★</div>
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@
   ];
   $company = [
     ['For business', 'Task board, seats, one invoice', route('for-business')],
-    ['For freelancers', 'Keep 90%, no bidding',        route('for-creators')],
+    ['For talent',     'Freelancers & creators — keep 90%', route('for-creators')],
     ['For teams',    'Pods, SLAs, one invoice',     route('enterprise')],
     ['Insights',     'Playbooks and case studies',  route('blog.index')],
     ['FAQ',          'Answers without a sales call', route('faq')],
@@ -77,7 +77,7 @@
       @auth
         <a href="{{ $dash }}" class="hidden sm:inline-flex h-10 px-4 rounded-xl border border-line hover:border-ink/30 hover:bg-tint items-center text-[13.5px] font-medium transition">Dashboard</a>
         <div x-data="{ m:false }" class="relative hidden sm:block">
-          <button x-on:click="m=!m" class="w-10 h-10 rounded-xl btn-grad grid place-items-center font-display font-bold text-[13px] text-ink">{{ strtoupper(substr($user->name ?? 'U',0,1)) }}</button>
+          <button x-on:click="m=!m" class="w-10 h-10 rounded-xl btn-grad grid place-items-center font-display font-bold text-[13px] text-white">{{ strtoupper(substr($user->name ?? 'U',0,1)) }}</button>
           <div x-show="m" x-cloak x-on:click.outside="m=false" x-transition class="absolute right-0 mt-2 w-56 bg-white border border-line rounded-2xl p-2 shadow-xl shadow-ink/10 z-50">
             <div class="px-3 py-2">
               <div class="text-[13px] font-semibold truncate">{{ $user->name }}</div>

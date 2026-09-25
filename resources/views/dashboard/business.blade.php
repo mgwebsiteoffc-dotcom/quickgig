@@ -203,7 +203,7 @@ Accept: application/json
                 <img src="{{ $c->avatarUrl() }}" class="w-9 h-9 rounded-xl object-cover border border-line" alt="">
                 <div class="min-w-0 flex-1">
                   <div class="text-[13px] font-medium truncate group-hover:text-mint-deep transition">{{ $c->name }}</div>
-                  <div class="text-[11.5px] text-mut truncate">{{ $c->headline ?: $c->handle }}</div>
+                  <div class="text-[11.5px] text-mut truncate">{{ $c->headline ?: $c->profileLabel() }}</div>
                 </div>
               </a>
             @empty

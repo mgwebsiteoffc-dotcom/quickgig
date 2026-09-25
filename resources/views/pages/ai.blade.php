@@ -4,7 +4,7 @@
   // Raw factor data for the client-side re-ranking demo.
   $matchData = $ranked->map(fn ($r) => [
     'name'   => $r['creator']->name,
-    'handle' => $r['creator']->handle,
+    'ref'    => 'QG-' . str_pad((string) $r['creator']->id, 4, '0', STR_PAD_LEFT),
     'img'    => $r['creator']->avatarUrl(),
     'role'   => $r['creator']->headline ?: $r['creator']->profileLabel(),
     'price'  => (int) $r['creator']->price_from,
@@ -88,7 +88,7 @@
 
       {{-- ranked freelancers --}}
       <div class="space-y-4">
-        <template x-for="(m, i) in ranked" :key="m.handle">
+        <template x-for="(m, i) in ranked" :key="m.ref">
           <div class="glass rounded-3xl p-5 sm:p-6" :class="i === 0 ? 'ring-glow' : ''">
             <div class="flex flex-wrap items-center gap-4">
               <div class="relative">
@@ -98,7 +98,7 @@
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-2">
                   <span class="text-[15px] font-semibold" x-text="m.name"></span>
-                  <span x-show="i === 0" class="text-[10.5px] font-semibold btn-grad text-ink rounded-full px-2 py-0.5">Top match</span>
+                  <span x-show="i === 0" class="text-[10.5px] font-semibold btn-grad text-white rounded-full px-2 py-0.5">Top match</span>
                 </div>
                 <div class="text-[12.5px] text-mut truncate" x-text="m.role"></div>
               </div>

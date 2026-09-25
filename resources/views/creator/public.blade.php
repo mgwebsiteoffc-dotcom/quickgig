@@ -6,7 +6,6 @@
     '@context' => 'https://schema.org',
     '@type' => 'Person',
     'name' => $c->name,
-    'alternateName' => $c->handle,
     'image' => $c->avatarUrl(),
     'description' => $c->bio,
     'url' => route('creator.public', $c->id),
@@ -34,13 +33,13 @@
               {{ $c->name }}
               @if($c->is_verified)<span class="text-[10.5px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2.5 py-1">Verified</span>@endif
             </h1>
-            <div class="text-[13.5px] text-mut mt-1">{{ $c->handle }} · {{ $c->headline }}</div>
+            <div class="text-[13.5px] text-mut mt-1">{{ $c->profileLabel() }} · {{ $c->headline }}</div>
           </div>
           <div class="flex items-center gap-2.5">
             <span class="text-[12px] font-semibold rounded-full px-3 py-1.5 {{ $c->is_available ? 'bg-mint-wash text-mint-deep' : 'bg-amber-400/15 text-amber-300' }}">
               {{ $c->is_available ? 'Available now' : 'Busy — free soon' }}
             </span>
-            <a href="{{ route('marketplace', ['q' => ltrim($c->handle, '@')]) }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">See gigs</a>
+            <a href="{{ route('marketplace', ['q' => $c->profileLabel()]) }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">See gigs</a>
           </div>
         </div>
 

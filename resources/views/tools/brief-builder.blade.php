@@ -6,7 +6,7 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[720px]">
       <div class="inline-flex items-center gap-2.5 glass rounded-full pl-2 pr-3.5 py-1.5 text-[12px] font-medium">
-        <span class="btn-grad text-ink text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full">Free tool</span>
+        <span class="btn-grad text-white text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full">Free tool</span>
         <span class="text-body">No account, no card, no email wall</span>
       </div>
       <h1 class="mt-5 font-display text-[38px] sm:text-[50px] font-semibold leading-[1.04]">

@@ -182,7 +182,7 @@
       @foreach($categories as $i => [$name, $desc, $grad])
         <div class="reveal-s rounded-3xl p-5 bg-ink text-white hover:-translate-y-1.5 transition-transform duration-300" data-delay="{{ $i * 60 }}">
           <div class="font-display text-[17px] font-semibold">{{ $name }}</div>
-          <div class="mt-1.5 text-[12.5px] text-body">{{ $desc }}</div>
+          <div class="mt-1.5 text-[12.5px] text-white/70">{{ $desc }}</div>
         </div>
       @endforeach
     </div>

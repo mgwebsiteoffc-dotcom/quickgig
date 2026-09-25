@@ -18,8 +18,8 @@
       </h1>
 
       <p class="mt-3.5 text-[15px] leading-6.5 text-body max-w-[480px]">
-        Then we match a verified freelancer, hold your money in escrow and run the delivery through an
-        automated quality gate. Video, design, copy, code, voice and marketing.
+        Then we match a verified freelancer or creator, hold your money in escrow and run the delivery
+        through an automated quality gate. Video, design, copy, code, voice, UGC and marketing.
       </p>
 
       {{-- the proof: a real brief, generated in front of you --}}
@@ -310,7 +310,7 @@
           <template x-for="a in cfg.addons" :key="a.id">
             <button type="button" x-on:click="toggleAddon(a.id)"
               class="rounded-full px-3.5 py-2 text-[12.5px] font-medium border transition-all duration-300"
-              :class="addons.includes(a.id) ? 'border-mint bg-mint-wash text-white' : 'border-line text-mut hover:text-ink hover:border-line'">
+              :class="addons.includes(a.id) ? 'border-mint bg-mint-wash text-ink' : 'border-line text-mut hover:text-ink hover:border-line'">
               <span x-text="a.label"></span> <span class="font-mono opacity-60" x-text="'+₹' + a.price"></span>
             </button>
           </template>
@@ -460,8 +460,8 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="max-w-[620px] reveal">
       <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">The talent layer</div>
-      <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1]">Verified pros only. Live availability.</h2>
-      <p class="mt-4 text-[15px] leading-7 text-mut">Every freelancer is ID-checked and portfolio-reviewed before they can accept a gig. You always see who is free right now.</p>
+      <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1]">Verified freelancers and creators. Live availability.</h2>
+      <p class="mt-4 text-[15px] leading-7 text-mut">Editors, designers, writers, developers, voice artists and UGC creators — every one ID-checked and portfolio-reviewed before they can accept a gig.</p>
     </div>
 
     <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -474,7 +474,7 @@
             </div>
             <div class="min-w-0">
               <div class="text-[14px] font-semibold truncate">{{ $c['name'] }}</div>
-              <div class="text-[12px] text-mut truncate">{{ $c['handle'] }}</div>
+              <div class="text-[12px] text-mut truncate">{{ $c['discipline'] }}</div>
             </div>
           </div>
           <div class="mt-4 text-[12.5px] text-mut leading-5 line-clamp-2 min-h-[38px]">{{ $c['role'] }}</div>
@@ -754,7 +754,7 @@
           Start hiring
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a href="{{ route('register') }}?type=creator" class="px-7 py-3.5 rounded-xl glass btn-ghost font-medium text-[15px] inline-flex items-center hover:border-line">Join as a freelancer</a>
+        <a href="{{ route('register') }}?type=creator" class="px-7 py-3.5 rounded-xl glass btn-ghost font-medium text-[15px] inline-flex items-center hover:border-line">Join as talent</a>
       </div>
 
       <div class="mt-7 flex flex-wrap justify-center gap-x-7 gap-y-2 text-[12.5px] text-mut">
