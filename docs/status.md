@@ -84,6 +84,39 @@ included), delete portfolio items, read orders and upload deliveries.
 - `tests/Feature/ActorAuthorizationTest.php` — 14 tests covering guest redirects, the old
   session-key exploit, cross-creator and cross-company access, and staff impersonation
 
+## 🌱 Seeders (latest commit)
+
+Split out of the single `DatabaseSeeder` into focused, re-runnable classes:
+
+| Seeder | What it does |
+|---|---|
+| `AdminUserSeeder` | Super admin from `ADMIN_EMAIL` / `ADMIN_PASSWORD`; generates and prints a random 16-char password once if none is set. Adds manager/support/finance/admin demo logins **only outside production**. |
+| `SettingSeeder` | Ensures every `Setting::DEFAULTS` key exists. |
+| `CompanySeeder` | 3 businesses, each with a bound `business` login. |
+| `CreatorSeeder` | 4 creators + portfolio items, each with a bound `creator` login and `user_id` back-reference. |
+| `ServiceSeeder` | 5 services including a barter listing. |
+| `OrderSeeder` | 10 orders across every status, with delivery records and payouts (some ready, some on hold). |
+| `ContentSeeder` | 5 FAQs (feeding the landing JSON-LD) and 2 blog posts. |
+| `DemoDataSeeder` | Calls the five demo seeders in dependency order. |
+| `DatabaseSeeder` | Settings + admin always; demo data only outside production. |
+
+**Security fix along the way:** the install migration used to `INSERT` three accounts with passwords
+published in the source (`Admin@12345`, `Manager@123`, `Support@123`). That block is gone — accounts
+now come from `AdminUserSeeder`. *Existing deployments that already ran the migration must change
+those three passwords manually.*
+
+Also removed from version control: 13 stale compiled Blade views in `storage/framework/views`
+(one still contained the old demo-credentials markup), a committed session file, and `laravel.log`.
+
+```bash
+php artisan migrate --seed                      # settings + admin (+ demo data outside production)
+php artisan db:seed --class=AdminUserSeeder     # just the super admin
+php artisan db:seed --class=DemoDataSeeder      # just the marketplace demo data
+```
+
+Demo logins (non-production only): `priya@creators.test`, `rohan@avante.test`,
+`manager@example.test` … all `Password123`.
+
 ## 🔜 Still open
 
 1. **Run it.** Nothing here has been executed — expect to fix a typo or two on first `phpunit` run.
