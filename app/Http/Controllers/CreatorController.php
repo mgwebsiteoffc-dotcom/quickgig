@@ -152,9 +152,13 @@ class CreatorController extends Controller
     public function deliver(Request $request, $order)
     {
         $request->validate([
-            'delivery_url' => ['required', 'url'],
+            'delivery_url' => ['nullable', 'url', 'required_without:delivery_file'],
+            'delivery_file' => ['nullable', 'file', 'max:51200', 'mimes:pdf,zip,jpg,jpeg,png,webp,mp4,mov,doc,docx'],
             'note'         => ['nullable', 'string', 'max:500'],
         ]);
+        if (! $request->filled('delivery_url') && ! $request->hasFile('delivery_file')) {
+            return back()->withErrors(['delivery_file' => 'Add a delivery link or upload a file.']);
+        }
 
         $creator = $this->creator($request);
 
@@ -162,7 +166,11 @@ class CreatorController extends Controller
             ->where(fn ($q) => $q->where('uid', $order)->orWhere('id', $order))
             ->firstOrFail();
 
-        $o->update(['status' => 'review', 'progress' => 100]);
+        $payload = ['status' => 'review', 'progress' => 100, 'delivery_url' => $request->input('delivery_url'), 'delivery_version' => ((int) $o->delivery_version) + 1];
+        if ($request->hasFile('delivery_file')) {
+            $payload['delivery_path'] = $request->file('delivery_file')->store('deliveries', 'public');
+        }
+        $o->update($payload);
 
         Notifier::toUserOf($o->company, new DeliverySubmitted($o));
 
@@ -183,6 +191,7 @@ class CreatorController extends Controller
             'category'     => ['nullable', 'string', 'max:40'],
             'tags'         => ['nullable', 'string', 'max:200'],
             'cover'        => ['nullable', 'image', 'max:3072'],
+            'media_file'   => ['nullable', 'file', 'max:51200', 'mimes:mp4,mov,webm,pdf,zip,jpg,jpeg,png,webp'],
         ]);
 
         if (isset($data['tags'])) {
@@ -192,6 +201,11 @@ class CreatorController extends Controller
         if ($request->hasFile('cover')) {
             $data['cover'] = $this->storeUpload($request->file('cover'), 'portfolio');
         }
+        if ($request->hasFile('media_file')) {
+            $data['media_path'] = $this->storeUpload($request->file('media_file'), 'portfolio/media');
+            $data['media_type'] = $request->file('media_file')->getMimeType();
+        }
+        unset($data['media_file']);
 
         $data['creator_id'] = $creator->id;
         $data['slug'] = Str::slug($data['title']) . '-' . time();

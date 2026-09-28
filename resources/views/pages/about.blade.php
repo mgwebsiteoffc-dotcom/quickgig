@@ -17,7 +17,7 @@
       <p class="mt-4 text-[16px] leading-7 text-mut max-w-[620px]">
         So we automated everything except the craft. The brief writes itself, matching is scored and
         explained, money sits in escrow, and quality is checked before anything reaches your inbox.
-        Freelancers keep 90% because they are the ones doing the work.
+        Freelancers keep 100% because they are the ones doing the work.
       </p>
     </div>
 
@@ -26,7 +26,7 @@
         [number_format($stats['gigs']) . '+', 'gigs in the catalogue'],
         [number_format($stats['creators']) . '+', 'freelancers on the platform'],
         ['4 min', 'average time to a match'],
-        ['90%', 'of every rupee to creators'],
+        ['100%', 'of every rupee to creators'],
       ] as $i => [$v, $l])
         <div class="reveal glass rounded-3xl p-6" style="transition-delay: {{ $i * 70 }}ms">
           <div class="font-display text-[30px] font-semibold tracking-tight">{{ $v }}</div>

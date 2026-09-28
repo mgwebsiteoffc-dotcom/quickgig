@@ -10,7 +10,7 @@
   ];
   $company = [
     ['For business', 'Task board, seats, one invoice', route('for-business')],
-    ['For talent',     'Freelancers & creators — keep 90%', route('for-creators')],
+    ['For talent',     'Freelancers & creators — keep 100%', route('for-creators')],
     ['For teams',    'Pods, SLAs, one invoice',     route('enterprise')],
     ['Insights',     'Playbooks and case studies',  route('blog.index')],
     ['FAQ',          'Answers without a sales call', route('faq')],

@@ -191,7 +191,7 @@
       @foreach([
         ['Is there any subscription or minimum?', 'No. You can order a single ₹1,299 gig and never come back. The retainer option exists only because teams asked for predictable monthly billing at a discount.'],
         ['When is my card charged?', 'At order time the amount moves into escrow. It is released to the freelancer when you approve, or refunded to you if you reject the delivery within the review window.'],
-        ['What does the 10% fee cover?', 'Matching, the brief engine, escrow and payouts, the QA gate, dispute handling and support. Freelancers keep the other 90%.'],
+        ['What does the 10% fee cover?', 'Matching, the brief engine, escrow and payouts, the QA gate, dispute handling and support. Freelancers keep 100%; the platform fee is paid by the client.'],
         ['Do express gigs cost more?', 'Yes — express is 1.6× the base price because the freelancer reorganises their day for it. Relaxed 48-hour delivery is 0.85×. You always see the exact number before ordering.'],
         ['What if the deadline is missed?', 'The express premium is credited back automatically, and you keep the right to reject the delivery and recover the escrow.'],
         ['Do you invoice with GST?', 'Yes. Add your GSTIN in workspace settings and every order produces a GST-compliant invoice; teams can consolidate into one monthly invoice.'],
