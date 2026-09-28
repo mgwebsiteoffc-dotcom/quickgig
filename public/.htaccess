@@ -15,7 +15,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
-# Hostinger shared — disable directory listing
+# Disable directory listing
 Options -Indexes
 # Cache static assets (file cache safe)
 <IfModule mod_expires.c>

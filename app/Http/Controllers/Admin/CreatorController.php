@@ -109,6 +109,26 @@ class CreatorController extends Controller
         return back()->with('toast',$c->name.' featured '.($c->is_featured?'enabled':'disabled'));
     }
 
+    public function togglePortfolio(string $creator, string $portfolio)
+    {
+        $item = \App\Models\PortfolioItem::where('creator_id', $creator)->findOrFail($portfolio);
+        $item->update(['is_published' => ! $item->is_published]);
+        return back()->with('toast', 'Work reference '.($item->is_published ? 'published' : 'hidden').' from the marketplace.');
+    }
+
+    public function featurePortfolio(string $creator, string $portfolio)
+    {
+        $item = \App\Models\PortfolioItem::where('creator_id', $creator)->findOrFail($portfolio);
+        $item->update(['is_featured' => ! $item->is_featured]);
+        return back()->with('toast', 'Work reference '.($item->is_featured ? 'featured' : 'unfeatured').'.');
+    }
+
+    public function destroyPortfolio(string $creator, string $portfolio)
+    {
+        \App\Models\PortfolioItem::where('creator_id', $creator)->findOrFail($portfolio)->delete();
+        return back()->with('toast', 'Work reference deleted.');
+    }
+
     public function destroy(string $id)
     {
         Creator::findOrFail($id)->delete();

@@ -152,9 +152,13 @@ class CreatorController extends Controller
     public function deliver(Request $request, $order)
     {
         $request->validate([
-            'delivery_url' => ['required', 'url'],
+            'delivery_url' => ['nullable', 'url', 'required_without:delivery_file'],
+            'delivery_file' => ['nullable', 'file', 'max:51200', 'mimes:pdf,zip,jpg,jpeg,png,webp,mp4,mov,doc,docx'],
             'note'         => ['nullable', 'string', 'max:500'],
         ]);
+        if (! $request->filled('delivery_url') && ! $request->hasFile('delivery_file')) {
+            return back()->withErrors(['delivery_file' => 'Add a delivery link or upload a file.']);
+        }
 
         $creator = $this->creator($request);
 
@@ -162,7 +166,11 @@ class CreatorController extends Controller
             ->where(fn ($q) => $q->where('uid', $order)->orWhere('id', $order))
             ->firstOrFail();
 
-        $o->update(['status' => 'review', 'progress' => 100]);
+        $payload = ['status' => 'review', 'progress' => 100, 'delivery_url' => $request->input('delivery_url'), 'delivery_version' => ((int) $o->delivery_version) + 1];
+        if ($request->hasFile('delivery_file')) {
+            $payload['delivery_path'] = $request->file('delivery_file')->store('deliveries', 'public');
+        }
+        $o->update($payload);
 
         Notifier::toUserOf($o->company, new DeliverySubmitted($o));
 
