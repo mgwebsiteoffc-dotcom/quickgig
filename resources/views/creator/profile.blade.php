@@ -163,6 +163,10 @@
           <input id="p_cover" type="file" name="cover" accept="image/*" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-ink file:text-white file:text-[12.5px]">
         </div>
         <div class="sm:col-span-2">
+          <label class="label" for="p_media">Work file <span class="normal-case tracking-normal text-faint">optional · video, image, PDF or ZIP · max 50 MB</span></label>
+          <input id="p_media" type="file" name="media_file" accept="video/*,image/*,.pdf,.zip" class="block w-full text-[13px] text-mut file:mr-3 file:h-9 file:px-4 file:rounded-lg file:border-0 file:bg-ink file:text-white file:text-[12.5px]">
+        </div>
+        <div class="sm:col-span-2">
           <button class="h-12 px-6 rounded-xl glass font-medium text-[14px] hover:border-line transition">Add portfolio item</button>
         </div>
       </form>

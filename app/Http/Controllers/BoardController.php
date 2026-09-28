@@ -134,7 +134,9 @@ class BoardController extends Controller
             return $this->respond($request, $task, 'No matching gig in the catalogue yet.');
         }
 
-        $subtotal = (int) $service->price;
+        $subtotal = (int) ($service->billing_type === 'monthly' && $service->monthly_price ? $service->monthly_price : $service->price);
+        $fee = (int) round($subtotal * \App\Http\Controllers\OrderController::feeRate());
+        $tax = (int) round($subtotal * ((float) setting('platform.gst_percent', 18) / 100));
 
         $order = \App\Models\Order::create([
             'company_id'    => $task->company_id,
@@ -143,9 +145,11 @@ class BoardController extends Controller
             'brief'         => $task->brief ?: $task->title,
             'turnaround'    => $task->priority === 'urgent' ? 'Express · 3 hours' : 'Standard · 24 hours',
             'subtotal'      => $subtotal,
-            'fee'           => (int) round($subtotal * \App\Http\Controllers\OrderController::feeRate()),
+            'fee'           => $fee,
             'discount'      => 0,
-            'total'         => $subtotal,
+            'tax_amount'    => $tax,
+            'currency'      => 'INR',
+            'total'         => $subtotal + $fee + $tax,
             'status'        => 'working',
             'escrow_status' => 'held',
             'progress'      => 25,
