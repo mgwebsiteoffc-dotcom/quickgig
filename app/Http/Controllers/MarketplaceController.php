@@ -86,7 +86,7 @@ class MarketplaceController extends Controller
 
     public function show(Request $request, $id)
     {
-        $gig = Service::with(['creator.portfolio'])->findOrFail($id);
+        $gig = Service::with(['creator.portfolio' => fn ($q) => $q->published()])->findOrFail($id);
 
         $related = Service::with('creator')
             ->where('is_active', true)

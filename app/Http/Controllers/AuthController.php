@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
@@ -151,6 +152,7 @@ class AuthController extends Controller
             $request->session()->put('creator_id', $creator->id);
         }
 
+        event(new Registered($user));
         Auth::login($user, true);
         $request->session()->regenerate();
         $this->rememberWorkspace($request, $user->fresh());
