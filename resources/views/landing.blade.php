@@ -180,7 +180,7 @@
       @endforeach
     </div>
     <div class="mt-5 flex gap-2 overflow-x-auto pb-1" aria-label="Popular service categories">
-      @foreach([['Video editing','Reel'],['Graphic design','Graphic Design'],['Google Ads','Google Ads'],['Meta Ads','Meta Ads'],['AI automation','AI Automation'],['Shopify operations','Shopify Operations'],['UGC services','UGC Video']] as [$label,$category])
+      @foreach([['Video editing','Reel'],['Graphic design','Graphic Design'],['Performance marketing','Performance Marketing'],['Google Ads','Google Ads'],['Meta Ads','Meta Ads'],['AI automation','AI Automation'],['Shopify operations','Shopify Operations'],['UGC services','UGC Video']] as [$label,$category])
         <a href="{{ route('marketplace', ['category' => $category]) }}" class="shrink-0 rounded-full border border-line bg-tint px-3.5 py-2 text-[12px] font-medium text-body hover:border-mint hover:bg-mint-wash transition">{{ $label }}</a>
       @endforeach
     </div>
