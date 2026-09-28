@@ -109,7 +109,7 @@ class DatabaseSeeder extends Seeder
             ['How fast is delivery, really?', 'Express gigs start within minutes and land in about three hours. Standard reels and thumbnails are next-day. Team packs and AI ads take up to two days.', 'Delivery', 2, true],
             ['What if I do not like the work?', 'Every gig includes two free revisions. If the delivery still misses the brief, raise a dispute before approving and the escrow is refunded in full.', 'Guarantee', 3, true],
             ['How are freelancers verified?', 'Freelancers submit ID, portfolio and client references. Our team reviews each profile manually, then tracks on-time delivery, rating and response time on every gig.', 'Freelancers', 4, true],
-            ['What does it cost?', 'Gigs start at ₹1,299. The platform fee is a flat 10%, so freelancers keep 90%. Posting briefs, browsing gigs and getting matched is free.', 'Pricing', 5, true],
+            ['What does it cost?', 'Gigs start at ₹1,299. The platform fee is a flat 10%, so freelancers keep 100%. Posting briefs, browsing gigs and getting matched is free.', 'Pricing', 5, true],
             ['How do freelancers get paid?', 'The moment you approve a delivery, escrow is released and paid out to the freelancer via UPI or bank transfer, usually within minutes.', 'Payouts', 6, true],
             ['Do you provide GST invoices?', 'Yes. Add your GSTIN in workspace settings and every order generates a GST-compliant invoice. Freelancers get matching payout statements.', 'Pricing', 7, false],
         ];
@@ -246,6 +246,12 @@ class DatabaseSeeder extends Seeder
             ['Product UI screens (5 screens)',         'Design',      8999,  11999, 3, 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80',    'UI',          210, 4.9, '@meeradesigns', 'Figma file with components, states and a handoff-ready spec.'],
             ['Hindi + English voice over, 60 seconds', 'Voice Over',  1299,  1899,  1, 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&q=80',  'VO',          430, 4.8, '@arjunvoice',   'Studio-clean read, two takes, WAV and MP3 delivered with sync markers.'],
             ['Meta ads creative + campaign setup',     'Marketing',   6999,  9999,  2, 'https://images.unsplash.com/photo-1611926653458-09294b3142bf?w=800&q=80',  'Ads',         180, 4.7, '@sanagrowth',   'Three ad variants, audiences, pixel check and a first-week optimisation note.'],
+            ['Google Ads account setup + first campaign', 'Google Ads', 7999, 12999, 3, 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80', 'Performance', 72, 4.8, '@sanagrowth', 'Conversion tracking, keyword research, search campaign structure and a launch-ready optimisation plan.'],
+            ['Meta Ads campaign management — 30 days', 'Meta Ads', 14999, 24999, 30, 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80', 'Growth', 48, 4.8, '@sanagrowth', 'Audience setup, creative testing, weekly optimisation and a plain-English performance report.'],
+            ['Shopify operations — store setup + catalogue', 'Shopify Operations', 11999, 17999, 5, 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80', 'Shopify', 64, 4.7, '@vikrambuilds', 'Product imports, collections, theme settings, shipping basics and a handover checklist.'],
+            ['AI automation workflow — lead to CRM', 'AI Automation', 9999, 15999, 5, 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80', 'Automation', 38, 4.8, '@vikrambuilds', 'Map one business workflow and connect forms, AI classification, notifications and your CRM.'],
+            ['WhatsApp automation — enquiry to follow-up', 'WhatsApp Automation', 8999, 13999, 4, 'https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=800&q=80', 'WhatsApp', 51, 4.7, '@sanagrowth', 'Message flow, FAQ replies, lead capture and handoff rules for WhatsApp Business.'],
+            ['Brand graphics pack — 10 social creatives', 'Graphic Design', 4999, 7999, 3, 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80', 'Design', 120, 4.9, '@meeradesigns', 'Ten on-brand social graphics in editable Figma format with export-ready sizes.'],
         ];
 
         foreach ($wider as [$title, $category, $price, $mrp, $days, $cover, $badge, $sold, $rating, $handle, $desc]) {

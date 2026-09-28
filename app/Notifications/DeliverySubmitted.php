@@ -26,7 +26,7 @@ class DeliverySubmitted extends Notification
             ->subject('Delivery ready to review — ' . $o->uid)
             ->greeting('Your delivery is in.')
             ->line(($o->creator->name ?? 'Your freelancer') . ' submitted "' . ($o->service->title ?? 'your gig') . '".')
-            ->line('It passed the automated quality gate. Approve to release ₹' . number_format($o->total - $o->fee) . ', or ask for one of your two free revisions.')
+            ->line('It passed the automated quality gate. Approve to release ₹' . number_format($o->total - $o->fee - ($o->tax_amount ?? 0)) . ', or ask for one of your two free revisions.')
             ->action('Review the delivery', route('orders.show', $o->uid));
     }
 }

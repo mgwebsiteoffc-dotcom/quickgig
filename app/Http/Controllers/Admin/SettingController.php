@@ -14,10 +14,22 @@ class SettingController extends Controller
     private const FIELDS = [
         // platform
         'platform.fee_percent'            => false,
+        'platform.gst_percent'           => false,
         'platform.escrow_hours'           => false,
         'platform.support_email'          => false,
         'platform.support_phone'          => false,
         'platform.maintenance'            => false,
+        'notifications.email_enabled'  => false,
+        'notifications.whatsapp_enabled' => false,
+        'notifications.whatify_api_key' => true,
+        'notifications.whatify_account_id' => false,
+        'mail.host' => false,
+        'mail.port' => false,
+        'mail.username' => false,
+        'mail.password' => true,
+        'mail.encryption' => false,
+        'mail.from_address' => false,
+        'mail.from_name' => false,
         // payments
         'payments.razorpay.key_id'        => false,
         'payments.razorpay.key_secret'    => true,
@@ -37,11 +49,21 @@ class SettingController extends Controller
     {
         return view('admin.settings.index', [
             'values' => [
-                'platform.fee_percent'   => setting('platform.fee_percent', 10),
+                'platform.fee_percent'   => setting('platform.fee_percent', 0),
+                'platform.gst_percent'  => setting('platform.gst_percent', 18),
                 'platform.escrow_hours'  => setting('platform.escrow_hours', 48),
                 'platform.support_email' => setting('platform.support_email', 'support@quickgigs.in'),
                 'platform.support_phone' => setting('platform.support_phone', '+91 98765 43210'),
                 'platform.maintenance'   => (bool) setting('platform.maintenance', false),
+                'notifications.email_enabled' => (bool) setting('notifications.email_enabled', true),
+                'notifications.whatsapp_enabled' => (bool) setting('notifications.whatsapp_enabled', false),
+                'notifications.whatify_account_id' => setting('notifications.whatify_account_id', ''),
+                'mail.host' => setting('mail.host', env('MAIL_HOST','')),
+                'mail.port' => setting('mail.port', env('MAIL_PORT',587)),
+                'mail.username' => setting('mail.username', env('MAIL_USERNAME','')),
+                'mail.encryption' => setting('mail.encryption', env('MAIL_ENCRYPTION','tls')),
+                'mail.from_address' => setting('mail.from_address', env('MAIL_FROM_ADDRESS','')),
+                'mail.from_name' => setting('mail.from_name', env('MAIL_FROM_NAME','Quick GIGS')),
                 'payments.razorpay.key_id' => setting('payments.razorpay.key_id', ''),
                 'payments.razorpayx.account_number' => setting('payments.razorpayx.account_number', ''),
                 'ai.default_provider'    => setting('ai.default_provider', 'auto'),
@@ -55,6 +77,8 @@ class SettingController extends Controller
                 'ai.openrouter.key'                => Setting::masked('ai.openrouter.key'),
                 'ai.openai.key'                    => Setting::masked('ai.openai.key'),
                 'ai.gemini.key'                    => Setting::masked('ai.gemini.key'),
+                'notifications.whatify_api_key' => Setting::masked('notifications.whatify_api_key'),
+                'mail.password' => Setting::masked('mail.password'),
             ],
             'ai'       => $ai->status(),
             'aiActive' => $ai->label(),
@@ -71,9 +95,15 @@ class SettingController extends Controller
     {
         $data = $request->validate([
             'platform.fee_percent'   => ['required', 'numeric', 'min:0', 'max:30'],
+            'platform.gst_percent'  => ['required', 'numeric', 'min:0', 'max:30'],
             'platform.escrow_hours'  => ['required', 'numeric', 'min:1', 'max:720'],
             'platform.support_email' => ['required', 'email'],
             'platform.support_phone' => ['nullable', 'string', 'max:30'],
+            'notifications.email_enabled' => ['nullable','boolean'],
+            'notifications.whatsapp_enabled' => ['nullable','boolean'],
+            'notifications.whatify_api_key' => ['nullable','string','max:255'],
+            'notifications.whatify_account_id' => ['nullable','integer','min:1'],
+            'mail.host' => ['nullable','string','max:120'], 'mail.port' => ['nullable','integer','min:1','max:65535'], 'mail.username' => ['nullable','string','max:160'], 'mail.password' => ['nullable','string','max:200'], 'mail.encryption' => ['nullable','in:tls,ssl,none'], 'mail.from_address' => ['nullable','email'], 'mail.from_name' => ['nullable','string','max:120'],
             'payments.razorpay.key_id'         => ['nullable', 'string', 'max:80'],
             'payments.razorpay.key_secret'     => ['nullable', 'string', 'max:200'],
             'payments.razorpay.webhook_secret' => ['nullable', 'string', 'max:200'],
@@ -103,6 +133,7 @@ class SettingController extends Controller
             Setting::put($key, $value, $isSecret);
         }
 
+        config(['mail.mailers.smtp.host'=>setting('mail.host',env('MAIL_HOST')), 'mail.mailers.smtp.port'=>(int) setting('mail.port',env('MAIL_PORT',587)), 'mail.mailers.smtp.username'=>setting('mail.username',env('MAIL_USERNAME')), 'mail.mailers.smtp.password'=>setting('mail.password',env('MAIL_PASSWORD')), 'mail.mailers.smtp.encryption'=>setting('mail.encryption',env('MAIL_ENCRYPTION','tls')), 'mail.from.address'=>setting('mail.from_address',env('MAIL_FROM_ADDRESS')), 'mail.from.name'=>setting('mail.from_name',env('MAIL_FROM_NAME','Quick GIGS'))]);
         return back()->with('toast', 'Settings saved.');
     }
 
@@ -124,6 +155,10 @@ class SettingController extends Controller
         $target = (string) $request->input('target');
 
         try {
+            if ($target === 'smtp') {
+                \Illuminate\Support\Facades\Mail::raw('Quick GIGS SMTP test — your mail settings are working.', function ($message) { $message->to(auth()->user()->email)->subject('Quick GIGS SMTP test'); });
+                return response()->json(['ok'=>true,'message'=>'SMTP test email sent to '.auth()->user()->email.'.']);
+            }
             if ($target === 'razorpay') {
                 $result = $razorpay->ping();
 
