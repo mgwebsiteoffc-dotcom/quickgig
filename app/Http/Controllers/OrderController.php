@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    public const PLATFORM_FEE = 0.10;
+    public const PLATFORM_FEE = 0.00;
+    public const GST_RATE = 0.18;
 
     /** Fee comes from the admin console; the constant is the fallback. */
     public static function feeRate(): float
@@ -48,9 +49,11 @@ class OrderController extends Controller
         $service = Service::with('creator')->findOrFail($data['service_id']);
         $company = $this->companyFor($request, $user);
 
-        $lane     = self::LANES[$data['lane']];
-        $subtotal = (int) round($service->price * $lane['mult']);
-        $fee      = (int) round($subtotal * self::feeRate());
+        $lane = self::LANES[$data['lane']];
+        $isMonthly = $service->billing_type === 'monthly' && $service->monthly_price;
+        $subtotal = $isMonthly ? (int) $service->monthly_price : (int) round($service->price * $lane['mult']);
+        $fee = (int) round($subtotal * self::feeRate());
+        $tax = (int) round($subtotal * ((float) setting('platform.gst_percent', 18) / 100));
 
         $creatorId = $service->creator_id ?: Creator::where('is_verified', true)
             ->where('is_available', true)->orderByDesc('rating')->value('id');
@@ -60,15 +63,17 @@ class OrderController extends Controller
             'creator_id'    => $creatorId,
             'service_id'    => $service->id,
             'brief'         => $data['brief'],
-            'turnaround'    => $lane['label'],
+            'turnaround'    => $isMonthly ? 'Monthly management' : $lane['label'],
             'subtotal'      => $subtotal,
-            'fee'           => $fee,
+'fee'          => $fee,
             'discount'      => 0,
-            'total'         => $subtotal,
+            'tax_amount'    => $tax,
+            'currency'      => 'INR',
+            'total'         => $subtotal + $fee + $tax,
             'status'        => 'working',
             'escrow_status' => 'held',
             'progress'      => 15,
-            'due_at'        => now()->addDays($lane['days']),
+            'due_at'        => now()->addDays($isMonthly ? 30 : $lane['days']),
         ]);
 
         $service->increment('sold_count');

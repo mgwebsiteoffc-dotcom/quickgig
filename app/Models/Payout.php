@@ -72,7 +72,7 @@ class Payout extends Model
             'order_id'     => $order->id,
             'gross'        => (int) $order->total,
             'fee'          => (int) $order->fee,
-            'amount'       => (int) ($order->total - $order->fee),
+            'amount'       => (int) ($order->total - $order->fee - ($order->tax_amount ?? 0)),
             'status'       => 'pending',
             'method'       => $order->creator?->upi_id ? 'upi' : 'manual',
             'destination'  => $order->creator?->upi_id,

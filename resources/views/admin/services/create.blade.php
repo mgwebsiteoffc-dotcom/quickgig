@@ -21,6 +21,10 @@
       <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Compare price (strikethrough)</label><input name="compare_price" type="number" min="0" step="1" value="{{ old('compare_price') }}" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
     </div>
 
+    <div class="grid sm:grid-cols-2 gap-4 p-4 rounded-2xl border border-blue-200 bg-blue-50">
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-blue-800">Billing model *</label><select name="billing_type" class="mt-1 w-full h-10 px-3 rounded-xl border border-blue-200 bg-white text-[13px] font-bold"><option value="one_time" @selected(old('billing_type','one_time')==='one_time')>One-time project</option><option value="monthly" @selected(old('billing_type')==='monthly')>Monthly management</option></select></div>
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-blue-800">Monthly price ₹ (if monthly)</label><input name="monthly_price" type="number" min="0" value="{{ old('monthly_price') }}" class="mt-1 w-full h-10 px-3 rounded-xl border border-blue-200 bg-white text-[13px]"></div>
+    </div>
     <div id="barter-box" class="hidden p-4 rounded-2xl border border-amber-200 bg-amber-50 space-y-3">
       <div class="font-black text-[13px]">Barter details</div>
       <div class="grid sm:grid-cols-2 gap-4">
@@ -38,6 +42,13 @@
 
     <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Description</label><textarea name="description" rows="2" placeholder="UGC video: unboxing + 3 UGC hooks + captions. Deliverable: 1×30s vertical mp4." class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">{{ old('description') }}</textarea></div>
     <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Deliverables — one per line (e.g. 1×30s Reel )</label><textarea name="deliverables" rows="2" placeholder="1×30s vertical mp4&#10;Captions burned in&#10;2 size variants" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">{{ old('deliverables') }}</textarea></div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Scope / what is included</label><textarea name="scope" rows="3" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]" placeholder="Define exactly what the client receives.">{{ old('scope') }}</textarea></div>
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Process / how it works</label><textarea name="process" rows="3" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]" placeholder="Kickoff → implementation → report.">{{ old('process') }}</textarea></div>
+    </div>
+    <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">SEO description (max 165 characters)</label><input name="seo_description" value="{{ old('seo_description') }}" maxlength="165" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
+    <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">AEO answer / short direct answer</label><textarea name="aeo_answer" rows="2" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]" placeholder="Answer the customer's main question in 1–3 sentences.">{{ old('aeo_answer') }}</textarea></div>
 
     <div class="grid sm:grid-cols-2 gap-4">
       <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Badge (e.g. Best seller, UGC)</label><input name="badge" value="{{ old('badge') }}" placeholder="UGC" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>

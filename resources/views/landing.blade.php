@@ -148,6 +148,45 @@
   </div>
 </section>
 
+{{-- ═══════════════ SERVICES FIRST SCROLL ═══════════════ --}}
+<section class="py-14 sm:py-18 border-y border-line bg-white">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">What do you need?</div>
+        <h2 class="mt-2 font-display text-[28px] sm:text-[36px] font-semibold leading-tight text-deep">Services starting from ₹999</h2>
+        <p class="mt-2 text-[14px] text-mut">Choose what you need, see the price and delivery time upfront.</p>
+      </div>
+      <a href="{{ route('marketplace') }}" class="h-10 px-4 rounded-xl bg-deep text-white inline-flex items-center text-[13px] font-semibold">View all services →</a>
+    </div>
+    <div class="mt-7 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+      @foreach($gigs as $i => $g)
+        <a href="{{ route('gigs.show', $g['id']) }}" class="glass rounded-2xl sm:rounded-3xl overflow-hidden card-hover group">
+          <div class="relative h-[118px] sm:h-[155px] overflow-hidden">
+            <img src="{{ $g['img'] }}" alt="{{ $g['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute left-2.5 top-2.5 text-[9px] sm:text-[10px] font-bold uppercase bg-deep/80 text-white rounded-full px-2 py-1">{{ $g['badge'] }}</span>
+          </div>
+          <div class="p-3 sm:p-4">
+            <div class="text-[13px] sm:text-[14px] font-semibold leading-snug line-clamp-2 min-h-[36px]">{{ $g['title'] }}</div>
+            <div class="mt-3 flex items-end justify-between gap-2">
+              <div>
+                <div class="font-display text-[16px] sm:text-[18px] font-semibold text-deep">{{ $g['price'] }}</div>
+                <div class="mt-1 text-[10px] sm:text-[11px] text-mut">{{ $g['rating'] ?? '4.8' }} ★ · verified pro</div>
+              </div>
+              <div class="text-[10px] sm:text-[11px] text-mut text-right">{{ $g['time'] }}<br><span class="text-mint-deep">escrow protected</span></div>
+            </div>
+          </div>
+        </a>
+      @endforeach
+    </div>
+    <div class="mt-5 flex gap-2 overflow-x-auto pb-1" aria-label="Popular service categories">
+      @foreach([['Video editing','Reel'],['Graphic design','Graphic Design'],['Performance marketing','Performance Marketing'],['Google Ads','Google Ads'],['Meta Ads','Meta Ads'],['AI automation','AI Automation'],['Shopify operations','Shopify Operations'],['UGC services','UGC Video']] as [$label,$category])
+        <a href="{{ route('marketplace', ['category' => $category]) }}" class="shrink-0 rounded-full border border-line bg-tint px-3.5 py-2 text-[12px] font-medium text-body hover:border-mint hover:bg-mint-wash transition">{{ $label }}</a>
+      @endforeach
+    </div>
+  </div>
+</section>
+
 {{-- ═══════════════ PROCESS GIF ═══════════════ --}}
 <section class="py-16 band-light">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
@@ -380,12 +419,12 @@
 
         <div class="mt-7 rounded-2xl border border-line bg-tint p-5">
           <div class="flex items-baseline justify-between">
-            <span class="text-[13px] text-mut">Gig total</span>
-            <span class="font-display text-[30px] font-semibold tracking-tight transition-all duration-300" x-text="'₹' + total.toLocaleString('en-IN')"></span>
+            <span class="text-[13px] text-mut">Your total</span>
+            <span class="font-display text-[30px] font-semibold tracking-tight transition-all duration-300" x-text="'₹' + buyerTotal.toLocaleString('en-IN')"></span>
           </div>
           <div class="mt-3 space-y-1.5 text-[12.5px] text-mut">
-            <div class="flex justify-between"><span>Freelancer receives (90%)</span><span class="font-mono text-body" x-text="'₹' + creatorCut.toLocaleString('en-IN')"></span></div>
-            <div class="flex justify-between"><span>Platform fee (10%)</span><span class="font-mono text-body" x-text="'₹' + fee.toLocaleString('en-IN')"></span></div>
+            <div class="flex justify-between"><span>Service amount</span><span class="font-mono text-body" x-text="'₹' + total.toLocaleString('en-IN')"></span></div>
+            <div class="flex justify-between"><span>GST (18%)</span><span class="font-mono text-body" x-text="'₹' + tax.toLocaleString('en-IN')"></span></div>
             <div class="flex justify-between"><span>Estimated delivery</span><span class="font-mono text-body" x-text="eta"></span></div>
           </div>
           <button type="button" x-on:click="run()" class="mt-5 w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">
@@ -489,31 +528,6 @@
       @endforeach
     </div>
 
-    {{-- gig cards --}}
-    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      @foreach($gigs as $i => $g)
-        <a href="{{ route('gigs.show', $g['id']) }}" class="reveal glass rounded-3xl overflow-hidden card-hover group" data-delay="{{ $i * 70 }}">
-          <div class="relative h-[150px] overflow-hidden">
-            <img src="{{ $g['img'] }}" alt="{{ $g['title'] }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-            <span class="absolute left-3 top-3 text-[10.5px] font-semibold tracking-wider uppercase bg-deep/80 text-white rounded-full px-2.5 py-1 backdrop-blur">{{ $g['badge'] }}</span>
-            <span class="absolute right-3 top-3 text-[11px] font-mono bg-white/90 text-deep rounded-full px-2.5 py-1">{{ $g['time'] }}</span>
-          </div>
-          <div class="p-4">
-            <div class="text-[14px] font-semibold leading-snug line-clamp-2 min-h-[38px] text-deep">{{ $g['title'] }}</div>
-            <div class="mt-3 flex items-end justify-between">
-              <div>
-                <div class="flex items-baseline gap-1.5">
-                  <span class="font-display text-[17px] font-semibold text-deep">{{ $g['price'] }}</span>
-                  @if(!empty($g['mrp']))<span class="text-[11.5px] line-through text-mut">{{ $g['mrp'] }}</span>@endif
-                </div>
-                @if(!empty($g['off']))<span class="mt-1 inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded badge-off">{{ $g['off'] }}% off</span>@endif
-              </div>
-              <span class="text-[11.5px] text-mut">{{ $g['rating'] }} ★ · {{ $g['sold'] }}</span>
-            </div>
-          </div>
-        </a>
-      @endforeach
-    </div>
   </div>
 </section>
 
@@ -564,14 +578,14 @@
 
   <div class="mt-9 marquee">
     @foreach(array_merge($gallery, $gallery) as $item)
-      <div class="relative w-[240px] h-[150px] rounded-2xl overflow-hidden shrink-0 group">
+      <a href="{{ $item['href'] ?? route('marketplace') }}" @if(!empty($item['href'])) target="_blank" rel="noopener" @endif class="relative w-[240px] h-[150px] rounded-2xl overflow-hidden shrink-0 group" aria-label="View {{ $item['label'] }}">
         <img src="{{ $item['img'] }}" alt="{{ $item['label'] }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
         <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent"></div>
         <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
           <span class="text-[12.5px] font-medium">{{ $item['label'] }}</span>
           <span class="text-[11px] font-mono bg-tint rounded-full px-2 py-0.5">{{ $item['meta'] }}</span>
         </div>
-      </div>
+      </a>
     @endforeach
   </div>
 </section>
@@ -620,66 +634,6 @@
         <div class="reveal rounded-3xl p-6 border border-line {{ $grad }}" data-delay="{{ $i * 80 }}">
           <div class="font-display text-[24px] font-semibold tracking-tight grad-text">{{ $stat }}</div>
           <p class="mt-2.5 text-[13.5px] leading-6 text-mut">{{ $body }}</p>
-        </div>
-      @endforeach
-    </div>
-  </div>
-</section>
-
-{{-- ═══════════════ PRICING (light) ═══════════════ --}}
-<section id="pricing" class="band-light py-24" x-data="{ mode:'gig' }">
-  <div class="max-w-shell mx-auto px-5 lg:px-8">
-    <div class="text-center max-w-[640px] mx-auto reveal">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Pricing</div>
-      <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1] text-deep">Flat prices. No bidding. No surprises.</h2>
-      <p class="mt-4 text-[15px] leading-7 text-mut">See the price before you order. Money sits in escrow until you approve the delivery.</p>
-
-      <div class="mt-8 inline-flex rounded-2xl p-1 bg-white shadow-sm border border-line">
-        <button x-on:click="mode='gig'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition-all duration-300" :class="mode==='gig' ? 'btn-grad text-white' : 'text-mut hover:text-deep'">Pay per gig</button>
-        <button x-on:click="mode='retainer'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition-all duration-300" :class="mode==='retainer' ? 'btn-grad text-white' : 'text-mut hover:text-deep'">Monthly retainer <span class="text-[11px] opacity-70">−20%</span></button>
-      </div>
-    </div>
-
-    <div class="mt-12 grid md:grid-cols-3 gap-5 items-start">
-      @foreach($plans as $i => $p)
-        <div class="reveal rounded-3xl p-7 card-hover relative {{ $p['featured'] ? 'glass-strong ring-glow-pink' : 'glass' }}" data-delay="{{ $i * 90 }}">
-          @if($p['featured'])
-            <span class="absolute -top-3 left-7 btn-grad text-white text-[10.5px] font-bold tracking-wider uppercase px-3 py-1 rounded-full shadow-lg">Most popular</span>
-          @endif
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">{{ $p['name'] }}</div>
-          <div class="mt-4 flex items-baseline gap-1.5">
-            <span class="font-display text-[38px] font-semibold tracking-tight text-deep"
-                  x-text="mode==='gig' ? '₹{{ number_format($p['price']) }}' : '₹{{ number_format($p['retainer']) }}'"></span>
-            <span class="text-[13px] text-mut" x-text="mode==='gig' ? '{{ $p['unit'] }}' : '/ month'"></span>
-          </div>
-          <p class="mt-2 text-[13.5px] text-mut">{{ $p['tagline'] }}</p>
-
-          <ul class="mt-6 space-y-3">
-            @foreach($p['features'] as $f)
-              <li class="flex gap-2.5 text-[13.5px] leading-5">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ $p['featured'] ? '#FF4D8D' : '#7C5CFF' }}" stroke-width="2.6" class="shrink-0 mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
-                <span class="text-body">{{ $f }}</span>
-              </li>
-            @endforeach
-          </ul>
-
-          <a href="{{ route('register') }}?type=business&plan={{ $p['slug'] }}"
-             class="mt-7 h-12 rounded-xl grid place-items-center font-semibold text-[14px] transition {{ $p['featured'] ? 'btn-grad shadow-lg shadow-ink/10' : 'bg-deep text-white hover:opacity-90' }}">
-            {{ $p['cta'] }}
-          </a>
-        </div>
-      @endforeach
-    </div>
-
-    <div class="mt-8 text-center">
-      <a href="{{ route('pricing') }}" class="text-[13.5px] text-mint-deep font-medium hover:underline">See the full pricing page, calculator and fee breakdown →</a>
-    </div>
-
-    <div class="mt-8 grid sm:grid-cols-3 gap-4">
-      @foreach($feeNotes as $i => $n)
-        <div class="reveal glass rounded-2xl p-5" data-delay="{{ $i * 70 }}">
-          <div class="text-[13.5px] font-semibold text-deep">{{ $n['title'] }}</div>
-          <div class="mt-1.5 text-[12.5px] leading-5 text-mut">{{ $n['body'] }}</div>
         </div>
       @endforeach
     </div>
@@ -780,7 +734,7 @@
             ['₹0', 'to join or list'],
             ['₹0', 'to receive gigs'],
             ['₹0', 'connects or bids'],
-            ['90%', 'yours on every gig'],
+            ['100%', 'yours on every gig'],
           ] as [$v, $l])
             <div>
               <div class="font-display text-[24px] font-semibold text-mint-deep">{{ $v }}</div>
@@ -790,7 +744,7 @@
         </div>
         <p class="mt-5 text-[13.5px] leading-6 text-body max-w-[620px]">
           There is no subscription, no monthly fee and nothing to buy before you can work. The only
-          charge is a flat 10% platform fee, taken from a gig you have already been paid for — and the
+          GST is added at checkout. Your quoted gig price is protected — and the
           payout lands the moment the client approves.
         </p>
       </div>
@@ -982,8 +936,10 @@ document.addEventListener('alpine:init', () => {
       const addons = this.cfg.addons.filter(a => this.addons.includes(a.id)).reduce((n, a) => n + a.price, 0);
       return Math.round((this.cat.base + addons) * this.spd.mult);
     },
-    get fee()        { return Math.round(this.total * 0.10); },
-    get creatorCut() { return this.total - this.fee; },
+    get fee()        { return 0; },
+    get tax()        { return Math.round(this.total * 0.18); },
+    get buyerTotal() { return this.total + this.tax; },
+    get creatorCut() { return this.total; },
     get eta()        { return this.spd.eta; },
     get clock()      { const m = String(Math.floor(this.seconds / 60)).padStart(2,'0'), s = String(this.seconds % 60).padStart(2,'0'); return m + ':' + s; },
     get workLabel()  { return this.work < 40 ? 'cutting timeline' : (this.work < 75 ? 'sound + captions' : 'final export'); },
@@ -991,7 +947,7 @@ document.addEventListener('alpine:init', () => {
       return [
         { key:'post',    title:'Brief posted',            detail:`${this.cat.label} · ${this.spd.label} · <span class="font-mono">₹${this.total.toLocaleString('en-IN')}</span>` },
         { key:'match',   title:'Matching engine',         detail:`Scanned ${this.cfg.pool.toLocaleString('en-IN')} verified pros · ranked by skill, speed, rating` },
-        { key:'escrow',  title:'Payment secured',         detail:`<span class="font-mono">₹${this.total.toLocaleString('en-IN')}</span> held in escrow — released only on your approval` },
+        { key:'escrow',  title:'Payment secured',         detail:`<span class="font-mono">₹${this.buyerTotal.toLocaleString('en-IN')}</span> held in escrow — released only on your approval` },
         { key:'work',    title:'Production in progress',  detail:'Live progress, chat and file previews inside your dashboard' },
         { key:'deliver', title:'Delivered for review',    detail:'2 free revisions included · 24h auto-approve window' },
         { key:'release', title:'Approved · escrow released', detail:`<span class="font-mono">₹${this.creatorCut.toLocaleString('en-IN')}</span> paid out instantly via UPI` },
