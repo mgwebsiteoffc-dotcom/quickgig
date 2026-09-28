@@ -36,11 +36,11 @@
     </div>
 
     @if($o->status !== 'delivered')
-      <form method="POST" action="{{ route('creator.deliver', $o->uid) }}" class="mt-5 glass rounded-3xl p-6 sm:p-7">
+      <form method="POST" enctype="multipart/form-data" action="{{ route('creator.deliver', $o->uid) }}" class="mt-5 glass rounded-3xl p-6 sm:p-7">
         @csrf
         <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Deliver this gig</div>
         <div class="mt-4 grid sm:grid-cols-[1fr_auto] gap-3">
-          <input name="delivery_url" type="url" required class="field" placeholder="https://drive.google.com/… delivery link">
+          <div><input name="delivery_url" type="url" class="field" placeholder="https://drive.google.com/… delivery link"><label class="block mt-2 text-xs text-mut">Or upload (PDF, ZIP, image, video; max 50 MB)<input name="delivery_file" type="file" class="field mt-1"></label></div>
           <button class="h-12 px-6 rounded-xl btn-grad font-semibold text-[14px]">Send for review</button>
         </div>
         <textarea name="note" rows="2" maxlength="500" class="field mt-3" placeholder="Optional note for the client…"></textarea>

@@ -14,10 +14,15 @@ class SettingController extends Controller
     private const FIELDS = [
         // platform
         'platform.fee_percent'            => false,
+        'platform.gst_percent'           => false,
         'platform.escrow_hours'           => false,
         'platform.support_email'          => false,
         'platform.support_phone'          => false,
         'platform.maintenance'            => false,
+        'notifications.email_enabled'  => false,
+        'notifications.whatsapp_enabled' => false,
+        'notifications.whatify_api_key' => true,
+        'notifications.whatify_account_id' => false,
         // payments
         'payments.razorpay.key_id'        => false,
         'payments.razorpay.key_secret'    => true,
@@ -37,11 +42,15 @@ class SettingController extends Controller
     {
         return view('admin.settings.index', [
             'values' => [
-                'platform.fee_percent'   => setting('platform.fee_percent', 10),
+                'platform.fee_percent'   => setting('platform.fee_percent', 0),
+                'platform.gst_percent'  => setting('platform.gst_percent', 18),
                 'platform.escrow_hours'  => setting('platform.escrow_hours', 48),
                 'platform.support_email' => setting('platform.support_email', 'support@quickgigs.in'),
                 'platform.support_phone' => setting('platform.support_phone', '+91 98765 43210'),
                 'platform.maintenance'   => (bool) setting('platform.maintenance', false),
+                'notifications.email_enabled' => (bool) setting('notifications.email_enabled', true),
+                'notifications.whatsapp_enabled' => (bool) setting('notifications.whatsapp_enabled', false),
+                'notifications.whatify_account_id' => setting('notifications.whatify_account_id', ''),
                 'payments.razorpay.key_id' => setting('payments.razorpay.key_id', ''),
                 'payments.razorpayx.account_number' => setting('payments.razorpayx.account_number', ''),
                 'ai.default_provider'    => setting('ai.default_provider', 'auto'),
@@ -55,6 +64,7 @@ class SettingController extends Controller
                 'ai.openrouter.key'                => Setting::masked('ai.openrouter.key'),
                 'ai.openai.key'                    => Setting::masked('ai.openai.key'),
                 'ai.gemini.key'                    => Setting::masked('ai.gemini.key'),
+                'notifications.whatify_api_key' => Setting::masked('notifications.whatify_api_key'),
             ],
             'ai'       => $ai->status(),
             'aiActive' => $ai->label(),
@@ -71,9 +81,14 @@ class SettingController extends Controller
     {
         $data = $request->validate([
             'platform.fee_percent'   => ['required', 'numeric', 'min:0', 'max:30'],
+            'platform.gst_percent'  => ['required', 'numeric', 'min:0', 'max:30'],
             'platform.escrow_hours'  => ['required', 'numeric', 'min:1', 'max:720'],
             'platform.support_email' => ['required', 'email'],
             'platform.support_phone' => ['nullable', 'string', 'max:30'],
+            'notifications.email_enabled' => ['nullable','boolean'],
+            'notifications.whatsapp_enabled' => ['nullable','boolean'],
+            'notifications.whatify_api_key' => ['nullable','string','max:255'],
+            'notifications.whatify_account_id' => ['nullable','integer','min:1'],
             'payments.razorpay.key_id'         => ['nullable', 'string', 'max:80'],
             'payments.razorpay.key_secret'     => ['nullable', 'string', 'max:200'],
             'payments.razorpay.webhook_secret' => ['nullable', 'string', 'max:200'],

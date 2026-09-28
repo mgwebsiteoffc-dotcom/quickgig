@@ -30,9 +30,13 @@
       <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Platform</div>
       <div class="mt-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <label class="block">
-          <span class="text-[12px] font-bold text-[#7A7A78]">Platform fee %</span>
+          <span class="text-[12px] font-bold text-[#7A7A78]">Platform fee % <span class="font-normal">(currently 0)</span></span>
           <input name="platform[fee_percent]" type="number" step="0.5" min="0" max="30" value="{{ $values['platform.fee_percent'] }}"
                  class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-semibold">
+        </label>
+        <label class="block">
+          <span class="text-[12px] font-bold text-[#7A7A78]">GST %</span>
+          <input name="platform[gst_percent]" type="number" step="0.5" min="0" max="30" value="{{ $values['platform.gst_percent'] }}" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-semibold">
         </label>
         <label class="block">
           <span class="text-[12px] font-bold text-[#7A7A78]">Escrow hold (hours)</span>
@@ -54,6 +58,21 @@
         <input type="checkbox" name="platform[maintenance]" value="1" @checked($values['platform.maintenance'])>
         Maintenance banner
       </label>
+    </div>
+
+    {{-- ── notifications ── --}}
+    <div class="bg-white border border-[#E8E8E6] rounded-2xl p-5">
+      <div class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Transaction notifications</div>
+      <p class="mt-1 text-[12px] text-[#7A7A78]">Email is the default. WhatsApp uses Whatify’s external API and stays off until enabled.</p>
+      <div class="mt-4 flex flex-wrap gap-5 text-[13px] font-semibold">
+        <label class="flex items-center gap-2"><input type="checkbox" name="notifications[email_enabled]" value="1" @checked($values['notifications.email_enabled'])> Email notifications</label>
+        <label class="flex items-center gap-2"><input type="checkbox" name="notifications[whatsapp_enabled]" value="1" @checked($values['notifications.whatsapp_enabled'])> WhatsApp notifications</label>
+      </div>
+      <div class="mt-4 grid sm:grid-cols-2 gap-4">
+        <label class="block"><span class="text-[12px] font-bold text-[#7A7A78]">Whatify API key</span><input name="notifications[whatify_api_key]" type="password" placeholder="{{ $masked['notifications.whatify_api_key'] ?: 'wfy_…' }}" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px] font-mono"></label>
+        <label class="block"><span class="text-[12px] font-bold text-[#7A7A78]">WhatsApp account ID</span><input name="notifications[whatify_account_id]" type="number" min="1" value="{{ $values['notifications.whatify_account_id'] }}" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></label>
+      </div>
+      <div class="mt-3 text-[11px] text-[#7A7A78]">Configure approved WhatsApp templates or text messaging in Whatify before enabling this.</div>
     </div>
 
     {{-- ── payments ── --}}

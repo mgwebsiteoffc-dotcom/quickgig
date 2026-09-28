@@ -182,7 +182,7 @@
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Payment</div>
           <div class="mt-4 space-y-2.5 text-[13.5px]">
             <div class="flex justify-between"><span class="text-mut">Gig total</span><span class="font-mono">₹{{ number_format($order->total) }}</span></div>
-            <div class="flex justify-between"><span class="text-mut">Platform fee</span><span class="font-mono">₹{{ number_format($order->fee) }}</span></div>
+            <div class="flex justify-between"><span class="text-mut">GST</span><span class="font-mono">₹{{ number_format($order->tax_amount ?? 0) }}</span></div>
             <div class="flex justify-between"><span class="text-mut">Freelancer payout</span><span class="font-mono text-mint-deep">₹{{ number_format($payout) }}</span></div>
             <div class="pt-3 mt-3 border-t border-line flex justify-between items-center">
               <span class="text-mut">Escrow</span>
