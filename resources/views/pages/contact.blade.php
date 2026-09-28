@@ -31,7 +31,7 @@
         <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Office</div>
         <div class="mt-2 text-[14px] leading-7 text-mut">
           Quick GIGS<br>
-          Ghaziabad, Uttar Pradesh, India<br>
+          Vinayak Tower, Vibhuti Khand, Lucknow 226028<br>
           Mon–Sat, 10:00–19:00 IST
         </div>
       </div>
