@@ -40,7 +40,7 @@
       @foreach([
         ['Active gigs', $stats['active'], 'assigned to you'],
         ['Pending escrow', '₹'.number_format($stats['pending']), 'releases on approval'],
-        ['Earned', '₹'.number_format($stats['earned']), 'after 10% fee'],
+        ['Earned', '₹'.number_format($stats['earned']), 'no platform fee'],
         ['Rating', $stats['rating'].' ★', ($creator->reviews_count ?: 0).' reviews'],
       ] as [$label, $value, $hint])
         <div class="glass rounded-3xl p-5">

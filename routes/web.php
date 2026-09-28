@@ -127,7 +127,7 @@ Route::middleware('auth')->group(function () {
 
 /* ── Public creator profile (numeric ids only so /creator/profile stays safe) ── */
 Route::get('/creators/{id}', function ($id) {
-    $c = \App\Models\Creator::with('portfolio')->findOrFail($id);
+    $c = \App\Models\Creator::with(['portfolio' => fn ($q) => $q->published()])->findOrFail($id);
     return view('creator.public', [
         'c'   => $c,
         'seo' => [
@@ -164,6 +164,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,ad
     Route::post('/creators/{id}/verify', [AdminCreator::class, 'toggleVerify'])->middleware('role:super_admin,admin,manager')->name('creators.verify');
     Route::post('/creators/{id}/availability', [AdminCreator::class, 'toggleAvailability'])->middleware('role:super_admin,admin,manager')->name('creators.availability');
     Route::post('/creators/{id}/featured', [AdminCreator::class, 'toggleFeatured'])->middleware('role:super_admin,admin')->name('creators.featured');
+    Route::post('/creators/{creator}/portfolio/{portfolio}/publish', [AdminCreator::class, 'togglePortfolio'])->middleware('role:super_admin,admin,manager')->name('creators.portfolio.publish');
+    Route::post('/creators/{creator}/portfolio/{portfolio}/feature', [AdminCreator::class, 'featurePortfolio'])->middleware('role:super_admin,admin')->name('creators.portfolio.feature');
+    Route::delete('/creators/{creator}/portfolio/{portfolio}', [AdminCreator::class, 'destroyPortfolio'])->middleware('role:super_admin,admin')->name('creators.portfolio.destroy');
     Route::post('/creators/{id}/profile-type', [AdminCreator::class, 'updateProfileType'])->middleware('role:super_admin,admin,manager')->name('creators.profileType');
     Route::delete('/creators/{id}', [AdminCreator::class, 'destroy'])->middleware('role:super_admin,admin')->name('creators.destroy');
 

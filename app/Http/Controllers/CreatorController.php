@@ -191,6 +191,7 @@ class CreatorController extends Controller
             'category'     => ['nullable', 'string', 'max:40'],
             'tags'         => ['nullable', 'string', 'max:200'],
             'cover'        => ['nullable', 'image', 'max:3072'],
+            'media_file'   => ['nullable', 'file', 'max:51200', 'mimes:mp4,mov,webm,pdf,zip,jpg,jpeg,png,webp'],
         ]);
 
         if (isset($data['tags'])) {
@@ -200,6 +201,11 @@ class CreatorController extends Controller
         if ($request->hasFile('cover')) {
             $data['cover'] = $this->storeUpload($request->file('cover'), 'portfolio');
         }
+        if ($request->hasFile('media_file')) {
+            $data['media_path'] = $this->storeUpload($request->file('media_file'), 'portfolio/media');
+            $data['media_type'] = $request->file('media_file')->getMimeType();
+        }
+        unset($data['media_file']);
 
         $data['creator_id'] = $creator->id;
         $data['slug'] = Str::slug($data['title']) . '-' . time();
