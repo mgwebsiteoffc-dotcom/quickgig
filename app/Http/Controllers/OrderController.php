@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 class OrderController extends Controller
 {
     public const PLATFORM_FEE = 0.10;
+    public const GST_RATE = 0.18;
 
     /** Fee comes from the admin console; the constant is the fallback. */
     public static function feeRate(): float
@@ -48,9 +49,12 @@ class OrderController extends Controller
         $service = Service::with('creator')->findOrFail($data['service_id']);
         $company = $this->companyFor($request, $user);
 
-        $lane     = self::LANES[$data['lane']];
-        $subtotal = (int) round($service->price * $lane['mult']);
-        $fee      = (int) round($subtotal * self::feeRate());
+        $lane = self::LANES[$data['lane']];
+        $isMonthly = $service->billing_type === 'monthly' && $service->monthly_price;
+        $subtotal = $isMonthly ? (int) $service->monthly_price : (int) round($service->price * $lane['mult']);
+        $fee = (int) round($subtotal * self::feeRate());
+        $customerSubtotal = $subtotal + $fee;
+        $tax = (int) round($customerSubtotal * ((float) setting('platform.gst_percent', 18) / 100));
 
         $creatorId = $service->creator_id ?: Creator::where('is_verified', true)
             ->where('is_available', true)->orderByDesc('rating')->value('id');
@@ -60,15 +64,17 @@ class OrderController extends Controller
             'creator_id'    => $creatorId,
             'service_id'    => $service->id,
             'brief'         => $data['brief'],
-            'turnaround'    => $lane['label'],
+            'turnaround'    => $isMonthly ? 'Monthly management' : $lane['label'],
             'subtotal'      => $subtotal,
-            'fee'           => $fee,
+'fee'          => $fee,
             'discount'      => 0,
-            'total'         => $subtotal,
+            'tax_amount'    => $tax,
+            'currency'      => 'INR',
+            'total'         => $customerSubtotal + $tax,
             'status'        => 'working',
             'escrow_status' => 'held',
             'progress'      => 15,
-            'due_at'        => now()->addDays($lane['days']),
+            'due_at'        => now()->addDays($isMonthly ? 30 : $lane['days']),
         ]);
 
         $service->increment('sold_count');
@@ -83,7 +89,7 @@ class OrderController extends Controller
                 $gateway->createOrder($order);
 
                 return redirect()->route('orders.show', $order->uid)
-                    ->with('toast', 'Gig booked — pay ₹' . number_format($subtotal) . ' to move it into escrow.');
+                    ->with('toast', 'Gig booked — pay ₹' . number_format($customerSubtotal + $tax) . ' to move it into escrow.');
             } catch (\Throwable $e) {
                 Log::warning('razorpay.order_failed', ['order' => $order->uid, 'message' => $e->getMessage()]);
             }
@@ -93,7 +99,7 @@ class OrderController extends Controller
         $order->forceFill(['payment_provider' => 'demo', 'payment_status' => 'paid', 'paid_at' => now()])->save();
 
         return redirect()->route('orders.show', $order->uid)
-            ->with('toast', 'Gig booked — ₹' . number_format($subtotal) . ' is held in escrow until you approve.');
+            ->with('toast', 'Gig booked — ₹' . number_format($customerSubtotal + $tax) . ' is held in escrow until you approve.');
     }
 
     public function show(Request $request, $order)
@@ -171,7 +177,7 @@ class OrderController extends Controller
             Notifier::toFreelancer($o->creator, new PayoutReleased($payout));
         }
 
-        $payout  = $o->total - $o->fee;
+        $payout  = $o->total - $o->fee - ($o->tax_amount ?? 0);
         $message = 'Approved — ₹' . number_format($payout) . ' released to the freelancer.';
 
         if ($request->expectsJson()) {

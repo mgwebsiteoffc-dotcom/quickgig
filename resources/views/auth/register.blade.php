@@ -12,7 +12,7 @@
       <p class="mt-2.5 text-[15px] text-mut">Takes about 30 seconds. No card required.</p>
 
       {{-- account type switch --}}
-      <div class="mt-7 grid grid-cols-2 gap-2.5">
+      <div class="mt-7 grid sm:grid-cols-3 gap-2.5">
         <button type="button" x-on:click="type='business'"
                 class="rounded-2xl p-4 text-left border transition"
                 :class="type==='business' ? 'border-mint bg-mint-wash' : 'border-line bg-tint hover:border-line'">
@@ -24,6 +24,12 @@
                 :class="type==='creator' ? 'border-mint bg-mint-wash' : 'border-line bg-tint hover:border-line'">
           <div class="text-[14px] font-semibold">I do the work</div>
           <div class="text-[12px] text-mut mt-0.5">Freelancer or creator</div>
+        </button>
+        <button type="button" x-on:click="type='agency'"
+                class="rounded-2xl p-4 text-left border transition"
+                :class="type==='agency' ? 'border-mint bg-mint-wash' : 'border-line bg-tint hover:border-line'">
+          <div class="text-[14px] font-semibold">We are a team</div>
+          <div class="text-[12px] text-mut mt-0.5">Agency or freelancer company</div>
         </button>
       </div>
 
@@ -46,9 +52,13 @@
             <label class="label" for="name">Full name</label>
             <input id="name" name="name" value="{{ old('name') }}" required class="field" placeholder="Rohan Sharma">
           </div>
-          <div x-show="type==='business'" x-cloak>
-            <label class="label" for="company_name">Company / brand</label>
+          <div x-show="type==='business' || type==='agency'" x-cloak>
+            <label class="label" for="company_name" x-text="type==='agency' ? 'Agency / team name' : 'Company / brand'"></label>
             <input id="company_name" name="company_name" value="{{ old('company_name') }}" class="field" placeholder="Avante Studio">
+          </div>
+          <div x-show="type==='agency'" x-cloak>
+            <label class="label" for="agency_name">Agency name</label>
+            <input id="agency_name" name="agency_name" value="{{ old('agency_name') }}" class="field" placeholder="Northstar Creative Co.">
           </div>
           <div x-show="type==='creator'" x-cloak>
             <label class="label" for="handle">Handle</label>
@@ -68,13 +78,23 @@
         </div>
 
         <div x-show="type==='creator'" x-cloak>
-          <label class="label">Your skills <span class="normal-case tracking-normal text-faint">pick up to 8 — you can change them later</span></label>
+          <label class="label">Your skills <span class="normal-case tracking-normal text-faint">pick up to 8 — type to search, then choose up to 8</span></label>
           @include('partials.skill-picker', [
             'selected' => old('skills', []),
             'groups'   => $skillGroups,
             'name'     => 'skills',
             'max'      => 8,
           ])
+        </div>
+
+        <div x-show="type==='agency'" x-cloak class="rounded-2xl border border-line bg-tint p-4 space-y-3">
+          <div class="text-[13px] font-semibold">Tell clients about your team</div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div><label class="label" for="team_size">Team size</label><input id="team_size" name="team_size" type="number" min="1" max="500" value="{{ old('team_size') }}" class="field" placeholder="5"></div>
+            <div><label class="label" for="team_services">Services</label><input id="team_services" name="team_services[]" value="{{ old('team_services.0') }}" class="field" placeholder="Video, design, ads"></div>
+          </div>
+          <label class="label" for="team_description">Team description</label><textarea id="team_description" name="team_description" rows="2" class="field" placeholder="Editors, designers and performance marketers working together.">{{ old('team_description') }}</textarea>
+          <div class="text-[11.5px] text-mut">Admin verifies the team and its work references before the profile is listed.</div>
         </div>
 
         <div class="grid sm:grid-cols-2 gap-4">
@@ -96,6 +116,7 @@
         <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">
           <span x-show="type==='business'">Create account & post a gig</span>
           <span x-show="type==='creator'" x-cloak>Create talent account</span>
+          <span x-show="type==='agency'" x-cloak>Join as an agency team</span>
         </button>
 
         <div class="text-center text-[13.5px] text-mut">
@@ -113,7 +134,7 @@
             ['Matched in minutes', 'Our engine ranks verified pros by skill, speed and rating — no bidding, no proposals.'],
             ['Escrow on every gig', 'Money is held safely and released only when you approve the delivery.'],
             ['Live production tracking', 'Watch progress, chat and preview files without chasing anyone.'],
-            ['Flat 10% platform fee', 'Freelancers keep 90%. No connects, no listing fees, no subscriptions.'],
+            ['No creator platform fee', 'Freelancers keep 100%. No connects, no listing fees, no subscriptions.'],
           ] as [$title, $body])
             <li class="flex gap-3.5">
               <span class="w-6 h-6 rounded-lg bg-mint-wash grid place-items-center shrink-0 mt-0.5">

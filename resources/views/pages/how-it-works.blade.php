@@ -90,7 +90,7 @@
           ['SLA or credit', 'Miss the promised window and the express premium is credited back automatically.'],
           ['Two free revisions', 'Included on every gig, translated into timestamped notes so they actually land.'],
           ['No lock-in', 'No subscription, no commitment fee, no minimum volume. Order one gig or two hundred.'],
-          ['Freelancers keep 90%', 'A flat 10% platform fee. No connects, no bidding credits, no listing charges.'],
+          ['Freelancers receive the agreed payout', 'No creator fee. No connects, no bidding credits, no listing charges.'],
           ['Your files, your rights', 'Full commercial rights transfer on approval, with licensed music and footage only.'],
         ] as $i => [$t, $b])
           <div class="reveal glass rounded-3xl p-6" style="transition-delay: {{ $i * 60 }}ms">
