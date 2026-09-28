@@ -343,6 +343,7 @@
           <textarea id="b_message" name="message" rows="3" class="field" placeholder="Weekly reels for two brands, plus thumbnails and a monthly AI ad.">{{ old('message') }}</textarea>
         </div>
 
+        @include('partials.lead-captcha')
         <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Book the demo</button>
         <div class="text-center text-[11.5px] text-mut">One reply from a human, within a working day.</div>
       </form>
