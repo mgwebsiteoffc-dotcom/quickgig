@@ -68,7 +68,7 @@
         </div>
 
         <div x-show="type==='creator'" x-cloak>
-          <label class="label">Your skills <span class="normal-case tracking-normal text-faint">pick up to 8 — you can change them later</span></label>
+          <label class="label">Your skills <span class="normal-case tracking-normal text-faint">pick up to 8 — type to search, then choose up to 8</span></label>
           @include('partials.skill-picker', [
             'selected' => old('skills', []),
             'groups'   => $skillGroups,

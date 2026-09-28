@@ -148,6 +148,37 @@
   </div>
 </section>
 
+{{-- ═══════════════ SERVICES FIRST SCROLL ═══════════════ --}}
+<section class="py-14 sm:py-18 border-y border-line bg-white">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">What do you need?</div>
+        <h2 class="mt-2 font-display text-[28px] sm:text-[36px] font-semibold leading-tight text-deep">Pick a service. See the price.</h2>
+        <p class="mt-2 text-[14px] text-mut">Ready-to-order services from verified specialists.</p>
+      </div>
+      <a href="{{ route('marketplace') }}" class="h-10 px-4 rounded-xl bg-deep text-white inline-flex items-center text-[13px] font-semibold">View all services →</a>
+    </div>
+    <div class="mt-7 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+      @foreach($gigs as $i => $g)
+        <a href="{{ route('gigs.show', $g['id']) }}" class="glass rounded-2xl sm:rounded-3xl overflow-hidden card-hover group">
+          <div class="relative h-[118px] sm:h-[155px] overflow-hidden">
+            <img src="{{ $g['img'] }}" alt="{{ $g['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute left-2.5 top-2.5 text-[9px] sm:text-[10px] font-bold uppercase bg-deep/80 text-white rounded-full px-2 py-1">{{ $g['badge'] }}</span>
+          </div>
+          <div class="p-3 sm:p-4">
+            <div class="text-[13px] sm:text-[14px] font-semibold leading-snug line-clamp-2 min-h-[36px]">{{ $g['title'] }}</div>
+            <div class="mt-3 flex items-end justify-between gap-2">
+              <div class="font-display text-[16px] sm:text-[18px] font-semibold text-deep">{{ $g['price'] }}</div>
+              <div class="text-[10px] sm:text-[11px] text-mut">{{ $g['time'] }}</div>
+            </div>
+          </div>
+        </a>
+      @endforeach
+    </div>
+  </div>
+</section>
+
 {{-- ═══════════════ PROCESS GIF ═══════════════ --}}
 <section class="py-16 band-light">
   <div class="max-w-shell mx-auto px-5 lg:px-8">
@@ -620,66 +651,6 @@
         <div class="reveal rounded-3xl p-6 border border-line {{ $grad }}" data-delay="{{ $i * 80 }}">
           <div class="font-display text-[24px] font-semibold tracking-tight grad-text">{{ $stat }}</div>
           <p class="mt-2.5 text-[13.5px] leading-6 text-mut">{{ $body }}</p>
-        </div>
-      @endforeach
-    </div>
-  </div>
-</section>
-
-{{-- ═══════════════ PRICING (light) ═══════════════ --}}
-<section id="pricing" class="band-light py-24" x-data="{ mode:'gig' }">
-  <div class="max-w-shell mx-auto px-5 lg:px-8">
-    <div class="text-center max-w-[640px] mx-auto reveal">
-      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Pricing</div>
-      <h2 class="mt-3 font-display text-[32px] sm:text-[40px] font-semibold leading-[1.1] text-deep">Flat prices. No bidding. No surprises.</h2>
-      <p class="mt-4 text-[15px] leading-7 text-mut">See the price before you order. Money sits in escrow until you approve the delivery.</p>
-
-      <div class="mt-8 inline-flex rounded-2xl p-1 bg-white shadow-sm border border-line">
-        <button x-on:click="mode='gig'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition-all duration-300" :class="mode==='gig' ? 'btn-grad text-white' : 'text-mut hover:text-deep'">Pay per gig</button>
-        <button x-on:click="mode='retainer'" class="h-10 px-5 rounded-xl text-[13.5px] font-medium transition-all duration-300" :class="mode==='retainer' ? 'btn-grad text-white' : 'text-mut hover:text-deep'">Monthly retainer <span class="text-[11px] opacity-70">−20%</span></button>
-      </div>
-    </div>
-
-    <div class="mt-12 grid md:grid-cols-3 gap-5 items-start">
-      @foreach($plans as $i => $p)
-        <div class="reveal rounded-3xl p-7 card-hover relative {{ $p['featured'] ? 'glass-strong ring-glow-pink' : 'glass' }}" data-delay="{{ $i * 90 }}">
-          @if($p['featured'])
-            <span class="absolute -top-3 left-7 btn-grad text-white text-[10.5px] font-bold tracking-wider uppercase px-3 py-1 rounded-full shadow-lg">Most popular</span>
-          @endif
-          <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">{{ $p['name'] }}</div>
-          <div class="mt-4 flex items-baseline gap-1.5">
-            <span class="font-display text-[38px] font-semibold tracking-tight text-deep"
-                  x-text="mode==='gig' ? '₹{{ number_format($p['price']) }}' : '₹{{ number_format($p['retainer']) }}'"></span>
-            <span class="text-[13px] text-mut" x-text="mode==='gig' ? '{{ $p['unit'] }}' : '/ month'"></span>
-          </div>
-          <p class="mt-2 text-[13.5px] text-mut">{{ $p['tagline'] }}</p>
-
-          <ul class="mt-6 space-y-3">
-            @foreach($p['features'] as $f)
-              <li class="flex gap-2.5 text-[13.5px] leading-5">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ $p['featured'] ? '#FF4D8D' : '#7C5CFF' }}" stroke-width="2.6" class="shrink-0 mt-0.5"><path d="M20 6 9 17l-5-5"/></svg>
-                <span class="text-body">{{ $f }}</span>
-              </li>
-            @endforeach
-          </ul>
-
-          <a href="{{ route('register') }}?type=business&plan={{ $p['slug'] }}"
-             class="mt-7 h-12 rounded-xl grid place-items-center font-semibold text-[14px] transition {{ $p['featured'] ? 'btn-grad shadow-lg shadow-ink/10' : 'bg-deep text-white hover:opacity-90' }}">
-            {{ $p['cta'] }}
-          </a>
-        </div>
-      @endforeach
-    </div>
-
-    <div class="mt-8 text-center">
-      <a href="{{ route('pricing') }}" class="text-[13.5px] text-mint-deep font-medium hover:underline">See the full pricing page, calculator and fee breakdown →</a>
-    </div>
-
-    <div class="mt-8 grid sm:grid-cols-3 gap-4">
-      @foreach($feeNotes as $i => $n)
-        <div class="reveal glass rounded-2xl p-5" data-delay="{{ $i * 70 }}">
-          <div class="text-[13.5px] font-semibold text-deep">{{ $n['title'] }}</div>
-          <div class="mt-1.5 text-[12.5px] leading-5 text-mut">{{ $n['body'] }}</div>
         </div>
       @endforeach
     </div>
