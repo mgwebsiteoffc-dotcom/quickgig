@@ -13,7 +13,7 @@ class Creator extends Model
         'upi_id','portfolio_url','instagram','youtube','seo_title','seo_description',
         // dynamic profile type & barter/UGC
         'profile_type','barter_available','barter_categories','ugc_niches','followers_count','collab_type',
-        'verification_notes','verified_at','rejection_reason'
+        'verification_notes','verified_at','rejection_reason','account_kind','agency_name','team_size','team_services','team_description'
     ];
 
     protected $casts = [
@@ -24,7 +24,7 @@ class Creator extends Model
         'is_featured'=>'boolean',
         'barter_available'=>'boolean',
         'barter_categories'=>'array',
-        'ugc_niches'=>'array',
+        'ugc_niches'=>'array','team_services'=>'array',
         'rating'=>'decimal:1',
         'verified_at'=>'datetime',
     ];
@@ -35,6 +35,7 @@ class Creator extends Model
         'influencer' => 'Influencer (Barter)',
         'designer' => 'Designer (Thumbnails)',
         'hybrid' => 'Hybrid (All)',
+        'agency' => 'Agency / Team',
     ];
 
     public function user(){ return $this->belongsTo(User::class); }

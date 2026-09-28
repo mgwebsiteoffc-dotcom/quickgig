@@ -1,0 +1,2 @@
+@extends('layouts.site')
+@section('content')<main class="max-w-xl mx-auto px-6 py-24"><div class="glass rounded-3xl p-8 text-center"><h1 class="text-2xl font-black">Verify your email</h1><p class="mt-3 text-mut">We sent a verification link to {{ auth()->user()->email }}. Verify it before posting or accepting work.</p><form method="POST" action="{{ route('verification.send') }}" class="mt-6">@csrf<button class="btn-grad rounded-xl px-5 py-3 font-semibold">Send another link</button></form></div></main>@endsection

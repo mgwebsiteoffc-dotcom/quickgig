@@ -31,7 +31,7 @@
         <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Office</div>
         <div class="mt-2 text-[14px] leading-7 text-mut">
           Quick GIGS<br>
-          Ghaziabad, Uttar Pradesh, India<br>
+          Vinayak Tower, Vibhuti Khand, Lucknow 226028<br>
           Mon–Sat, 10:00–19:00 IST
         </div>
       </div>
@@ -74,6 +74,7 @@
           <textarea id="c_message" name="message" rows="5" class="field" placeholder="Tell us what you are trying to get made, or what went wrong.">{{ old('message') }}</textarea>
         </div>
 
+        @include('partials.lead-captcha')
         <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Send message</button>
         <div class="text-center text-[11.5px] text-mut">We reply within one working day. No newsletter, no sequence.</div>
       </form>
