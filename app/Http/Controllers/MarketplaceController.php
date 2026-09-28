@@ -86,7 +86,7 @@ class MarketplaceController extends Controller
 
     public function show(Request $request, $id)
     {
-        $gig = Service::with(['creator.portfolio'])->findOrFail($id);
+        $gig = Service::with(['creator.portfolio' => fn ($q) => $q->published()])->findOrFail($id);
 
         $related = Service::with('creator')
             ->where('is_active', true)
@@ -106,10 +106,11 @@ class MarketplaceController extends Controller
 
         return view('marketplace.show', [
             'gig'     => $gig,
+            'service' => $gig,
             'related' => $related,
             'seo'     => [
-                'title'       => $gig->title . ' — ' . $gig->displayPrice() . ' | Quick GIGS',
-                'description' => \Illuminate\Support\Str::limit(strip_tags($gig->description ?: $gig->title), 150),
+                'title'       => $gig->seoTitle(),
+                'description' => $gig->seoDescription(),
                 'canonical'   => route('gigs.show', $gig->id),
                 'image'       => $gig->coverUrl(),
             ],
