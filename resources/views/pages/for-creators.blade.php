@@ -12,7 +12,7 @@
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[540px]">
         Editors, designers, writers, developers, voice artists, UGC creators — no proposals, no connects,
         no racing to the bottom. Gigs arrive with a full brief attached, the money is already in escrow,
-        and you keep 90% of it.
+        and you keep 100% of it.
       </p>
 
       <div class="mt-8 flex flex-wrap gap-3">
@@ -29,7 +29,7 @@
       </div>
 
       <div class="mt-7 flex flex-wrap gap-x-8 gap-y-4">
-        @foreach([['90%', 'you keep'], ['₹0', 'to bid or list'], ['Instant', 'payout on approval']] as [$v, $l])
+        @foreach([['100%', 'you keep'], ['₹0', 'to bid or list'], ['Instant', 'payout on approval']] as [$v, $l])
           <div>
             <div class="font-display text-[24px] font-semibold tracking-tight">{{ $v }}</div>
             <div class="text-[12px] text-mut mt-0.5">{{ $l }}</div>
@@ -116,11 +116,11 @@
         <div class="glass-strong rounded-3xl p-7 ring-glow">
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Monthly take-home</div>
           <div class="mt-2 font-display text-[44px] font-semibold tracking-tight" x-text="'₹' + takeHome.toLocaleString('en-IN')"></div>
-          <div class="mt-1 text-[13px] text-mut"><span x-text="perMonth"></span> gigs · after the 10% platform fee</div>
+          <div class="mt-1 text-[13px] text-mut"><span x-text="perMonth"></span> gigs · with no platform fee</div>
 
           <div class="mt-6 space-y-2.5 text-[13px]">
             <div class="flex justify-between"><span class="text-mut">Gross billed</span><span class="font-mono" x-text="'₹' + gross.toLocaleString('en-IN')"></span></div>
-            <div class="flex justify-between"><span class="text-mut">Platform fee (10%)</span><span class="font-mono">−<span x-text="'₹' + fee.toLocaleString('en-IN')"></span></span></div>
+            <div class="flex justify-between"><span class="text-mut">Quick GIGS creator fee</span><span class="font-mono text-mint-deep">₹0</span></div>
             <div class="flex justify-between"><span class="text-mut">Bidding / connect fees</span><span class="font-mono text-mint-deep">₹0</span></div>
           </div>
         </div>
@@ -221,7 +221,7 @@ document.addEventListener('alpine:init', () => {
     get perMonth() { return Math.round(this.perWeek * 4.3); },
     get gross()    { return Math.round(this.perMonth * this.price * (this.express ? 1.6 : 1)); },
     get fee()      { return Math.round(this.gross * 0.10); },
-    get takeHome() { return this.gross - this.fee; },
+    get takeHome() { return this.gross; },
     get elsewhere(){ return Math.round(this.gross * 0.80); },
   }));
 });

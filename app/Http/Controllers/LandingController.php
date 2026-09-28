@@ -192,7 +192,7 @@ class LandingController extends Controller
         ];
 
         $feeNotes = [
-            ['title' => '10% platform fee', 'body' => 'Freelancers keep 90% of every gig. No connects, no bidding credits, no listing fees.'],
+            ['title' => '10% platform fee', 'body' => 'Freelancers keep 100% of every gig. No connects, no bidding credits, no listing fees.'],
             ['title' => 'Escrow by default', 'body' => 'Funds are held the moment you order and released to the freelancer only after you approve.'],
             ['title' => 'Free to post',      'body' => 'Posting briefs, browsing freelancers and getting matched costs nothing.'],
         ];
@@ -250,7 +250,7 @@ class LandingController extends Controller
             (object) ['question' => 'How fast is delivery, really?', 'answer' => 'Express gigs start in minutes and land in about three hours. Standard reels and thumbnails are next-day. Team packs and AI ads take up to two days.'],
             (object) ['question' => 'What if I do not like the work?', 'answer' => 'Every gig includes two free revisions. If the delivery still misses the brief, raise a dispute before you approve and the escrow is refunded.'],
             (object) ['question' => 'How are freelancers verified?', 'answer' => 'Every freelancer submits ID, portfolio and past client references. Our team reviews each profile manually and tracks on-time delivery, rating and response time after that.'],
-            (object) ['question' => 'What does it cost?', 'answer' => 'Gigs start at ₹1,299. The platform fee is a flat 10% — freelancers keep 90%. Posting briefs and browsing freelancers is free.'],
+            (object) ['question' => 'What does it cost?', 'answer' => 'Gigs start at ₹1,299. The platform fee is a flat 10% — freelancers keep 100%. Posting briefs and browsing freelancers is free.'],
             (object) ['question' => 'How do freelancers get paid?', 'answer' => 'The moment you approve a delivery, the escrow is released and paid out to the freelancer’s UPI or bank account, usually within minutes.'],
         ]);
     }

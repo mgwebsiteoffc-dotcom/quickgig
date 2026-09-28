@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-@include('components.seo', ['seo' => $seo ?? [], 'faqs' => $faqs ?? null, 'blog' => $blog ?? null, 'breadcrumbs' => $breadcrumbs ?? null])
+@include('components.seo', ['seo' => $seo ?? [], 'faqs' => $faqs ?? null, 'blog' => $blog ?? null, 'service' => $service ?? null, 'breadcrumbs' => $breadcrumbs ?? null])
 <script src="https://cdn.tailwindcss.com"></script>
 {{-- Alpine plugins must load before the core, or their directives are missing at init --}}
 <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
