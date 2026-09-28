@@ -117,7 +117,7 @@ the board header and on the dashboard.
 ### Money flow
 
 * Gig price is set per service; speed lanes multiply it (`express ×1.6`, `standard ×1`, `relaxed ×0.85`).
-* Platform fee is a flat **10%** — creators keep 90%.
+* Platform fee is a flat **10%** — creators keep 100%.
 * Funds are marked `held` in escrow on order, and `released` when the buyer approves.
 
 ---

@@ -12,7 +12,7 @@ class ServiceController extends Controller
 {
     private function categories()
     {
-        return ['Reel','Thumbnail','AI Video','UGC Video','Barter Collab','Bundle'];
+        return ['Reel','Thumbnail','AI Video','UGC Video','Graphic Design','Performance Marketing','Google Ads','Meta Ads','AI Automation','WhatsApp Automation','Shopify Operations','Barter Collab','Bundle'];
     }
 
     public function index(Request $request)
@@ -66,7 +66,7 @@ class ServiceController extends Controller
             'title'=>'required|string|max:140',
             'slug'=>'nullable|string|max:160|unique:services,slug',
             'description'=>'nullable|string|max:2000',
-            'category'=>'required|in:Reel,Thumbnail,AI Video,UGC Video,Barter Collab,Bundle',
+            'category'=>'required|in:Reel,Thumbnail,AI Video,UGC Video,Graphic Design,Performance Marketing,Google Ads,Meta Ads,AI Automation,WhatsApp Automation,Shopify Operations,Barter Collab,Bundle',
             'profile_type'=>'required|in:video_editor,ugc_creator,influencer,designer,hybrid,any',
             'price_type'=>'required|in:paid,barter,hybrid',
             'price'=>'required_if:price_type,paid,hybrid|nullable|numeric|min:0|max:100000',
@@ -75,13 +75,22 @@ class ServiceController extends Controller
             'delivery_days'=>'required|integer|min:1|max:30',
             'deliverables'=>'nullable|string|max:500',
             'revision_count'=>'nullable|integer|min:0|max:10',
+            'billing_type'=>'required|in:one_time,monthly',
+            'monthly_price'=>'nullable|integer|min:0|max:1000000',
+            'scope'=>'nullable|string|max:3000',
+            'process'=>'nullable|string|max:3000',
+            'faq_json'=>'nullable|string',
+            'seo_title'=>'nullable|string|max:70',
+            'seo_description'=>'nullable|string|max:165',
+            'aeo_answer'=>'nullable|string|max:1500',
             'collab_terms'=>'nullable|string|max:500',
             'badge'=>'nullable|string|max:20',
             'cover'=>'nullable|image|max:3072',
         ]);
 
         if (empty($data['slug'])) $data['slug'] = Str::slug($data['title']);
-        if (isset($data['deliverables'])) $data['deliverables'] = array_values(array_filter(array_map('trim', explode(',', $data['deliverables']))));
+        if (isset($data['deliverables'])) $data['deliverables'] = array_values(array_filter(array_map('trim', preg_split('/[\r\n,]+/', $data['deliverables']))));
+        if (!empty($data['faq_json'])) { $decoded=json_decode($data['faq_json'], true); $data['faq_json']=is_array($decoded)?$decoded:null; } else { $data['faq_json']=null; }
         $data['is_active'] = $request->boolean('is_active', true);
         $data['is_barter'] = $data['price_type']==='barter';
         if ($data['price_type']==='barter') $data['price']=0;
@@ -111,7 +120,7 @@ class ServiceController extends Controller
             'title'=>'required|string|max:140',
             'slug'=>'required|string|max:160|unique:services,slug,'.$service->id,
             'description'=>'nullable|string|max:2000',
-            'category'=>'required|in:Reel,Thumbnail,AI Video,UGC Video,Barter Collab,Bundle',
+            'category'=>'required|in:Reel,Thumbnail,AI Video,UGC Video,Graphic Design,Performance Marketing,Google Ads,Meta Ads,AI Automation,WhatsApp Automation,Shopify Operations,Barter Collab,Bundle',
             'profile_type'=>'required|in:video_editor,ugc_creator,influencer,designer,hybrid,any',
             'price_type'=>'required|in:paid,barter,hybrid',
             'price'=>'nullable|numeric|min:0|max:100000',
@@ -120,12 +129,21 @@ class ServiceController extends Controller
             'delivery_days'=>'required|integer|min:1|max:30',
             'deliverables'=>'nullable|string|max:500',
             'revision_count'=>'nullable|integer|min:0|max:10',
+            'billing_type'=>'required|in:one_time,monthly',
+            'monthly_price'=>'nullable|integer|min:0|max:1000000',
+            'scope'=>'nullable|string|max:3000',
+            'process'=>'nullable|string|max:3000',
+            'faq_json'=>'nullable|string',
+            'seo_title'=>'nullable|string|max:70',
+            'seo_description'=>'nullable|string|max:165',
+            'aeo_answer'=>'nullable|string|max:1500',
             'collab_terms'=>'nullable|string|max:500',
             'badge'=>'nullable|string|max:20',
             'cover'=>'nullable|image|max:3072',
             'is_active'=>'nullable|boolean',
         ]);
-        if (isset($data['deliverables'])) $data['deliverables'] = array_values(array_filter(array_map('trim', explode(',', $data['deliverables']))));
+        if (isset($data['deliverables'])) $data['deliverables'] = array_values(array_filter(array_map('trim', preg_split('/[\r\n,]+/', $data['deliverables']))));
+        if (!empty($data['faq_json'])) { $decoded=json_decode($data['faq_json'], true); $data['faq_json']=is_array($decoded)?$decoded:null; } else { $data['faq_json']=null; }
         $data['is_active'] = $request->boolean('is_active');
         $data['is_barter'] = $data['price_type']==='barter';
         if ($data['price_type']==='barter') $data['price']=0;

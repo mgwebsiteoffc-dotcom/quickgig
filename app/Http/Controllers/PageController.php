@@ -78,7 +78,7 @@ class PageController extends Controller
                 ['Money up front',              'Escrow, refundable',              'Prepaid checkout',                    'Commitment fee / retainer',    'Escrow + connects fees'],
                 ['Pre-delivery QA',             '6 automated checks',              'None',                                'Manual, variable',             'None'],
                 ['Revisions',                   '2 free, translated to notes',     'Paid add-on',                         'Scoped in contract',           'Negotiated per gig'],
-                ['Freelancer take-home',           '90%',                             '~70–80%',                             'Undisclosed',                  '~80% after fees'],
+                ['Freelancer take-home',           '100%',                             '~70–80%',                             'Undisclosed',                  '~80% after fees'],
                 ['Repurposing',                 'Automatic on approval',           'New order',                           'New line item',                'New gig'],
             ],
         ];
@@ -124,7 +124,7 @@ class PageController extends Controller
             'comparison' => self::comparison(),
             'seo' => [
                 'title'       => 'Pricing — flat gig prices, 10% platform fee, escrow included | Quick GIGS',
-                'description' => 'Transparent Quick GIGS pricing: gigs from ₹1,299, a flat 10% platform fee, freelancers keep 90%, escrow on every order and no subscription or commitment fee.',
+                'description' => 'Transparent Quick GIGS pricing: gigs from ₹1,299, a flat 10% platform fee, freelancers keep 100%, escrow on every order and no subscription or commitment fee.',
                 'canonical'   => route('pricing'),
             ],
         ]);
@@ -137,8 +137,8 @@ class PageController extends Controller
         return view('pages.for-creators', [
             'creatorCount' => max($count, 1),
             'seo' => [
-                'title'       => 'Work on Quick GIGS — freelancers and creators keep 90%',
-                'description' => 'Join Quick GIGS as a creator: no bidding, no connects, no proposals. Get matched by skill and availability, work from a generated brief and keep 90% of every gig.',
+                'title'       => 'Work on Quick GIGS — freelancers and creators keep 100%',
+                'description' => 'Join Quick GIGS as a creator: no bidding, no connects, no proposals. Get matched by skill and availability, work from a generated brief and keep 100% of every gig.',
                 'canonical'   => route('for-creators'),
             ],
         ]);

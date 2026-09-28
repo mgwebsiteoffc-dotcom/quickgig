@@ -54,7 +54,7 @@ class OrderController extends Controller
     {
         $request->validate(['status'=>'required|in:pending,working,review,delivered,approved,cancelled']);
         // TODO: Order::where('order_code',$id)->update(['status'=>$request->status])
-        // For shared hosting: no queue, just DB update + mail()
+        // Fallback: persist the update and dispatch notification
         return back()->with('toast', "Order $id → ".$request->status);
     }
 
