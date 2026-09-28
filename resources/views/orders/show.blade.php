@@ -12,7 +12,7 @@
   $progress = (int) $order->progress;
   $released = $order->escrow_status === 'released';
   $current  = $released ? 4 : ($order->status === 'review' ? 3 : ($progress >= 40 ? 2 : 1));
-  $payout   = $order->total - $order->fee;
+  $payout   = $order->total - $order->fee - ($order->tax_amount ?? 0);
   $thread   = session('thread.' . $order->uid, []);
 @endphp
 
@@ -182,7 +182,8 @@
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Payment</div>
           <div class="mt-4 space-y-2.5 text-[13.5px]">
             <div class="flex justify-between"><span class="text-mut">Gig total</span><span class="font-mono">₹{{ number_format($order->total) }}</span></div>
-            <div class="flex justify-between"><span class="text-mut">Platform fee</span><span class="font-mono">₹{{ number_format($order->fee) }}</span></div>
+            <div class="flex justify-between"><span class="text-mut">GST</span><span class="font-mono">₹{{ number_format($order->tax_amount ?? 0) }}</span></div>
+            <div class="pt-3"><a href="{{ route('orders.invoice', [$order->id, 'buyer']) }}" target="_blank" class="text-mint-deep font-semibold">View invoice / save as PDF →</a></div>
             <div class="flex justify-between"><span class="text-mut">Freelancer payout</span><span class="font-mono text-mint-deep">₹{{ number_format($payout) }}</span></div>
             <div class="pt-3 mt-3 border-t border-line flex justify-between items-center">
               <span class="text-mut">Escrow</span>

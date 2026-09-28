@@ -51,12 +51,25 @@ $orgJsonLd = [
   'url'=>url('/'),
   'logo'=>url('/logo.png'),
   'description'=>$desc,
-  'foundingLocation'=>['@type'=>'Place','address'=>['@type'=>'PostalAddress','addressLocality'=>'Ghaziabad','addressRegion'=>'Uttar Pradesh','addressCountry'=>'IN']],
+  'foundingLocation'=>['@type'=>'Place','address'=>['@type'=>'PostalAddress','streetAddress'=>'Vinayak Tower, Vibhuti Khand','postalCode'=>'226028','addressLocality'=>'Lucknow','addressRegion'=>'Uttar Pradesh','addressCountry'=>'IN']],
   'sameAs'=>['https://www.linkedin.com/company/quickgigs','https://x.com/quickgigs'],
   'contactPoint'=>['@type'=>'ContactPoint','telephone'=>'+91-98765-43210','contactType'=>'customer support','areaServed'=>'IN','availableLanguage'=>['en','hi']],
 ];
 @endphp
 <script type="application/ld+json">{!! json_encode($orgJsonLd, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
+
+{{-- Service JSON-LD for marketplace detail pages --}}
+@if(!empty($service))
+@php
+$serviceLd = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$service->title,'description'=>$service->seoDescription(),'serviceType'=>$service->category,'provider'=>['@type'=>'Organization','name'=>'Quick GIGS'],'areaServed'=>'IN','url'=>url('/gigs/'.$service->id),'offers'=>['@type'=>'Offer','priceCurrency'=>'INR','price'=>(string) (($service->billing_type === 'monthly' && $service->monthly_price) ? $service->monthly_price : $service->price),'url'=>url('/gigs/'.$service->id),'availability'=>'https://schema.org/InStock']];
+if ($service->billing_type === 'monthly') $serviceLd['offers']['priceSpecification']=['@type'=>'UnitPriceSpecification','priceCurrency'=>'INR','price'=>(string)$service->monthly_price,'unitCode'=>'MON'];
+@endphp
+<script type="application/ld+json">{!! json_encode($serviceLd, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
+@endif
+
+@if(!empty($service) && is_array($service->faq_json) && count($service->faq_json))
+<script type="application/ld+json">{!! json_encode(['@context'=>'https://schema.org','@type'=>'FAQPage','mainEntity'=>collect($service->faq_json)->map(fn($f)=>['@type'=>'Question','name'=>$f['q'] ?? '','acceptedAnswer'=>['@type'=>'Answer','text'=>strip_tags($f['a'] ?? '')]])->values()->all()], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
+@endif
 
 {{-- Breadcrumbs JSON-LD if provided --}}
 @if(!empty($breadcrumbs))

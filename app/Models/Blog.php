@@ -10,7 +10,7 @@ class Blog extends Model
     protected $fillable = [
         'author_id','category_id','title','slug','excerpt','content','cover','cover_alt',
         'tags','meta_title','meta_description','og_image','canonical_url',
-        'is_published','is_featured','published_at','views','reading_minutes','faq_json'
+        'is_published','is_featured','published_at','publish_at','views','reading_minutes','faq_json'
     ];
 
     protected $casts = [
