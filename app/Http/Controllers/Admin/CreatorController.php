@@ -85,10 +85,15 @@ class CreatorController extends Controller
 
     public function updateProfileType(Request $request, string $id)
     {
-        $request->validate(['profile_type'=>'required|in:video_editor,ugc_creator,influencer,designer,hybrid']);
+        $request->validate(['profile_type'=>'required|in:video_editor,ugc_creator,influencer,designer,hybrid,agency','agency_name'=>'nullable|string|max:120','team_size'=>'nullable|integer|min:1|max:500','team_description'=>'nullable|string|max:1000','team_services'=>'nullable|string|max:500']);
         $creator = Creator::findOrFail($id);
         $creator->update([
             'profile_type'=>$request->profile_type,
+            'account_kind'=>$request->profile_type === 'agency' ? 'agency' : 'individual',
+            'agency_name'=>$request->input('agency_name'),
+            'team_size'=>$request->input('team_size'),
+            'team_services'=>array_values(array_filter(array_map('trim', explode(',', (string) $request->input('team_services'))))),
+            'team_description'=>$request->input('team_description'),
             'barter_available'=>$request->boolean('barter_available'),
             'collab_type'=>$request->input('collab_type','paid'),
         ]);
@@ -107,6 +112,26 @@ class CreatorController extends Controller
         $c = Creator::findOrFail($id);
         $c->update(['is_featured'=>!$c->is_featured]);
         return back()->with('toast',$c->name.' featured '.($c->is_featured?'enabled':'disabled'));
+    }
+
+    public function togglePortfolio(string $creator, string $portfolio)
+    {
+        $item = \App\Models\PortfolioItem::where('creator_id', $creator)->findOrFail($portfolio);
+        $item->update(['is_published' => ! $item->is_published]);
+        return back()->with('toast', 'Work reference '.($item->is_published ? 'published' : 'hidden').' from the marketplace.');
+    }
+
+    public function featurePortfolio(string $creator, string $portfolio)
+    {
+        $item = \App\Models\PortfolioItem::where('creator_id', $creator)->findOrFail($portfolio);
+        $item->update(['is_featured' => ! $item->is_featured]);
+        return back()->with('toast', 'Work reference '.($item->is_featured ? 'featured' : 'unfeatured').'.');
+    }
+
+    public function destroyPortfolio(string $creator, string $portfolio)
+    {
+        \App\Models\PortfolioItem::where('creator_id', $creator)->findOrFail($portfolio)->delete();
+        return back()->with('toast', 'Work reference deleted.');
     }
 
     public function destroy(string $id)
