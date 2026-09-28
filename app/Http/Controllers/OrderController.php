@@ -48,9 +48,10 @@ class OrderController extends Controller
         $service = Service::with('creator')->findOrFail($data['service_id']);
         $company = $this->companyFor($request, $user);
 
-        $lane     = self::LANES[$data['lane']];
-        $subtotal = (int) round($service->price * $lane['mult']);
-        $fee      = (int) round($subtotal * self::feeRate());
+        $lane = self::LANES[$data['lane']];
+        $isMonthly = $service->billing_type === 'monthly' && $service->monthly_price;
+        $subtotal = $isMonthly ? (int) $service->monthly_price : (int) round($service->price * $lane['mult']);
+        $fee = (int) round($subtotal * self::feeRate());
 
         $creatorId = $service->creator_id ?: Creator::where('is_verified', true)
             ->where('is_available', true)->orderByDesc('rating')->value('id');
@@ -60,7 +61,7 @@ class OrderController extends Controller
             'creator_id'    => $creatorId,
             'service_id'    => $service->id,
             'brief'         => $data['brief'],
-            'turnaround'    => $lane['label'],
+            'turnaround'    => $isMonthly ? 'Monthly management' : $lane['label'],
             'subtotal'      => $subtotal,
             'fee'           => $fee,
             'discount'      => 0,
@@ -68,7 +69,7 @@ class OrderController extends Controller
             'status'        => 'working',
             'escrow_status' => 'held',
             'progress'      => 15,
-            'due_at'        => now()->addDays($lane['days']),
+            'due_at'        => now()->addDays($isMonthly ? 30 : $lane['days']),
         ]);
 
         $service->increment('sold_count');
