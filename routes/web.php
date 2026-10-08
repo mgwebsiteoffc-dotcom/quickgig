@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\BriefBuilderController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CreatorController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SitemapController;
@@ -24,10 +26,11 @@ use App\Http\Controllers\Admin\SettingController as AdminSetting;
 use App\Http\Controllers\Admin\BlogController as AdminBlog;
 use App\Http\Controllers\Admin\FaqController as AdminFaq;
 use App\Http\Controllers\Admin\SkillController as AdminSkill;
+use App\Http\Controllers\Admin\AuditLogController as AdminAudit;
 
 /*
 |--------------------------------------------------------------------------
-| Quick GIGS — marketplace routes
+| GIG60 — marketplace routes
 |--------------------------------------------------------------------------
 */
 
@@ -39,7 +42,8 @@ Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
-Route::get('/gigs/{id}', [MarketplaceController::class, 'show'])->whereNumber('id')->name('gigs.show');
+Route::get('/services', [MarketplaceController::class, 'index'])->name('services');
+Route::get('/gigs/{id}', [MarketplaceController::class, 'show'])->name('gigs.show');
 Route::get('/services/{id}', fn ($id) => redirect()->route('gigs.show', $id))->whereNumber('id')->name('services.show');
 
 /* ── Product & company pages ── */
@@ -72,6 +76,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', fn () => view('auth.verify-email'))->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) { $request->fulfill(); return redirect()->route('business.home')->with('toast','Email verified.'); })->middleware('signed')->name('verification.verify');
+    Route::post('/email/verification-notification', function (\Illuminate\Http\Request $request) { $request->user()->sendEmailVerificationNotification(); return back()->with('toast','Verification link sent.'); })->middleware('throttle:6,1')->name('verification.send');
+});
 
 // Legacy onboarding links now point at the single sign-up flow.
 Route::get('/onboarding/business', fn () => redirect()->route('register', ['type' => 'business']))->name('onboarding.business');
@@ -102,6 +111,7 @@ Route::middleware('auth')->group(function () {
     /* ── Orders ── */
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/invoice/{audience}', [InvoiceController::class, 'show'])->whereIn('audience', ['buyer','creator'])->name('orders.invoice');
     Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
     Route::post('/orders/{order}/simulate', [OrderController::class, 'simulate'])->name('orders.simulate');
     Route::post('/orders/{order}/message', [OrderController::class, 'message'])->name('orders.message');
@@ -120,12 +130,12 @@ Route::middleware('auth')->group(function () {
 
 /* ── Public creator profile (numeric ids only so /creator/profile stays safe) ── */
 Route::get('/creators/{id}', function ($id) {
-    $c = \App\Models\Creator::with('portfolio')->findOrFail($id);
+    $c = \App\Models\Creator::with(['portfolio' => fn ($q) => $q->published()])->findOrFail($id);
     return view('creator.public', [
         'c'   => $c,
         'seo' => [
             'title'       => $c->seoTitle(),
-            'description' => \Illuminate\Support\Str::limit($c->bio ?: ($c->headline ?: 'Verified creator on Quick GIGS'), 150),
+            'description' => \Illuminate\Support\Str::limit($c->bio ?: ($c->headline ?: 'Verified creator on GIG60'), 150),
             'canonical'   => url('/creators/' . $c->id),
             'image'       => $c->avatarUrl(),
         ],
@@ -138,12 +148,12 @@ Route::post('/webhooks/razorpay', [OrderController::class, 'webhook'])->name('we
 /* ── Health ── */
 Route::get('/health', fn () => response()->json([
     'status' => 'ok',
-    'app'    => 'Quick GIGS',
+    'app'    => 'GIG60',
     'time'   => now()->toIso8601String(),
 ]));
 
 /* ── Admin ── */
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,admin,manager,support,finance'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,admin,manager,support,finance', 'audit.admin'])->group(function () {
     Route::get('/', [AdminDash::class, 'index'])->name('dashboard');
 
     Route::get('/orders', [AdminOrder::class, 'index'])->name('orders.index');
@@ -154,9 +164,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,ad
 
     Route::get('/creators', [AdminCreator::class, 'index'])->name('creators.index');
     Route::get('/creators/{id}', [AdminCreator::class, 'show'])->name('creators.show');
+    Route::get('/creators/{id}/edit', [AdminCreator::class, 'edit'])->middleware('role:super_admin,admin,manager')->name('creators.edit');
+    Route::put('/creators/{id}', [AdminCreator::class, 'update'])->middleware('role:super_admin,admin,manager')->name('creators.update');
     Route::post('/creators/{id}/verify', [AdminCreator::class, 'toggleVerify'])->middleware('role:super_admin,admin,manager')->name('creators.verify');
     Route::post('/creators/{id}/availability', [AdminCreator::class, 'toggleAvailability'])->middleware('role:super_admin,admin,manager')->name('creators.availability');
     Route::post('/creators/{id}/featured', [AdminCreator::class, 'toggleFeatured'])->middleware('role:super_admin,admin')->name('creators.featured');
+    Route::post('/creators/{creator}/portfolio/{portfolio}/publish', [AdminCreator::class, 'togglePortfolio'])->middleware('role:super_admin,admin,manager')->name('creators.portfolio.publish');
+    Route::post('/creators/{creator}/portfolio/{portfolio}/feature', [AdminCreator::class, 'featurePortfolio'])->middleware('role:super_admin,admin')->name('creators.portfolio.feature');
+    Route::delete('/creators/{creator}/portfolio/{portfolio}', [AdminCreator::class, 'destroyPortfolio'])->middleware('role:super_admin,admin')->name('creators.portfolio.destroy');
     Route::post('/creators/{id}/profile-type', [AdminCreator::class, 'updateProfileType'])->middleware('role:super_admin,admin,manager')->name('creators.profileType');
     Route::delete('/creators/{id}', [AdminCreator::class, 'destroy'])->middleware('role:super_admin,admin')->name('creators.destroy');
 
@@ -209,6 +224,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super_admin,ad
     Route::post('/payouts/{id}/hold', [AdminPayout::class, 'hold'])->middleware('role:super_admin,admin,finance')->name('payouts.hold');
     Route::post('/payouts/{id}/retry', [AdminPayout::class, 'retry'])->middleware('role:super_admin,admin,finance')->name('payouts.retry');
 
+    Route::get('/audit-log', [AdminAudit::class, 'index'])->middleware('role:super_admin,admin')->name('audit.index');
     Route::get('/settings',        [AdminSetting::class, 'index'])->middleware('role:super_admin')->name('settings.index');
     Route::post('/settings',       [AdminSetting::class, 'update'])->middleware('role:super_admin')->name('settings.update');
     Route::post('/settings/clear', [AdminSetting::class, 'clear'])->middleware('role:super_admin')->name('settings.clear');

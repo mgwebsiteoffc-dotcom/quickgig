@@ -57,7 +57,7 @@
   'eyebrow'   => 'Still deciding?',
   'title'     => 'Try it on one gig — ₹1,299, refundable until you approve.',
   'body'      => 'The brief is free to generate and the escrow only moves when the work is right.',
-  'primary'   => ['Browse the marketplace', route('marketplace')],
+  'primary'   => ['Browse services', route('services')],
   'secondary' => ['Talk to us', route('contact')],
 ])
 @endsection
