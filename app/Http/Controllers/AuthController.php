@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use App\Models\Company;
 use App\Models\Creator;
 use App\Models\Skill;
+use App\Notifications\WelcomeNotification;
+use App\Support\Notifier;
 
 class AuthController extends Controller
 {
@@ -24,8 +27,8 @@ class AuthController extends Controller
 
         return view('auth.login', [
             'seo' => [
-                'title'       => 'Log in — Quick GIGS',
-                'description' => 'Log in to your Quick GIGS account to post gigs, track live deliveries and manage escrow payments.',
+                'title'       => 'Log in — GIG60',
+                'description' => 'Log in to your GIG60 account to post gigs, track live deliveries and manage escrow payments.',
                 'canonical'   => url('/login'),
             ],
         ]);
@@ -66,7 +69,7 @@ class AuthController extends Controller
             return redirect()->to($this->homeFor(Auth::user()));
         }
 
-        $type = in_array($request->query('type'), ['business', 'creator'], true)
+        $type = in_array($request->query('type'), ['business', 'creator', 'agency'], true)
             ? $request->query('type')
             : 'business';
 
@@ -75,8 +78,8 @@ class AuthController extends Controller
             'plan'        => $request->query('plan'),
             'skillGroups' => Skill::grouped(),
             'seo'  => [
-                'title'       => 'Create your free account — Quick GIGS',
-                'description' => 'Sign up in 30 seconds. Hire verified freelancers or start earning as a pro on Quick GIGS. Free to join, escrow protected.',
+                'title'       => 'Hire and Manage Creative Resources — GIG60',
+                'description' => 'Create a GIG60 account to book managed digital services, generate AI briefs, work with verified specialists and approve delivery through escrow.',
                 'canonical'   => url('/register'),
             ],
         ]);
@@ -84,14 +87,34 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        // The agency form currently accepts one comma-separated services field. Normalize
+        // both the single-value and array submissions before Laravel validates it, so a
+        // browser or older form cannot turn team_services.0 into a nested value.
+        if ($request->has('team_services')) {
+            $services = $request->input('team_services');
+            $services = is_array($services) ? $services : [$services];
+            $services = collect($services)
+                ->flatten()
+                ->map(fn ($service) => is_scalar($service) ? trim((string) $service) : '')
+                ->filter()
+                ->values()
+                ->all();
+            $request->merge(['team_services' => $services]);
+        }
+
         $data = $request->validate([
-            'account_type'  => ['required', 'in:business,creator'],
+            'account_type'  => ['required', 'in:business,creator,agency'],
             'name'          => ['required', 'string', 'max:80'],
             'email'         => ['required', 'email', 'max:120', 'unique:users,email'],
             'phone'         => ['nullable', 'string', 'max:20'],
             'password'      => ['required', 'confirmed', Password::min(8)],
             'company_name'  => ['nullable', 'required_if:account_type,business', 'string', 'max:80'],
             'handle'        => ['nullable', 'string', 'max:40'],
+            'agency_name'   => ['nullable', 'required_if:account_type,agency', 'string', 'max:120'],
+            'team_size'     => ['nullable', 'required_if:account_type,agency', 'integer', 'min:1', 'max:500'],
+            'team_services' => ['nullable', 'array', 'max:12'],
+            'team_services.*' => ['string', 'max:60'],
+            'team_description' => ['nullable', 'string', 'max:1000'],
             'skills'        => ['nullable', 'array', 'max:8'],
             'skills.*'      => ['string', 'max:60'],
             'terms'         => ['accepted'],
@@ -106,7 +129,7 @@ class AuthController extends Controller
             'email'     => $data['email'],
             'phone'     => $data['phone'] ?? null,
             'password'  => Hash::make($data['password']),
-            'role'      => $data['account_type'],
+            'role'      => $data['account_type'] === 'business' ? 'business' : 'creator',
             'is_active' => true,
         ]);
 
@@ -125,7 +148,7 @@ class AuthController extends Controller
             $user->update(['company_id' => $company->id]);
             $request->session()->put('company_id', $company->id);
         } else {
-            $handle = Str::of(($data['handle'] ?? '') ?: $data['name'])->slug('')->lower()->limit(30, '');
+            $handle = Str::of(($data['handle'] ?? '') ?: ($data['agency_name'] ?? $data['name']))->slug('')->lower()->limit(30, '');
             $handle = '@' . ($handle->isEmpty() ? 'creator' . $user->id : (string) $handle);
 
             if (Creator::where('handle', $handle)->exists()) {
@@ -134,12 +157,17 @@ class AuthController extends Controller
 
             $creator = Creator::create([
                 'user_id'      => $user->id,
-                'name'         => $data['name'],
+                'name'         => $data['account_type'] === 'agency' ? ($data['agency_name'] ?? $data['name']) : $data['name'],
                 'handle'       => $handle,
                 'email'        => $data['email'],
                 'phone'        => $data['phone'] ?? null,
-                'headline'     => 'New on Quick GIGS',
-                'profile_type' => 'video_editor',
+                'headline'     => 'New on GIG60',
+                'profile_type' => $data['account_type'] === 'agency' ? 'agency' : 'video_editor',
+                'account_kind' => $data['account_type'] === 'agency' ? 'agency' : 'individual',
+                'agency_name' => $data['agency_name'] ?? null,
+                'team_size' => $data['team_size'] ?? null,
+                'team_services' => array_values(array_unique(array_filter((array) ($data['team_services'] ?? [])))),
+                'team_description' => $data['team_description'] ?? null,
                 'skills'       => array_values(array_unique(array_filter(array_map('trim', (array) ($data['skills'] ?? []))))),
                 'price_from'   => 1299,
                 'rating'       => 5.0,
@@ -151,13 +179,16 @@ class AuthController extends Controller
             $request->session()->put('creator_id', $creator->id);
         }
 
+        event(new Registered($user));
+        Notifier::send($user->email, new WelcomeNotification($user->name, $data['account_type']));
+        Notifier::whatsapp($user->phone, 'Welcome to GIG60, '.$user->name.'. Your account is ready.');
         Auth::login($user, true);
         $request->session()->regenerate();
         $this->rememberWorkspace($request, $user->fresh());
 
         $message = $data['account_type'] === 'business'
             ? 'Account created. Post your first gig — it is free.'
-            : 'Welcome aboard. Complete your profile to get verified and start receiving gigs.';
+            : ($data['account_type'] === 'agency' ? 'Agency account created. Add your team services and submit for verification.' : 'Welcome aboard. Complete your profile to get verified and start receiving gigs.');
 
         return redirect()->to($this->homeFor($user->fresh()))->with('toast', $message);
     }

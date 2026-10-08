@@ -43,7 +43,7 @@
           <div class="text-[14px] font-black leading-tight flex items-center gap-1.5">{{ $c->name }} <span class="w-2 h-2 rounded-full {{ $c->is_available ? 'bg-green-500' : 'bg-amber-400' }}"></span></div>
           <div class="text-[11px] font-semibold text-[#7A7A78]">{{ $c->handle }} • {{ $c->email }}</div>
           <div class="mt-1 flex flex-wrap gap-1.5">
-            <span class="text-[10px] font-black px-2 py-1 rounded-full border tracking-wide {{ $c->profile_type==='ugc_creator' ? 'bg-blue-600 text-white border-blue-600' : ($c->profile_type==='influencer' ? 'bg-amber-400 text-[#0F0F0F] border-amber-400' : ($c->profile_type==='hybrid' ? 'bg-[#0F0F0F] text-white border-[#0F0F0F]' : 'bg-[#F8F8F7] border-[#E8E8E6]')) }}">{{ $c->profileLabel() }}</span>
+            <span class="text-[10px] font-black px-2 py-1 rounded-full border tracking-wide {{ $c->profile_type==='ugc_creator' ? 'bg-blue-600 text-white border-blue-600' : ($c->profile_type==='influencer' ? 'bg-amber-400 text-[#0F0F0F] border-amber-400' : ($c->profile_type==='hybrid' ? 'bg-[#0F0F0F] text-white border-[#0F0F0F]' : 'bg-[#F8F8F7] text-[#0F0F0F] border-[#E8E8E6]')) }}">{{ $c->profileLabel() }}</span>
             @if($c->barter_available)<span class="text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 border border-green-200 text-green-700">● Barter</span>@endif
             <span class="text-[10px] font-bold px-2 py-1 rounded-full {{ $c->is_verified ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-amber-50 border border-amber-200 text-amber-800' }}">{{ $c->is_verified ? 'Verified' : 'Pending' }}</span>
             @if($c->is_featured)<span class="text-[10px] font-bold px-2 py-1 rounded-full bg-amber-400 text-[#0F0F0F]">Featured</span>@endif

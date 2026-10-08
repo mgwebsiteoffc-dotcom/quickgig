@@ -5,11 +5,10 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div class="max-w-[620px]">
-        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Marketplace</div>
-        <h1 class="mt-3 font-display text-[34px] sm:text-[42px] font-semibold leading-[1.08]">Fixed-price gigs, verified pros.</h1>
+        <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Services</div>
+        <h1 class="mt-3 font-display text-[34px] sm:text-[42px] font-semibold leading-[1.08]">Choose the outcome. We handle the match.</h1>
         <p class="mt-4 text-[15px] leading-7 text-mut">
-          {{ number_format($totals['gigs']) }} live gigs · {{ number_format($totals['creators']) }} verified freelancers ·
-          <span class="text-mint-deep">{{ number_format($totals['online']) }} online right now</span>
+          Browse ready-to-order video, image, UGC, AI, design, copy and marketing services. You choose the result; GIG60 handles the specialist behind it.
         </p>
       </div>
 
@@ -71,7 +70,7 @@
       @if($gigs->count())
         <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
           @foreach($gigs as $gig)
-            <a href="{{ route('gigs.show', $gig->id) }}" class="glass rounded-3xl overflow-hidden card-hover group flex flex-col">
+            <a href="{{ route('gigs.show', $gig->slug) }}" class="glass rounded-3xl overflow-hidden card-hover group flex flex-col">
               <div class="relative h-[160px] overflow-hidden">
                 <img src="{{ $gig->coverUrl() }}" alt="{{ $gig->title }}" class="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-[1.04] transition duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/20 to-transparent"></div>
@@ -80,13 +79,7 @@
               </div>
 
               <div class="p-5 flex-1 flex flex-col">
-                <div class="flex items-center gap-2.5">
-                  <img src="{{ $gig->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-6 h-6 rounded-full object-cover border border-line" alt="">
-                  <span class="text-[12px] text-mut truncate">{{ $gig->creator->name ?? 'Quick GIGS pro' }}</span>
-                  @if($gig->creator?->is_verified)
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#22D3EE" class="shrink-0"><path d="M12 2l2.4 1.8 3-.3 1 2.8 2.6 1.5-1 2.9 1 2.9-2.6 1.5-1 2.8-3-.3L12 22l-2.4-1.8-3 .3-1-2.8L3 16.2l1-2.9-1-2.9 2.6-1.5 1-2.8 3 .3z" opacity=".25"/><path d="M10.6 15.4 7.8 12.6l1.2-1.2 1.6 1.6 4-4 1.2 1.2z"/></svg>
-                  @endif
-                </div>
+                  <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.12em] uppercase text-mint-deep"><span class="w-1.5 h-1.5 rounded-full bg-mint"></span> GIG60 service</div>
 
                 <div class="mt-3 text-[15px] font-semibold leading-snug line-clamp-2 group-hover:text-ink">{{ $gig->title }}</div>
                 <div class="mt-2 text-[12.5px] text-mut line-clamp-2">{{ Str::limit(strip_tags($gig->description ?? ''), 80) }}</div>
@@ -129,22 +122,11 @@
     {{-- sidebar --}}
     <aside class="space-y-5 lg:sticky lg:top-24">
       <div class="glass rounded-3xl p-5">
-        <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[.14em] uppercase text-faint">
-          <span class="w-1.5 h-1.5 rounded-full bg-mint pulse-dot text-mint-deep"></span> Available now
-        </div>
-        <div class="mt-4 space-y-3.5">
-          @forelse($availableNow as $c)
-            <a href="{{ route('creator.public', $c->id) }}" class="flex items-center gap-3 group">
-              <img src="{{ $c->avatarUrl() }}" class="w-9 h-9 rounded-xl object-cover border border-line" alt="">
-              <div class="min-w-0 flex-1">
-                <div class="text-[13px] font-medium truncate group-hover:text-mint-deep transition">{{ $c->name }}</div>
-                <div class="text-[11.5px] text-mut truncate">{{ $c->headline ?: $c->profileLabel() }}</div>
-              </div>
-              <span class="text-[11.5px] font-mono text-faint shrink-0">₹{{ number_format($c->price_from) }}</span>
-            </a>
-          @empty
-            <div class="text-[13px] text-mut">No freelancers online right now.</div>
-          @endforelse
+        <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Shop by outcome</div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          @foreach(['Video & reels','Images & design','UGC content','AI ads','Copy & content','Google & Meta Ads'] as $category)
+            <a href="{{ route('marketplace', ['category' => $category]) }}" class="rounded-full border border-line bg-tint px-3 py-2 text-[12px] text-body hover:border-mint hover:bg-mint-wash transition">{{ $category }}</a>
+          @endforeach
         </div>
       </div>
 
