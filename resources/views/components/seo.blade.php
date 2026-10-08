@@ -1,13 +1,14 @@
 {{-- SEO + AEO component — @include('components.seo', ['seo'=>$seo]) --}}
 @php
   $seo = $seo ?? [];
-  $title = $seo['title'] ?? 'Quick GIGS — Hire verified freelancers in minutes, not weeks';
-  $desc = $seo['description'] ?? 'Quick GIGS is the fast marketplace for content work — video editing, graphic design, copy, development, voice and UGC. Post a brief, get matched to a verified freelancer or creator in minutes, and pay only when you approve.';
+  $title = $seo['title'] ?? setting('site.title', 'GIG60 — Managed digital services in minutes');
+  $desc = $seo['description'] ?? setting('site.description', 'GIG60 is an AI-managed service platform for content and digital marketing. Book managed resources for video, design, UGC, Google Ads and Meta Ads, with clear scope, delivery and approval.');
   $canonical = $seo['canonical'] ?? url()->current();
   $image = $seo['image'] ?? url('/og-default.jpg');
   $type = $seo['type'] ?? 'website';
-  $keywords = $seo['keywords'] ?? 'quick gigs, gig marketplace, hire video editor, reels editing, thumbnail designer, AI video, freelance india, escrow payments';
-  $author = $seo['author'] ?? 'Quick GIGS';
+  $keywords = $seo['keywords'] ?? 'managed digital services india, hire content resources, Google Ads, Meta Ads, reels editing, UGC, AI brief, escrow payments';
+  $author = $seo['author'] ?? setting('site.name', 'GIG60');
+  $siteName = setting('site.name', 'GIG60');
 @endphp
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $desc }}">
@@ -23,7 +24,7 @@
 <meta property="og:url" content="{{ $canonical }}">
 <meta property="og:image" content="{{ $image }}">
 <meta property="og:type" content="{{ $type === 'article' ? 'article' : 'website' }}">
-<meta property="og:site_name" content="Quick GIGS">
+<meta property="og:site_name" content="GIG60">
 <meta property="og:locale" content="en_IN">
 
 {{-- Twitter --}}
@@ -46,17 +47,30 @@
 $orgJsonLd = [
   '@context'=>'https://schema.org',
   '@type'=>'Organization',
-  'name'=>'Quick GIGS',
-  'alternateName'=>'QuickGigs — the fast gig marketplace',
+  'name'=>$siteName,
+  'alternateName'=>'GIG60 — managed digital services',
   'url'=>url('/'),
   'logo'=>url('/logo.png'),
   'description'=>$desc,
-  'foundingLocation'=>['@type'=>'Place','address'=>['@type'=>'PostalAddress','addressLocality'=>'Ghaziabad','addressRegion'=>'Uttar Pradesh','addressCountry'=>'IN']],
+  'foundingLocation'=>['@type'=>'Place','address'=>['@type'=>'PostalAddress','streetAddress'=>'Vinayak Tower, Vibhuti Khand','postalCode'=>'226028','addressLocality'=>'Lucknow','addressRegion'=>'Uttar Pradesh','addressCountry'=>'IN']],
   'sameAs'=>['https://www.linkedin.com/company/quickgigs','https://x.com/quickgigs'],
   'contactPoint'=>['@type'=>'ContactPoint','telephone'=>'+91-98765-43210','contactType'=>'customer support','areaServed'=>'IN','availableLanguage'=>['en','hi']],
 ];
 @endphp
 <script type="application/ld+json">{!! json_encode($orgJsonLd, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
+
+{{-- Service JSON-LD for marketplace detail pages --}}
+@if(!empty($service))
+@php
+$serviceLd = ['@context'=>'https://schema.org','@type'=>'Service','name'=>$service->title,'description'=>$service->seoDescription(),'serviceType'=>$service->category,'provider'=>['@type'=>'Organization','name'=>'GIG60'],'areaServed'=>'IN','url'=>url('/gigs/'.($service->slug ?: $service->id)),'offers'=>['@type'=>'Offer','priceCurrency'=>'INR','price'=>(string) (($service->billing_type === 'monthly' && $service->monthly_price) ? $service->monthly_price : $service->price),'url'=>url('/gigs/'.($service->slug ?: $service->id)),'availability'=>'https://schema.org/InStock']];
+if ($service->billing_type === 'monthly') $serviceLd['offers']['priceSpecification']=['@type'=>'UnitPriceSpecification','priceCurrency'=>'INR','price'=>(string)$service->monthly_price,'unitCode'=>'MON'];
+@endphp
+<script type="application/ld+json">{!! json_encode($serviceLd, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
+@endif
+
+@if(!empty($service) && is_array($service->faq_json) && count($service->faq_json))
+<script type="application/ld+json">{!! json_encode(['@context'=>'https://schema.org','@type'=>'FAQPage','mainEntity'=>collect($service->faq_json)->map(fn($f)=>['@type'=>'Question','name'=>$f['q'] ?? '','acceptedAnswer'=>['@type'=>'Answer','text'=>strip_tags($f['a'] ?? '')]])->values()->all()], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
+@endif
 
 {{-- Breadcrumbs JSON-LD if provided --}}
 @if(!empty($breadcrumbs))
