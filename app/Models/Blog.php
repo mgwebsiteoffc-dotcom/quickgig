@@ -10,7 +10,7 @@ class Blog extends Model
     protected $fillable = [
         'author_id','category_id','title','slug','excerpt','content','cover','cover_alt',
         'tags','meta_title','meta_description','og_image','canonical_url',
-        'is_published','is_featured','published_at','views','reading_minutes','faq_json'
+        'is_published','is_featured','published_at','publish_at','views','reading_minutes','faq_json'
     ];
 
     protected $casts = [
@@ -44,7 +44,7 @@ class Blog extends Model
     public function incrementViews(){ $this->increment('views'); }
 
     // SEO helpers
-    public function seoTitle(): string { return $this->meta_title ?: $this->title . ' | Quick GIGS'; }
+    public function seoTitle(): string { return $this->meta_title ?: $this->title . ' | GIG60'; }
     public function seoDescription(): string { return $this->meta_description ?: Str::limit(strip_tags($this->excerpt ?: $this->content), 155); }
     public function canonical(): string { return $this->canonical_url ?: url('/blog/'.$this->slug); }
 
@@ -57,8 +57,8 @@ class Blog extends Model
             'headline'=>$this->title,
             'description'=>$this->seoDescription(),
             'image'=>$this->cover ? url($this->cover) : url('/og-default.jpg'),
-            'author'=>['@type'=>'Person','name'=>$this->author->name ?? 'Quick GIGS Team'],
-            'publisher'=>['@type'=>'Organization','name'=>'Quick GIGS','logo'=>['@type'=>'ImageObject','url'=>url('/logo.png')]],
+            'author'=>['@type'=>'Person','name'=>$this->author->name ?? 'GIG60 Team'],
+            'publisher'=>['@type'=>'Organization','name'=>'GIG60','logo'=>['@type'=>'ImageObject','url'=>url('/logo.png')]],
             'datePublished'=> optional($this->published_at)->toIso8601String(),
             'dateModified'=> $this->updated_at->toIso8601String(),
             'mainEntityOfPage'=>['@type'=>'WebPage','@id'=>$this->canonical()],

@@ -4,15 +4,15 @@
 @php
   $steps = [
     ['key' => 'placed',   'label' => 'Order placed',        'at' => 5],
-    ['key' => 'matched',  'label' => 'Freelancer assigned',    'at' => 15],
-    ['key' => 'working',  'label' => 'In production',       'at' => 45],
+    ['key' => 'matched',  'label' => 'Managed resource assigned', 'at' => 15],
+    ['key' => 'working',  'label' => 'Work in progress',       'at' => 45],
     ['key' => 'review',   'label' => 'Delivered for review','at' => 100],
     ['key' => 'released', 'label' => 'Approved · escrow released', 'at' => 101],
   ];
   $progress = (int) $order->progress;
   $released = $order->escrow_status === 'released';
   $current  = $released ? 4 : ($order->status === 'review' ? 3 : ($progress >= 40 ? 2 : 1));
-  $payout   = $order->total - $order->fee;
+  $payout   = $order->total - $order->fee - ($order->tax_amount ?? 0);
   $thread   = session('thread.' . $order->uid, []);
 @endphp
 
@@ -44,7 +44,7 @@
              'orderId'  => $order->payment_order_id,
              'amount'   => $order->total,
              'name'     => config('app.name'),
-             'gig'      => $order->service->title ?? 'Quick GIGS order',
+             'gig'      => $order->service->title ?? 'GIG60 order',
              'buyer'    => $order->company->person_name ?? '',
              'email'    => $order->company->email ?? '',
              'verify'   => route('orders.payment.verify', $order->uid),
@@ -119,11 +119,6 @@
                   <span x-show="!busy">Approve & release ₹<span x-text="payout.toLocaleString('en-IN')"></span></span>
                   <span x-show="busy" x-cloak>Releasing…</span>
                 </button>
-                <button x-on:click="advance()" :disabled="busy"
-                        class="h-11 px-5 rounded-xl glass btn-ghost font-medium text-[13.5px] hover:border-line disabled:opacity-60">
-                  <span x-show="!busy">▸ Advance demo pipeline</span>
-                  <span x-show="busy" x-cloak>Working…</span>
-                </button>
               </div>
             </template>
 
@@ -146,7 +141,7 @@
         <div class="glass rounded-3xl p-6 sm:p-7">
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Messages</div>
 
-          <div class="mt-4 space-y-3 max-h-[320px] overflow-y-auto">
+          <div id="chat-thread" class="mt-4 space-y-3 max-h-[320px] overflow-y-auto">
             <div class="flex gap-3">
               <img src="{{ $order->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-8 h-8 rounded-full object-cover shrink-0" alt="">
               <div class="rounded-2xl rounded-tl-sm bg-tint px-4 py-2.5 text-[13.5px] max-w-[80%]">
@@ -168,10 +163,10 @@
             @endforeach
           </div>
 
-          <form method="POST" action="{{ route('orders.message', $order->uid) }}" class="mt-4 flex gap-2.5">
+          <form x-data="chatComposer()" x-on:submit.prevent="send($event)" method="POST" action="{{ route('orders.message', $order->uid) }}" class="mt-4 flex gap-2.5">
             @csrf
-            <input name="message" required maxlength="500" class="field flex-1" placeholder="Send a note to the freelancer…">
-            <button class="h-12 px-5 rounded-xl btn-grad font-semibold text-[13.5px] shrink-0">Send</button>
+            <input x-ref="message" name="message" required maxlength="500" class="field flex-1" placeholder="Send a note to the managed team…" autocomplete="off">
+            <button x-bind:disabled="busy" class="h-12 px-5 rounded-xl btn-grad font-semibold text-[13.5px] shrink-0 disabled:opacity-60"><span x-show="!busy">Send</span><span x-show="busy" x-cloak>Sending…</span></button>
           </form>
         </div>
       </div>
@@ -181,9 +176,10 @@
         <div class="glass-strong rounded-3xl p-6">
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Payment</div>
           <div class="mt-4 space-y-2.5 text-[13.5px]">
-            <div class="flex justify-between"><span class="text-mut">Gig total</span><span class="font-mono">₹{{ number_format($order->total) }}</span></div>
-            <div class="flex justify-between"><span class="text-mut">Platform fee</span><span class="font-mono">₹{{ number_format($order->fee) }}</span></div>
-            <div class="flex justify-between"><span class="text-mut">Freelancer payout</span><span class="font-mono text-mint-deep">₹{{ number_format($payout) }}</span></div>
+            <div class="flex justify-between"><span class="text-mut">Service amount</span><span class="font-mono">₹{{ number_format($order->total - ($order->tax_amount ?? 0)) }}</span></div>
+            <div class="flex justify-between"><span class="text-mut">GST</span><span class="font-mono">₹{{ number_format($order->tax_amount ?? 0) }}</span></div>
+            <div class="flex justify-between font-semibold"><span class="text-body">Total payable</span><span class="font-mono text-mint-deep">₹{{ number_format($order->total) }}</span></div>
+            <div class="pt-3"><a href="{{ route('orders.invoice', [$order->id, 'buyer']) }}" target="_blank" class="text-mint-deep font-semibold">View invoice / save as PDF →</a></div>
             <div class="pt-3 mt-3 border-t border-line flex justify-between items-center">
               <span class="text-mut">Escrow</span>
               <span class="text-[12px] font-semibold rounded-full px-2.5 py-1 {{ $released ? 'bg-mint-wash text-mint-deep' : 'bg-mint-wash text-mint-deep' }}">
@@ -251,7 +247,6 @@ document.addEventListener('alpine:init', () => {
       }
       this.busy = false;
     },
-    advance() { return this.call('/orders/' + this.uid + '/simulate'); },
     approve() { return this.call('/orders/' + this.uid + '/approve'); },
   }));
 });
@@ -262,6 +257,41 @@ document.addEventListener('alpine:init', () => {
 <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 <script>
 document.addEventListener('alpine:init', () => {
+  Alpine.data('chatComposer', () => ({
+    busy: false,
+    async send(event) {
+      const form = event.currentTarget;
+      const input = this.$refs.message;
+      const text = input.value.trim();
+      if (!text || this.busy) return;
+      this.busy = true;
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'X-CSRF-TOKEN': form.querySelector('[name="_token"]').value, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          body: new FormData(form),
+        });
+        if (!response.ok) throw new Error('message failed');
+        const data = await response.json();
+        const thread = data.thread || [];
+        const latest = thread.slice(-2);
+        const list = document.getElementById('chat-thread');
+        latest.forEach(message => {
+          const row = document.createElement('div');
+          row.className = message.from === 'you' ? 'flex gap-3 justify-end' : 'flex gap-3';
+          const bubble = document.createElement('div');
+          bubble.className = message.from === 'you' ? 'rounded-2xl rounded-tr-sm bg-mint/25 border border-mint px-4 py-2.5 text-[13.5px] max-w-[80%]' : 'rounded-2xl rounded-tl-sm bg-tint px-4 py-2.5 text-[13.5px] max-w-[80%]';
+          bubble.textContent = message.text;
+          row.appendChild(bubble);
+          list.appendChild(row);
+        });
+        input.value = '';
+        list.scrollTop = list.scrollHeight;
+      } catch (error) {
+        window.qg?.toast('Message could not be sent. Please try again.');
+      } finally { this.busy = false; input.focus(); }
+    },
+  }));
   Alpine.data('checkoutPay', (cfg) => ({
     busy: false, error: '',
     pay() {
