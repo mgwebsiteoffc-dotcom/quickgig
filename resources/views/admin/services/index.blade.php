@@ -2,6 +2,10 @@
 @section('title','Services — Dynamic')
 @section('breadcrumb','Admin • Services • Dynamic by Profile Type')
 @section('content')
+<div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+  <div><h1 class="text-[22px] font-black tracking-tight">Services</h1><p class="mt-1 text-[13px] text-[#7A7A78]">Create and manage the offerings customers can book.</p></div>
+  <a href="{{ route('admin.services.create') }}" class="h-11 px-6 rounded-xl bg-[#0F0F0F] text-white font-black text-[13.5px] inline-flex items-center gap-2 shadow-sm">+ Add new service</a>
+</div>
 <form method="GET" class="bg-white border border-[#E8E8E6] rounded-2xl p-4 space-y-3">
   <div class="flex flex-wrap gap-2 items-center">
     <div class="flex gap-1.5 flex-wrap">
@@ -50,7 +54,7 @@
         <div class="mt-1 flex items-center gap-2"><span class="font-black text-[13px]">{{ $s->displayPrice() }}</span>@if($s->barter_value)<span class="text-[11px] font-semibold text-muted">• Barter value ₹{{ number_format($s->barter_value) }}</span>@endif<span class="text-[11px] text-muted">• ★ {{ $s->rating }} • {{ $s->sold_count }} sold</span></div>
         @if($s->deliverables)<div class="mt-1 text-[11px] font-medium text-muted">Deliver: {{ is_array($s->deliverables) ? implode(' • ', $s->deliverables) : $s->deliverables }}</div>@endif
       </div>
-      <div class="flex flex-col gap-1.5 shrink-0">
+      <div class="flex flex-row flex-wrap items-center justify-end gap-1.5 shrink-0">
         <a href="{{ route('admin.services.edit',$s->id) }}" class="h-8 px-3 rounded-full border border-line bg-white font-bold text-[12px] inline-flex items-center justify-center">Edit</a>
         <form method="POST" action="{{ route('admin.services.toggle',$s->id) }}">@csrf<button class="h-8 px-3 rounded-full border font-bold text-[12px] w-full {{ $s->is_active ? 'bg-white border-line' : 'bg-ink text-white border-ink' }}">{{ $s->is_active ? 'Hide' : 'Activate' }}</button></form>
         <form method="POST" action="{{ route('admin.services.destroy',$s->id) }}" onsubmit="return confirm('Delete?')">@csrf @method('DELETE')<button class="h-7 w-7 mx-auto rounded-full border border-red-200 bg-red-50 text-red-600 grid place-items-center text-[11px]">✕</button></form>

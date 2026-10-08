@@ -69,8 +69,8 @@ class MoneyFlowTest extends TestCase
         $this->assertSame('demo', $order->payment_provider);
         $this->assertSame('paid', $order->payment_status);
         $this->assertSame('held', $order->escrow_status);
-        $this->assertSame(2000, $order->total);
-        $this->assertSame(200, $order->fee, 'default platform fee is 10%');
+        $this->assertSame(2360, $order->total);
+        $this->assertSame(0, $order->fee, 'creator platform fee is disabled by default');
 
         Notification::assertSentTimes(OrderPlaced::class, 2);   // buyer + freelancer
     }

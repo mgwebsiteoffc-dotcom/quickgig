@@ -133,7 +133,7 @@
 
       {{-- quick gigs --}}
       <div class="glass-strong rounded-3xl p-7 ring-glow-pink relative">
-        <span class="absolute -top-3 left-7 btn-grad text-white text-[10.5px] font-bold tracking-wider uppercase px-3 py-1 rounded-full shadow-lg">With Quick GIGS</span>
+        <span class="absolute -top-3 left-7 btn-grad text-white text-[10.5px] font-bold tracking-wider uppercase px-3 py-1 rounded-full shadow-lg">With GIG60</span>
         <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint mt-1">Subscription</div>
 
         <ol class="mt-5 space-y-3">
@@ -264,7 +264,7 @@
     </div>
 
     <div class="mt-6 text-center text-[13px] text-mut">
-      Not ready to commit? <a href="{{ route('marketplace') }}" class="text-mint-deep hover:text-ink transition">Order single gigs from ₹1,299</a> — the board works on pay-as-you-go too.
+      Not ready to commit? <a href="{{ route('services') }}" class="text-mint-deep hover:text-ink transition">Book individual services from ₹1,299</a> — the board works on pay-as-you-go too.
     </div>
   </div>
 </section>
@@ -278,7 +278,7 @@
 
       <div class="mt-8 space-y-3" x-data="{ open: 0 }">
         @foreach([
-          ['Who actually does the work?', 'Verified Quick GIGS freelancers — ID checked, portfolio reviewed and scored on on-time delivery. You see who is assigned, their rating and their record, on every task.'],
+          ['Who actually does the work?', 'Verified GIG60 freelancers — ID checked, portfolio reviewed and scored on on-time delivery. You see who is assigned, their rating and their record, on every task.'],
           ['Can we talk to the specialist directly?', 'Yes. Every task has a thread. For plans with a pod, the same freelancers stay on your account so they learn your brand.'],
           ['What is the delivery timeline?', 'Express tasks land in about three hours, standard next-day, larger packs in two days. The SLA is attached to your plan and credited back if missed.'],
           ['Can we rebook the same creator?', 'Yes — request them by name on a task, or lock a pod on the Scale plan.'],
@@ -343,6 +343,7 @@
           <textarea id="b_message" name="message" rows="3" class="field" placeholder="Weekly reels for two brands, plus thumbnails and a monthly AI ad.">{{ old('message') }}</textarea>
         </div>
 
+        @include('partials.lead-captcha')
         <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Book the demo</button>
         <div class="text-center text-[11.5px] text-mut">One reply from a human, within a working day.</div>
       </form>
@@ -355,7 +356,7 @@
   'title'     => 'Create a workspace and queue your first task in 60 seconds.',
   'body'      => 'Free to start, pay-as-you-go pricing, and you can move to a plan whenever the volume justifies it.',
   'primary'   => ['Start free', route('register') . '?type=business'],
-  'secondary' => ['See the marketplace', route('marketplace')],
+  'secondary' => ['See services', route('services')],
 ])
 
 @endsection
