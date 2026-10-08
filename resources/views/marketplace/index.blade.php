@@ -82,7 +82,7 @@
               <div class="p-5 flex-1 flex flex-col">
                 <div class="flex items-center gap-2.5">
                   <img src="{{ $gig->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-6 h-6 rounded-full object-cover border border-line" alt="">
-                  <span class="text-[12px] text-mut truncate">{{ $gig->creator->name ?? 'Quick GIGS pro' }}</span>
+                  <span class="text-[12px] text-mut truncate">{{ $gig->creator->name ?? 'GIG60 pro' }}</span>
                   @if($gig->creator?->is_verified)
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="#22D3EE" class="shrink-0"><path d="M12 2l2.4 1.8 3-.3 1 2.8 2.6 1.5-1 2.9 1 2.9-2.6 1.5-1 2.8-3-.3L12 22l-2.4-1.8-3 .3-1-2.8L3 16.2l1-2.9-1-2.9 2.6-1.5 1-2.8 3 .3z" opacity=".25"/><path d="M10.6 15.4 7.8 12.6l1.2-1.2 1.6 1.6 4-4 1.2 1.2z"/></svg>
                   @endif

@@ -24,7 +24,7 @@
         You see the price <span class="grad-text">before</span> you commit.
       </h1>
       <p class="mt-5 text-[16px] leading-7 text-mut">
-        Flat gig prices, a single 10% platform fee, and escrow on every order. No subscription, no
+        Flat gig prices, GST shown clearly at checkout, and escrow on every order. No subscription, no
         commitment money, no connects, no surprise scope invoice at the end of the month.
       </p>
 
@@ -73,7 +73,7 @@
     <div class="max-w-[620px]">
       <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Cost calculator</div>
       <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">What a month actually costs.</h2>
-      <p class="mt-4 text-[15px] leading-7 text-mut">Set your monthly output and compare the three real options: Quick GIGS, an in-house editor, or an agency retainer.</p>
+      <p class="mt-4 text-[15px] leading-7 text-mut">Set your monthly output and compare the three real options: GIG60, an in-house editor, or an agency retainer.</p>
     </div>
 
     <div class="mt-10 grid lg:grid-cols-[1fr_1.15fr] gap-6 items-start">
@@ -99,7 +99,7 @@
         <div class="glass-strong rounded-3xl p-6 ring-glow">
           <div class="flex items-baseline justify-between">
             <div>
-              <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Quick GIGS</div>
+              <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">GIG60</div>
               <div class="text-[12.5px] text-mut mt-1"><span x-text="totalUnits"></span> deliverables · escrow protected</div>
             </div>
             <div class="font-display text-[34px] font-semibold tracking-tight" x-text="'₹' + ours.toLocaleString('en-IN')"></div>
@@ -140,7 +140,7 @@
 
     <div class="mt-10 grid sm:grid-cols-3 gap-4">
       @foreach([
-        ['Quick GIGS', '₹2,249', 'to the freelancer', '₹250 platform fee (10%). Nothing else — no listing fee, no connects, no payout charge.', true],
+        ['GIG60', '₹2,249', 'to the freelancer', 'No creator platform fee. GST is shown at checkout; no listing fee, no connects, no payout charge.', true],
         ['Bidding marketplaces', '₹1,999', 'to the freelancer', 'Around 20% commission, plus paid bids or connects before they even win the job.', false],
         ['Managed agencies', 'Not disclosed', 'to the freelancer', 'You pay a retainer or commitment fee; the split with the actual maker is rarely shown.', false],
       ] as [$name, $amount, $sub, $body, $highlight])
@@ -191,7 +191,7 @@
       @foreach([
         ['Is there any subscription or minimum?', 'No. You can order a single ₹1,299 gig and never come back. The retainer option exists only because teams asked for predictable monthly billing at a discount.'],
         ['When is my card charged?', 'At order time the amount moves into escrow. It is released to the freelancer when you approve, or refunded to you if you reject the delivery within the review window.'],
-        ['What does the 10% fee cover?', 'Matching, the brief engine, escrow and payouts, the QA gate, dispute handling and support. Freelancers keep the other 90%.'],
+        ['What does checkout include?', 'Matching, the brief engine, escrow and payouts, the QA gate, dispute handling and support. Freelancers keep 100%; GST is shown at checkout.'],
         ['Do express gigs cost more?', 'Yes — express is 1.6× the base price because the freelancer reorganises their day for it. Relaxed 48-hour delivery is 0.85×. You always see the exact number before ordering.'],
         ['What if the deadline is missed?', 'The express premium is credited back automatically, and you keep the right to reject the delivery and recover the escrow.'],
         ['Do you invoice with GST?', 'Yes. Add your GSTIN in workspace settings and every order produces a GST-compliant invoice; teams can consolidate into one monthly invoice.'],
