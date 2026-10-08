@@ -34,12 +34,20 @@
               @if($c->is_verified)<span class="text-[10.5px] font-semibold rounded-full bg-mint-wash text-mint-deep px-2.5 py-1">Verified</span>@endif
             </h1>
             <div class="text-[13.5px] text-mut mt-1">{{ $c->profileLabel() }} · {{ $c->headline }}</div>
+            @if($c->account_kind === 'agency')
+              <div class="mt-3 rounded-2xl border border-line bg-tint px-4 py-3 text-[13px]">
+                <b>{{ $c->agency_name ?: $c->name }}</b> · {{ $c->team_size }} person team
+                @if($c->team_services && count($c->team_services))
+                  <div class="mt-1 text-mut">{{ implode(' · ', $c->team_services) }}</div>
+                @endif
+              </div>
+            @endif
           </div>
           <div class="flex items-center gap-2.5">
             <span class="text-[12px] font-semibold rounded-full px-3 py-1.5 {{ $c->is_available ? 'bg-mint-wash text-mint-deep' : 'bg-amber-400/15 text-amber-300' }}">
               {{ $c->is_available ? 'Available now' : 'Busy — free soon' }}
             </span>
-            <a href="{{ route('marketplace', ['q' => $c->profileLabel()]) }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">See gigs</a>
+            <a href="{{ route('services', ['q' => $c->profileLabel()]) }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">See services</a>
           </div>
         </div>
 

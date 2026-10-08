@@ -10,15 +10,18 @@
         We got tired of the <span class="grad-text">waiting</span>.
       </h1>
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[620px]">
-        Quick GIGS started in Ghaziabad with a simple frustration: a 45-second reel took nine days —
+        GIG60 started in Lucknow with a simple frustration: a 45-second reel took nine days —
         two writing the brief, three choosing a freelancer, one making the video and three fixing
         things nobody had written down. The making was never the slow part.
       </p>
       <p class="mt-4 text-[16px] leading-7 text-mut max-w-[620px]">
         So we automated everything except the craft. The brief writes itself, matching is scored and
         explained, money sits in escrow, and quality is checked before anything reaches your inbox.
-        Freelancers keep 90% because they are the ones doing the work.
+        Freelancers receive 100% of the agreed creator payout because they are the ones doing the work.
       </p>
+      <div class="mt-5 text-[13px] leading-6 text-mut">
+        Office: Vinayak Tower, Vibhuti Khand, Lucknow 226028
+      </div>
     </div>
 
     <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -26,7 +29,7 @@
         [number_format($stats['gigs']) . '+', 'gigs in the catalogue'],
         [number_format($stats['creators']) . '+', 'freelancers on the platform'],
         ['4 min', 'average time to a match'],
-        ['90%', 'of every rupee to creators'],
+        ['100%', 'of agreed payout to creators'],
       ] as $i => [$v, $l])
         <div class="reveal glass rounded-3xl p-6" style="transition-delay: {{ $i * 70 }}ms">
           <div class="font-display text-[30px] font-semibold tracking-tight">{{ $v }}</div>
@@ -49,7 +52,7 @@
       @foreach([
         ['Show the maths', 'If a score decides who gets paid, both sides should see how it was calculated. No hidden ranking.'],
         ['Automate the admin, never the craft', 'Briefs, matching, QA and repurposing are software problems. The work itself is made by people.'],
-        ['Default to the freelancer', 'Flat 10%, instant payouts, no bidding fees, and rules that stop clients from moving the goalposts after delivery.'],
+        ['Default to the freelancer', '100% of the agreed creator payout, instant payouts, and rules that stop clients from moving the goalposts after delivery.'],
         ['Say the uncomfortable part', 'Our comparison page lists three cases where you should hire someone else. Trust is worth more than a conversion.'],
       ] as $i => [$t, $b])
         <div class="reveal glass rounded-3xl p-7 card-hover" style="transition-delay: {{ $i * 60 }}ms">
@@ -87,6 +90,34 @@
             <p class="mt-1.5 text-[14px] leading-7 text-mut max-w-[560px]">{{ $b }}</p>
           </div>
         </div>
+      @endforeach
+    </div>
+  </div>
+</section>
+
+{{-- ── advisors ── --}}
+<section class="band-lav py-20">
+  <div class="max-w-shell mx-auto px-5 lg:px-8">
+    <div class="max-w-[620px]">
+      <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Advisors</div>
+      <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Built with experienced operators.</h2>
+      <p class="mt-3 text-[15px] leading-7 text-mut">Our advisors bring practical experience across business, growth and performance marketing.</p>
+    </div>
+    <div class="mt-10 grid sm:grid-cols-3 gap-4">
+      @foreach([
+        ['Sanimca', 'Advisor', 'https://www.linkedin.com/in/sanimca/'],
+        ['Ashu Singh', 'Advisor', 'https://www.linkedin.com/in/ashusingh30/'],
+        ['Indu Sharma', 'Performance Marketing Advisor', 'https://www.linkedin.com/in/indusharma-ppc/'],
+      ] as [$name, $role, $url])
+        <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="glass rounded-3xl p-6 card-hover group">
+          <div class="flex items-center justify-between gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-mint-wash text-mint-deep grid place-items-center font-display text-[18px] font-semibold">{{ strtoupper(substr($name, 0, 1)) }}</div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="text-faint group-hover:text-mint-deep transition"><path d="M14 3h7v7M10 14 21 3M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
+          </div>
+          <div class="mt-5 text-[16px] font-semibold">{{ $name }}</div>
+          <div class="mt-1 text-[13px] text-mut">{{ $role }}</div>
+          <div class="mt-4 text-[12px] text-mint-deep font-medium">View LinkedIn profile →</div>
+        </a>
       @endforeach
     </div>
   </div>

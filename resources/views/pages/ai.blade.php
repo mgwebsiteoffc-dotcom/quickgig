@@ -56,7 +56,7 @@
         <div class="text-[11px] font-semibold tracking-[.16em] uppercase text-mint-deep">Module 01</div>
         <h2 class="mt-3 font-display text-[30px] sm:text-[38px] font-semibold leading-[1.1]">Explainable matching</h2>
         <p class="mt-4 text-[15px] leading-7 text-mut">
-          These are real freelancers from the live marketplace, scored right now against a sample brief
+          These are managed specialists from the live service catalogue, scored right now against a sample brief
           (short-form reel, express lane, ₹3,000 budget). Move the priorities and watch the ranking change —
           this is the same maths the platform runs when it assigns your gig.
         </p>
@@ -268,7 +268,7 @@
         @foreach([
           ['Does a model write my video?', 'No. Humans make the work. The engine writes the brief, ranks the humans, checks the output against the spec and translates your feedback. AI video gigs are a category you can order — not something we secretly substitute.'],
           ['Is my brief used to train anything?', 'No. Briefs stay attached to your workspace and are shared only with the freelancer assigned to the gig.'],
-          ['Can I override the match?', 'Always. The score is a recommendation — you can pick any available freelancer from the marketplace, or re-run matching with different priorities.'],
+          ['Can I override the match?', 'Always. The score is a recommendation — you can pick any available freelancer from the service catalogue, or re-run matching with different priorities.'],
           ['What happens when the gate is wrong?', 'You can accept a bounced delivery manually, and freelancers can dispute a failed check. Every override is logged on the order.'],
         ] as [$q, $a])
           <div class="glass rounded-3xl p-6">
@@ -287,7 +287,7 @@
   'title'     => 'Run the engine on something you actually need this week.',
   'body'      => 'The brief builder is free, needs no account, and ends with three scored freelancers who can start today.',
   'primary'   => ['Open the brief builder', route('brief-builder')],
-  'secondary' => ['Browse the marketplace', route('marketplace')],
+  'secondary' => ['Browse services', route('services')],
 ])
 
 @endsection
