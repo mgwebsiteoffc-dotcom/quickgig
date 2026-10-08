@@ -29,7 +29,7 @@
     <div class="mt-5 flex flex-wrap items-center gap-4 text-[13px] text-mut">
       <span class="flex items-center gap-2.5">
         <span class="w-7 h-7 rounded-lg btn-grad grid place-items-center font-display text-[12px] font-bold text-white">{{ substr($blog->author->name ?? 'Q', 0, 1) }}</span>
-        {{ $blog->author->name ?? 'Quick GIGS team' }}
+        {{ $blog->author->name ?? 'GIG60 team' }}
       </span>
       <span class="opacity-40">·</span>
       <span>{{ $blog->published_at?->format('d M Y') }}</span>

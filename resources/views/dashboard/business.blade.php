@@ -216,7 +216,7 @@ Accept: application/json
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Recommended for you</div>
           <div class="mt-4 space-y-3">
             @foreach($recommended as $r)
-              <a href="{{ route('gigs.show', $r->id) }}" class="flex gap-3 group">
+              <a href="{{ route('gigs.show', $r->slug) }}" class="flex gap-3 group">
                 <img src="{{ $r->coverUrl() }}" class="w-14 h-12 rounded-xl object-cover border border-line" alt="">
                 <div class="min-w-0">
                   <div class="text-[13px] font-medium leading-snug line-clamp-2 group-hover:text-mint-deep transition">{{ $r->title }}</div>
