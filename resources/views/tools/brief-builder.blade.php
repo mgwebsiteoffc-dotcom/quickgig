@@ -184,7 +184,7 @@
   'eyebrow'   => 'After the brief',
   'title'     => 'Matched, escrowed and QA-checked — in the same tab.',
   'body'      => 'Turn the brief into a live gig and watch it move through the pipeline.',
-  'primary'   => ['Browse the marketplace', route('marketplace')],
+  'primary'   => ['Browse services', route('services')],
   'secondary' => ['See how the engine works', route('ai')],
 ])
 

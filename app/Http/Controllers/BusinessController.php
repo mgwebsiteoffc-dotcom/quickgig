@@ -19,8 +19,10 @@ class BusinessController extends Controller
         $orders = Order::with(['creator', 'service'])
             ->where('company_id', $company->id)
             ->orderByDesc('created_at')
-            ->limit(8)
+            ->limit(50)
             ->get();
+        $activeOrders = $orders->whereIn('status', ['placed', 'working', 'review']);
+        $pastOrders = $orders->whereIn('status', ['delivered', 'cancelled', 'completed']);
 
         $all = Order::where('company_id', $company->id);
 
@@ -48,11 +50,13 @@ class BusinessController extends Controller
         return view('dashboard.business', [
             'company'      => $company,
             'orders'       => $orders,
+            'activeOrders' => $activeOrders,
+            'pastOrders'   => $pastOrders,
             'stats'        => $stats,
             'recommended'  => $recommended,
             'board'        => $board,
             'availableNow' => $availableNow,
-            'seo'          => ['title' => 'Dashboard — Quick GIGS', 'canonical' => url('/business')],
+            'seo'          => ['title' => 'Dashboard — GIG60', 'canonical' => url('/business')],
         ]);
     }
 
@@ -73,7 +77,7 @@ class BusinessController extends Controller
     {
         return view('business.profile', [
             'company' => $this->company($request),
-            'seo'     => ['title' => 'Business profile — Quick GIGS', 'canonical' => url('/business/profile')],
+            'seo'     => ['title' => 'Business profile — GIG60', 'canonical' => url('/business/profile')],
         ]);
     }
 
