@@ -14,7 +14,7 @@
       </div>
       <div class="flex gap-2.5">
         <a href="{{ route('business.profile') }}" class="h-11 px-5 rounded-xl glass inline-flex items-center text-[13.5px] font-medium hover:border-line transition">Workspace settings</a>
-        <a href="{{ route('marketplace') }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">Order a gig</a>
+        <a href="{{ route('services') }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">Book a service</a>
       </div>
     </div>
 
@@ -146,13 +146,6 @@
             <a :href="task.gig_url" class="h-12 rounded-xl btn-grad grid place-items-center font-semibold text-[14px]">Order the matching gig →</a>
           </template>
           <a :href="task?.brief_url" class="h-12 rounded-xl glass btn-ghost grid place-items-center font-medium text-[13.5px] hover:border-line">Write a full brief</a>
-          <div class="rounded-2xl border border-line bg-tint p-4">
-            <div class="text-[10.5px] font-semibold tracking-[.12em] uppercase text-faint">Same result as JSON</div>
-            <pre class="mt-2 text-[11px] leading-5 text-mut overflow-x-auto">POST /tasks/parse
-Accept: application/json
-
-{"prompt": "…"}</pre>
-          </div>
         </div>
       </div>
     </div>
@@ -160,35 +153,36 @@ Accept: application/json
     <div class="mt-6 grid lg:grid-cols-[1fr_330px] gap-6 items-start">
 
       {{-- orders --}}
-      <div class="glass rounded-3xl p-6 sm:p-7">
-        <div class="flex items-center justify-between">
-          <h2 class="font-display text-[19px] font-semibold">Your gigs</h2>
-          <a href="{{ route('marketplace') }}" class="text-[12.5px] text-mut hover:text-ink">Browse marketplace →</a>
+      <div class="space-y-5">
+        <div class="glass rounded-3xl p-6 sm:p-7">
+          <div class="flex items-center justify-between">
+            <div><h2 class="font-display text-[19px] font-semibold">In progress</h2><p class="mt-1 text-[12.5px] text-mut">Track active work, assignment and approval.</p></div>
+            <a href="{{ route('services') }}" class="text-[12.5px] text-mut hover:text-ink">Book another service →</a>
+          </div>
+          @forelse($activeOrders as $o)
+            <div class="mt-4 rounded-2xl border border-line bg-tint p-4">
+              <div class="flex flex-wrap items-center gap-4">
+                <div class="min-w-0 flex-1"><a href="{{ route('orders.show', $o->uid) }}" class="text-[14px] font-medium truncate hover:text-mint-deep">{{ $o->service->title ?? 'Custom service' }}</a><div class="text-[12px] text-mut mt-0.5 font-mono">{{ $o->uid }} · {{ $o->creator->name ?? 'Managed assignment pending' }} · {{ ucfirst($o->status) }}</div></div>
+                <div class="text-right shrink-0"><div class="text-[14px] font-semibold font-mono">₹{{ number_format($o->total) }}</div><div class="text-[11px] text-mint-deep">{{ $o->escrow_status === 'released' ? 'released' : 'in escrow' }}</div></div>
+              </div>
+              <div class="mt-3 flex flex-wrap items-center gap-3"><div class="h-1.5 rounded-full bg-white flex-1 min-w-[150px] overflow-hidden"><div class="h-full btn-grad" style="width: {{ max(5, (int) $o->progress) }}%"></div></div><span class="text-[11px] text-mut">{{ $o->progress }}%</span><a href="{{ route('orders.show', $o->uid) }}" class="text-[12px] font-semibold text-mint-deep">Open order →</a><a href="{{ route('orders.invoice', [$o->id, 'buyer']) }}" target="_blank" class="text-[12px] text-mut hover:text-ink">Invoice</a></div>
+            </div>
+          @empty
+            <div class="mt-5 rounded-2xl border border-dashed border-line p-8 text-center text-[13.5px] text-mut">No active orders right now. <a href="{{ route('services') }}" class="text-mint-deep font-semibold">Book a service →</a></div>
+          @endforelse
         </div>
 
-        @forelse($orders as $o)
-          <a href="{{ route('orders.show', $o->uid) }}" class="mt-4 flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-tint p-4 hover:border-mint transition group">
-            <img src="{{ $o->creator?->avatarUrl() ?? 'https://i.pravatar.cc/80?img=5' }}" class="w-10 h-10 rounded-xl object-cover border border-line" alt="">
-            <div class="min-w-0 flex-1">
-              <div class="text-[14px] font-medium truncate group-hover:text-mint-deep transition">{{ $o->service->title ?? 'Custom gig' }}</div>
-              <div class="text-[12px] text-mut mt-0.5 font-mono">{{ $o->uid }} · {{ $o->creator->name ?? 'Matching…' }} · {{ $o->turnaround }}</div>
+        <div class="glass rounded-3xl p-6 sm:p-7">
+          <div class="flex items-center justify-between"><div><h2 class="font-display text-[19px] font-semibold">Past orders</h2><p class="mt-1 text-[12.5px] text-mut">Rebook the same service or open an old invoice.</p></div><span class="text-[12px] text-mut">{{ $pastOrders->count() }} records</span></div>
+          @forelse($pastOrders as $o)
+            <div class="mt-4 flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-tint p-4">
+              <div class="min-w-0 flex-1"><div class="text-[14px] font-medium truncate">{{ $o->service->title ?? 'Custom service' }}</div><div class="text-[12px] text-mut mt-0.5">{{ $o->created_at?->format('d M Y') }} · {{ $o->uid }} · Completed</div></div>
+              <div class="flex items-center gap-3 text-[12px]"><a href="{{ route('gigs.show', $o->service?->slug ?? $o->service_id) }}" class="h-9 px-3 rounded-lg btn-grad inline-flex items-center font-semibold">Book again</a><a href="{{ route('orders.invoice', [$o->id, 'buyer']) }}" target="_blank" class="text-mut hover:text-ink">Invoice</a><a href="{{ route('orders.show', $o->uid) }}" class="text-mut hover:text-ink">View</a></div>
             </div>
-            <div class="w-full sm:w-[120px]">
-              <div class="h-1.5 rounded-full bg-tint overflow-hidden"><div class="h-full btn-grad" style="width: {{ max(5, (int) $o->progress) }}%"></div></div>
-              <div class="mt-1.5 text-[11px] text-mut">{{ $o->progress }}%</div>
-            </div>
-            <div class="text-right shrink-0">
-              <div class="text-[14px] font-semibold font-mono">₹{{ number_format($o->total) }}</div>
-              <div class="text-[11px] {{ $o->escrow_status === 'released' ? 'text-mint-deep' : 'text-mint-deep' }}">{{ $o->escrow_status === 'released' ? 'released' : 'in escrow' }}</div>
-            </div>
-          </a>
-        @empty
-          <div class="mt-5 rounded-2xl border border-dashed border-line p-10 text-center">
-            <div class="font-display text-[17px] font-semibold">No gigs yet</div>
-            <p class="mt-1.5 text-[13.5px] text-mut">Order your first gig — matched to a verified freelancer in minutes.</p>
-            <a href="{{ route('marketplace') }}" class="mt-5 inline-flex h-11 px-5 rounded-xl btn-grad items-center text-[13.5px] font-semibold">Browse the marketplace</a>
-          </div>
-        @endforelse
+          @empty
+            <div class="mt-5 text-[13.5px] text-mut">Completed orders and invoices will appear here.</div>
+          @endforelse
+        </div>
       </div>
 
       {{-- sidebar --}}
@@ -216,7 +210,7 @@ Accept: application/json
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Recommended for you</div>
           <div class="mt-4 space-y-3">
             @foreach($recommended as $r)
-              <a href="{{ route('gigs.show', $r->id) }}" class="flex gap-3 group">
+              <a href="{{ route('gigs.show', $r->slug) }}" class="flex gap-3 group">
                 <img src="{{ $r->coverUrl() }}" class="w-14 h-12 rounded-xl object-cover border border-line" alt="">
                 <div class="min-w-0">
                   <div class="text-[13px] font-medium leading-snug line-clamp-2 group-hover:text-mint-deep transition">{{ $r->title }}</div>

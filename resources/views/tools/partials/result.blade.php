@@ -143,7 +143,7 @@
           <div class="mt-1.5 text-[12.5px] text-mut">{{ $brief['suggested']['category'] }} · {{ ucfirst($brief['suggested']['lane']) }} lane · escrow protected</div>
 
           @if($gig)
-            <a href="{{ route('gigs.show', $gig->id) }}" class="mt-5 h-12 rounded-xl btn-grad grid place-items-center font-semibold text-[14.5px]">
+            <a href="{{ route('gigs.show', $gig->slug) }}" class="mt-5 h-12 rounded-xl btn-grad grid place-items-center font-semibold text-[14.5px]">
               Order this gig →
             </a>
             <div class="mt-2.5 text-[11.5px] text-center text-mut">Your brief is pre-filled on the order form.</div>
