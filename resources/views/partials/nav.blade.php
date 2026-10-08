@@ -6,11 +6,10 @@
     ['How it works',  'The 7-stage delivery pipeline', route('how-it-works')],
     ['The engine',    'Explainable matching, QA gate', route('ai')],
     ['Brief builder', 'Free tool — one line to brief', route('brief-builder')],
-    ['Compare',       'Quick GIGS vs the alternatives', route('compare')],
+    ['Compare',       'GIG60 vs the alternatives', route('compare')],
   ];
   $company = [
     ['For business', 'Task board, seats, one invoice', route('for-business')],
-    ['For talent',     'Freelancers & creators — keep 90%', route('for-creators')],
     ['For teams',    'Pods, SLAs, one invoice',     route('enterprise')],
     ['Insights',     'Playbooks and case studies',  route('blog.index')],
     ['FAQ',          'Answers without a sales call', route('faq')],
@@ -25,13 +24,8 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8 h-[70px] flex items-center justify-between gap-6">
 
     {{-- Brand --}}
-    <a href="{{ route('landing') }}" class="flex items-center gap-2.5 shrink-0 group">
-      <span class="w-9 h-9 rounded-xl grid place-items-center bg-ink group-hover:scale-105 transition">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#00C48C"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
-      </span>
-      <span class="font-display text-[17px] tracking-tight leading-none">
-        <span class="font-medium">Quick</span><span class="font-bold text-mint-deep"> GIGS</span>
-      </span>
+    <a href="{{ route('landing') }}" class="flex items-center shrink-0 group" aria-label="GIG60 home">
+      <img src="{{ asset('gig60-logo.svg') }}" alt="GIG60" class="w-[126px] h-auto group-hover:scale-[1.02] transition">
     </a>
 
     {{-- Desktop menu: 2 dropdowns + 2 links --}}
