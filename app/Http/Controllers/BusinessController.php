@@ -52,7 +52,7 @@ class BusinessController extends Controller
             'recommended'  => $recommended,
             'board'        => $board,
             'availableNow' => $availableNow,
-            'seo'          => ['title' => 'Dashboard — Quick GIGS', 'canonical' => url('/business')],
+            'seo'          => ['title' => 'Dashboard — GIG60', 'canonical' => url('/business')],
         ]);
     }
 
@@ -73,7 +73,7 @@ class BusinessController extends Controller
     {
         return view('business.profile', [
             'company' => $this->company($request),
-            'seo'     => ['title' => 'Business profile — Quick GIGS', 'canonical' => url('/business/profile')],
+            'seo'     => ['title' => 'Business profile — GIG60', 'canonical' => url('/business/profile')],
         ]);
     }
 

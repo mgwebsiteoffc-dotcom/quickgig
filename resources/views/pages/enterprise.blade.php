@@ -79,6 +79,7 @@
             <textarea id="e_message" name="message" rows="3" class="field" placeholder="Weekly reels for two brands, plus thumbnails and a monthly AI ad.">{{ old('message') }}</textarea>
           </div>
 
+          @include('partials.lead-captcha')
           <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Request a pod proposal</button>
           <div class="text-center text-[11.5px] text-mut">No sales sequence. One reply from a human.</div>
         </form>
