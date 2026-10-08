@@ -39,7 +39,7 @@ class BriefBuilderController extends Controller
             'goals'   => BriefComposer::GOALS,
             'tones'   => BriefComposer::TONES,
             'seo' => [
-                'title'       => 'Free AI brief builder — turn one line into a production brief | Quick GIGS',
+                'title'       => 'Free AI brief builder — turn one line into a production brief | GIG60',
                 'description' => 'Describe your idea in one line and get a production-ready creative brief: objective, three hook options, a timed beat sheet, deliverables, spec and the QA checks your delivery must pass. Free, no signup.',
                 'canonical'   => route('brief-builder'),
             ],
