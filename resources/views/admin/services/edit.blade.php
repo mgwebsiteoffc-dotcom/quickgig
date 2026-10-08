@@ -20,6 +20,10 @@
       <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Compare price</label><input name="compare_price" type="number" min="0" value="{{ old('compare_price',$service->compare_price) }}" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
     </div>
 
+    <div class="grid sm:grid-cols-2 gap-4 p-4 rounded-2xl border border-blue-200 bg-blue-50">
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-blue-800">Billing model *</label><select name="billing_type" id="billing_type" class="mt-1 w-full h-10 px-3 rounded-xl border border-blue-200 bg-white text-[13px] font-bold"><option value="one_time" @selected(old('billing_type',$service->billing_type ?: 'one_time')==='one_time')>One-time project</option><option value="monthly" @selected(old('billing_type',$service->billing_type)==='monthly')>Monthly management</option></select></div>
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-blue-800">Monthly price ₹</label><input name="monthly_price" type="number" min="0" value="{{ old('monthly_price',$service->monthly_price) }}" class="mt-1 w-full h-10 px-3 rounded-xl border border-blue-200 bg-white text-[13px]"></div>
+    </div>
     <div id="barter-box" class="p-4 rounded-2xl border border-amber-200 bg-amber-50 space-y-3">
       <div class="font-black text-[13px]">Barter details</div>
       <div class="grid sm:grid-cols-2 gap-4">
@@ -35,6 +39,14 @@
     </div>
     <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Description</label><textarea name="description" rows="2" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">{{ old('description',$service->description) }}</textarea></div>
     <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Deliverables (one per line)</label><textarea name="deliverables" rows="2" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">{{ old('deliverables', is_array($service->deliverables)?implode("\n",$service->deliverables):$service->deliverables) }}</textarea></div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">What is included</label><textarea name="scope" rows="3" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">{{ old('scope',$service->scope) }}</textarea></div>
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">What is not included</label><textarea name="not_included" rows="3" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">{{ old('not_included',$service->not_included) }}</textarea></div>
+      <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Process / how it works</label><textarea name="process" rows="3" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">{{ old('process',$service->process) }}</textarea></div>
+    </div>
+    <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">SEO description</label><input name="seo_description" value="{{ old('seo_description',$service->seo_description) }}" maxlength="165" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>
+    <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">AEO answer</label><textarea name="aeo_answer" rows="2" class="mt-1 w-full px-3 py-2 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]">{{ old('aeo_answer',$service->aeo_answer) }}</textarea></div>
 
     <div class="grid sm:grid-cols-2 gap-4">
       <div><label class="text-[11px] font-bold tracking-widest uppercase text-[#7A7A78]">Badge</label><input name="badge" value="{{ old('badge',$service->badge) }}" class="mt-1 w-full h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"></div>

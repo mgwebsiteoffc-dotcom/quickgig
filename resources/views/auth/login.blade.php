@@ -39,7 +39,7 @@
       <button class="w-full h-12 rounded-xl btn-grad font-semibold text-[14.5px] shadow-lg shadow-ink/10">Log in</button>
 
       <div class="text-center text-[13.5px] text-mut">
-        New to Quick GIGS? <a href="{{ route('register') }}" class="text-ink font-medium underline decoration-mint decoration-2 underline-offset-4 hover:text-mint-deep">Create a free account</a>
+        New to GIG60? <a href="{{ route('register') }}" class="text-ink font-medium underline decoration-mint decoration-2 underline-offset-4 hover:text-mint-deep">Create a free account</a>
       </div>
     </form>
 

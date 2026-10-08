@@ -14,7 +14,7 @@
       </div>
       <div class="flex gap-2.5">
         <a href="{{ route('business.profile') }}" class="h-11 px-5 rounded-xl glass inline-flex items-center text-[13.5px] font-medium hover:border-line transition">Workspace settings</a>
-        <a href="{{ route('marketplace') }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">Order a gig</a>
+        <a href="{{ route('services') }}" class="h-11 px-5 rounded-xl btn-grad inline-flex items-center text-[13.5px] font-semibold">Book a service</a>
       </div>
     </div>
 
@@ -163,7 +163,7 @@ Accept: application/json
       <div class="glass rounded-3xl p-6 sm:p-7">
         <div class="flex items-center justify-between">
           <h2 class="font-display text-[19px] font-semibold">Your gigs</h2>
-          <a href="{{ route('marketplace') }}" class="text-[12.5px] text-mut hover:text-ink">Browse marketplace →</a>
+          <a href="{{ route('services') }}" class="text-[12.5px] text-mut hover:text-ink">Browse services →</a>
         </div>
 
         @forelse($orders as $o)
@@ -186,7 +186,7 @@ Accept: application/json
           <div class="mt-5 rounded-2xl border border-dashed border-line p-10 text-center">
             <div class="font-display text-[17px] font-semibold">No gigs yet</div>
             <p class="mt-1.5 text-[13.5px] text-mut">Order your first gig — matched to a verified freelancer in minutes.</p>
-            <a href="{{ route('marketplace') }}" class="mt-5 inline-flex h-11 px-5 rounded-xl btn-grad items-center text-[13.5px] font-semibold">Browse the marketplace</a>
+            <a href="{{ route('services') }}" class="mt-5 inline-flex h-11 px-5 rounded-xl btn-grad items-center text-[13.5px] font-semibold">Browse services</a>
           </div>
         @endforelse
       </div>
@@ -216,7 +216,7 @@ Accept: application/json
           <div class="text-[11px] font-semibold tracking-[.14em] uppercase text-faint">Recommended for you</div>
           <div class="mt-4 space-y-3">
             @foreach($recommended as $r)
-              <a href="{{ route('gigs.show', $r->id) }}" class="flex gap-3 group">
+              <a href="{{ route('gigs.show', $r->slug) }}" class="flex gap-3 group">
                 <img src="{{ $r->coverUrl() }}" class="w-14 h-12 rounded-xl object-cover border border-line" alt="">
                 <div class="min-w-0">
                   <div class="text-[13px] font-medium leading-snug line-clamp-2 group-hover:text-mint-deep transition">{{ $r->title }}</div>
