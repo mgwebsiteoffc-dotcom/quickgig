@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Idempotent demo data for Quick GIGS.
+     * Idempotent demo data for GIG60.
      * Run with: php artisan migrate --seed  (or php artisan db:seed)
      */
     public function run(): void
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->sampleOrders($company, $creator);
         $this->sampleBoard($company, $creator);
 
-        $this->command?->info('Quick GIGS demo data ready — log in with business@quickgigs.in / Business@123');
+        $this->command?->info('GIG60 demo data ready — log in with business@quickgigs.in / Business@123');
     }
 
     /* ── platform staff ── */
@@ -105,7 +105,7 @@ class DatabaseSeeder extends Seeder
     private function faqs(): void
     {
         $faqs = [
-            ['How is Quick GIGS different from a normal freelance site?', 'You never post a job and wait for proposals. Pick a fixed-price gig or post a brief, and the matching engine assigns a verified freelancer in minutes. Payment stays in escrow until you approve.', 'General', 1, true],
+            ['How is GIG60 different from a normal freelance site?', 'You never post a job and wait for proposals. Pick a fixed-price gig or post a brief, and the matching engine assigns a verified freelancer in minutes. Payment stays in escrow until you approve.', 'General', 1, true],
             ['How fast is delivery, really?', 'Express gigs start within minutes and land in about three hours. Standard reels and thumbnails are next-day. Team packs and AI ads take up to two days.', 'Delivery', 2, true],
             ['What if I do not like the work?', 'Every gig includes two free revisions. If the delivery still misses the brief, raise a dispute before approving and the escrow is refunded in full.', 'Guarantee', 3, true],
             ['How are freelancers verified?', 'Freelancers submit ID, portfolio and client references. Our team reviews each profile manually, then tracks on-time delivery, rating and response time on every gig.', 'Freelancers', 4, true],

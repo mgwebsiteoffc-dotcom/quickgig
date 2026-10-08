@@ -30,7 +30,7 @@ use App\Http\Controllers\Admin\AuditLogController as AdminAudit;
 
 /*
 |--------------------------------------------------------------------------
-| Quick GIGS — marketplace routes
+| GIG60 — marketplace routes
 |--------------------------------------------------------------------------
 */
 
@@ -134,7 +134,7 @@ Route::get('/creators/{id}', function ($id) {
         'c'   => $c,
         'seo' => [
             'title'       => $c->seoTitle(),
-            'description' => \Illuminate\Support\Str::limit($c->bio ?: ($c->headline ?: 'Verified creator on Quick GIGS'), 150),
+            'description' => \Illuminate\Support\Str::limit($c->bio ?: ($c->headline ?: 'Verified creator on GIG60'), 150),
             'canonical'   => url('/creators/' . $c->id),
             'image'       => $c->avatarUrl(),
         ],
@@ -147,7 +147,7 @@ Route::post('/webhooks/razorpay', [OrderController::class, 'webhook'])->name('we
 /* ── Health ── */
 Route::get('/health', fn () => response()->json([
     'status' => 'ok',
-    'app'    => 'Quick GIGS',
+    'app'    => 'GIG60',
     'time'   => now()->toIso8601String(),
 ]));
 

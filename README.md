@@ -1,8 +1,8 @@
-# Quick GIGS
+# GIG60
 
 **Hire a verified pro in minutes, not weeks.**
 
-Quick GIGS is a fast, escrow-protected freelance marketplace built on Laravel 11: post a brief or buy
+GIG60 is a fast, escrow-protected freelance marketplace built on Laravel 11: post a brief or buy
 a fixed-price gig, get matched to a verified freelancer automatically, track production live, and
 release payment only when you approve.
 
@@ -233,7 +233,7 @@ always gets a brief.
 
 `docs/competitor-audit.md` captures the September 2026 review of Unjob.ai (incl. business.unjob.ai),
 Elyvato and the wider field (Fiverr, Upwork, Superside, Design Pickle, Awesomic, Contra, Toptal) —
-their models, design language, weaknesses, and the gaps Quick GIGS targets.
+their models, design language, weaknesses, and the gaps GIG60 targets.
 
 ## Tests
 
