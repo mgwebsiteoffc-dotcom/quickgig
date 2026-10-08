@@ -1,32 +1,4 @@
 <?php
-
 namespace App\Notifications;
-
-use App\Models\Order;
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
-
-class DeliverySubmitted extends Notification
-{
-    use Queueable;
-
-    public function __construct(public Order $order) {}
-
-    public function via(object $notifiable): array
-    {
-        return ['mail'];
-    }
-
-    public function toMail(object $notifiable): MailMessage
-    {
-        $o = $this->order;
-
-        return (new MailMessage)
-            ->subject('Delivery ready to review — ' . $o->uid)
-            ->greeting('Your delivery is in.')
-            ->line(($o->creator->name ?? 'Your freelancer') . ' submitted "' . ($o->service->title ?? 'your gig') . '".')
-            ->line('It passed the automated quality gate. Approve to release ₹' . number_format($o->total - $o->fee) . ', or ask for one of your two free revisions.')
-            ->action('Review the delivery', route('orders.show', $o->uid));
-    }
-}
+use App\Models\Order; use App\Support\MessageTemplates; use Illuminate\Bus\Queueable; use Illuminate\Notifications\Messages\MailMessage; use Illuminate\Notifications\Notification;
+class DeliverySubmitted extends Notification { use Queueable; public function __construct(public Order $order){} public function via(object $notifiable):array{return ['mail'];} public function toMail(object $notifiable):MailMessage { $o=$this->order; $t=MessageTemplates::get('delivery_submitted','Delivery ready to review — {{uid}}','{{creator}} submitted "{{service}}". Review the delivery and approve it to release ₹{{payout}}.',['uid'=>$o->uid,'creator'=>$o->creator->name??'Your freelancer','service'=>$o->service->title??'your gig','payout'=>number_format($o->total-$o->fee-($o->tax_amount??0))]); return (new MailMessage)->subject($t['subject'])->greeting('Your delivery is in.')->line($t['body'])->action('Review the delivery',route('orders.show',$o->uid)); } }

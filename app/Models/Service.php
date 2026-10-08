@@ -10,14 +10,14 @@ class Service extends Model
     protected $fillable = [
         'creator_id','title','slug','description','cover','price','mrp','delivery_days','category',
         'profile_type','price_type','barter_value','is_active','is_barter','deliverables','revision_count','collab_terms',
-        'badge','sold_count','rating'
+        'badge','sold_count','rating','billing_type','monthly_price','scope','not_included','process','faq_json','seo_title','seo_description','aeo_answer'
     ];
 
     protected $casts = [
         'deliverables'=>'array',
         'is_active'=>'boolean',
         'is_barter'=>'boolean',
-        'rating'=>'decimal:1',
+        'rating'=>'decimal:1','monthly_price'=>'integer','faq_json'=>'array',
     ];
 
     const CATEGORIES = ['Reel','Thumbnail','AI Video','UGC Video','Writing','Development','Design','Voice Over','Marketing','Bundle'];
@@ -40,9 +40,19 @@ class Service extends Model
     public function displayPrice(): string
     {
         if ($this->price_type === 'barter') return 'Barter';
-        if ($this->price_type === 'hybrid') return '₹'.number_format($this->price).' + Barter';
-        return '₹'.number_format($this->price);
+        $amount = $this->billing_type === 'monthly' && $this->monthly_price ? $this->monthly_price : $this->price;
+        $suffix = $this->billing_type === 'monthly' ? '/month' : '';
+        if ($this->price_type === 'hybrid') return '₹'.number_format($amount).' + Barter'.$suffix;
+        return '₹'.number_format($amount).$suffix;
     }
+
+    public function billingLabel(): string
+    {
+        return $this->billing_type === 'monthly' ? 'Monthly management' : 'One-time project';
+    }
+
+    public function seoTitle(): string { return $this->seo_title ?: $this->title.' | GIG60'; }
+    public function seoDescription(): string { return $this->seo_description ?: \Illuminate\Support\Str::limit(strip_tags($this->description ?: $this->title), 155); }
 
     public function isBarter(): bool { return $this->price_type === 'barter' || $this->is_barter; }
 

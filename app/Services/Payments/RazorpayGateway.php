@@ -90,8 +90,13 @@ class RazorpayGateway
     public function fetchPayment(string $paymentId): array
     {
         $this->assertEnabled();
-
         return $this->request('get', '/payments/' . $paymentId);
+    }
+
+    public function fetchPayout(string $payoutId): array
+    {
+        $this->assertEnabled();
+        return $this->request('get', '/payouts/' . $payoutId);
     }
 
     /** RazorpayX payouts need a funding account on top of the checkout keys. */
@@ -125,7 +130,7 @@ class RazorpayGateway
             'purpose'               => 'payout',
             'queue_if_low_balance'  => true,
             'reference_id'          => $payout->uid,
-            'narration'             => 'Quick GIGS payout',
+            'narration'             => 'GIG60 payout',
             'fund_account'          => [
                 'account_type' => 'vpa',
                 'vpa'          => ['address' => $upi],
