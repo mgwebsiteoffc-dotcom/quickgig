@@ -77,7 +77,7 @@ class MarketplaceController extends Controller
                 'online'   => Creator::where('is_verified', true)->where('is_available', true)->count(),
             ],
             'seo' => [
-                'title'       => 'Marketplace — fixed-price gigs from verified freelancers | Quick GIGS',
+                'title'       => 'Marketplace — fixed-price gigs from verified freelancers | GIG60',
                 'description' => 'Browse ready-to-buy gigs: reels, thumbnails, AI video ads, UGC and design. Fixed prices, verified freelancers, escrow-protected delivery from ₹1,299.',
                 'canonical'   => url('/marketplace'),
             ],
@@ -86,7 +86,7 @@ class MarketplaceController extends Controller
 
     public function show(Request $request, $id)
     {
-        $gig = Service::with(['creator.portfolio'])->findOrFail($id);
+        $gig = Service::with(['creator.portfolio' => fn ($q) => $q->published()])->findOrFail($id);
 
         $related = Service::with('creator')
             ->where('is_active', true)
@@ -106,10 +106,11 @@ class MarketplaceController extends Controller
 
         return view('marketplace.show', [
             'gig'     => $gig,
+            'service' => $gig,
             'related' => $related,
             'seo'     => [
-                'title'       => $gig->title . ' — ' . $gig->displayPrice() . ' | Quick GIGS',
-                'description' => \Illuminate\Support\Str::limit(strip_tags($gig->description ?: $gig->title), 150),
+                'title'       => $gig->seoTitle(),
+                'description' => $gig->seoDescription(),
                 'canonical'   => route('gigs.show', $gig->id),
                 'image'       => $gig->coverUrl(),
             ],

@@ -32,7 +32,8 @@
 
     <input x-ref="search" x-model="query" x-on:focus="open = true" x-on:input="open = true"
            class="flex-1 min-w-[140px] h-8 px-1 text-[13.5px] outline-none bg-transparent placeholder:text-faint"
-           :placeholder="chosen.length ? 'Add another…' : 'Search skills — reels, Figma, copywriting…'">
+           aria-label="Search skills"
+           :placeholder="chosen.length ? 'Search for another skill…' : 'Type to search skills — reels, Figma, copywriting…'">
 
     <span class="text-[11px] font-mono text-faint shrink-0 pr-1" x-text="chosen.length + '/' + max"></span>
   </div>
@@ -62,7 +63,7 @@
     </template>
 
     <div x-show="!Object.keys(filtered).length" x-cloak class="px-3 py-4 text-[13px] text-faint">
-      No skill matches “<span x-text="query"></span>”. The list is curated by the Quick GIGS team —
+      No skill matches “<span x-text="query"></span>”. The list is curated by the GIG60 team —
       <a href="{{ route('contact') }}" class="text-mint-deep font-medium hover:underline">ask us to add it</a>.
     </div>
   </div>
