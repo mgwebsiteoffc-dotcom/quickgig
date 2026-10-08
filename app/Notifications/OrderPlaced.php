@@ -1,42 +1,4 @@
 <?php
-
 namespace App\Notifications;
-
-use App\Models\Order;
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
-
-class OrderPlaced extends Notification
-{
-    use Queueable;
-
-    public function __construct(public Order $order, public string $audience = 'buyer') {}
-
-    public function via(object $notifiable): array
-    {
-        return ['mail'];
-    }
-
-    public function toMail(object $notifiable): MailMessage
-    {
-        $o = $this->order;
-
-        if ($this->audience === 'freelancer') {
-            return (new MailMessage)
-                ->subject('New gig assigned — ' . ($o->service->title ?? 'Quick GIGS'))
-                ->greeting('You have a new gig.')
-                ->line(($o->company->name ?? 'A client') . ' booked "' . ($o->service->title ?? 'a gig') . '".')
-                ->line('Payout on approval: ₹' . number_format($o->total - $o->fee) . ' · due ' . ($o->due_at?->format('d M, H:i') ?? 'soon'))
-                ->line('The brief is attached to the gig in your studio.')
-                ->action('Open the gig', route('creator.dashboard'));
-        }
-
-        return (new MailMessage)
-            ->subject('Order ' . $o->uid . ' is live')
-            ->greeting('Your gig is booked.')
-            ->line('"' . ($o->service->title ?? 'Your gig') . '" is with ' . ($o->creator->name ?? 'a verified freelancer') . '.')
-            ->line('₹' . number_format($o->total) . ' is held in escrow and is released only when you approve.')
-            ->action('Track the order', route('orders.show', $o->uid));
-    }
-}
+use App\Models\Order; use App\Support\MessageTemplates; use Illuminate\Bus\Queueable; use Illuminate\Notifications\Messages\MailMessage; use Illuminate\Notifications\Notification;
+class OrderPlaced extends Notification { use Queueable; public function __construct(public Order $order, public string $audience='buyer'){} public function via(object $notifiable):array{return ['mail'];} public function toMail(object $notifiable):MailMessage { $o=$this->order; if($this->audience==='freelancer'){ $t=MessageTemplates::get('order_freelancer','New gig assigned — {{service}}','{{company}} booked "{{service}}". Payout on approval: ₹{{payout}}. Due {{due}}.',['company'=>$o->company->name??'A client','service'=>$o->service->title??'a gig','payout'=>number_format($o->total-$o->fee-($o->tax_amount??0)),'due'=>$o->due_at?->format('d M, H:i')??'soon']); return (new MailMessage)->subject($t['subject'])->greeting('You have a new gig.')->line($t['body'])->line('The brief is attached to the gig in your studio.')->action('Open the gig',route('creator.dashboard')); } $t=MessageTemplates::get('order_buyer','Order {{uid}} is live','"{{service}}" is with {{creator}}. ₹{{total}} is held in escrow and released only when you approve.',['uid'=>$o->uid,'service'=>$o->service->title??'Your gig','creator'=>$o->creator->name??'a verified freelancer','total'=>number_format($o->total)]); return (new MailMessage)->subject($t['subject'])->greeting('Your gig is booked.')->line($t['body'])->action('Track the order',route('orders.show',$o->uid)); } }
