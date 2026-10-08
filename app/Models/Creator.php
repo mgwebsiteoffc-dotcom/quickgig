@@ -13,7 +13,7 @@ class Creator extends Model
         'upi_id','portfolio_url','instagram','youtube','seo_title','seo_description',
         // dynamic profile type & barter/UGC
         'profile_type','barter_available','barter_categories','ugc_niches','followers_count','collab_type',
-        'verification_notes','verified_at','rejection_reason'
+        'verification_notes','verified_at','rejection_reason','account_kind','agency_name','team_size','team_services','team_description'
     ];
 
     protected $casts = [
@@ -24,7 +24,7 @@ class Creator extends Model
         'is_featured'=>'boolean',
         'barter_available'=>'boolean',
         'barter_categories'=>'array',
-        'ugc_niches'=>'array',
+        'ugc_niches'=>'array','team_services'=>'array',
         'rating'=>'decimal:1',
         'verified_at'=>'datetime',
     ];
@@ -35,6 +35,7 @@ class Creator extends Model
         'influencer' => 'Influencer (Barter)',
         'designer' => 'Designer (Thumbnails)',
         'hybrid' => 'Hybrid (All)',
+        'agency' => 'Agency / Team',
     ];
 
     public function user(){ return $this->belongsTo(User::class); }
@@ -56,7 +57,7 @@ class Creator extends Model
     }
 
     public function handleClean(): string { return ltrim($this->handle, '@'); }
-    public function seoTitle(): string { return $this->seo_title ?: $this->name.' ('.$this->handle.') — '.($this->headline ?: 'Verified Creator') . ' | Quick GIGS'; }
+    public function seoTitle(): string { return $this->seo_title ?: $this->name.' ('.$this->handle.') — '.($this->headline ?: 'Verified Creator') . ' | GIG60'; }
 
     public function profileLabel(): string { return self::PROFILE_TYPES[$this->profile_type] ?? ucfirst(str_replace('_',' ',$this->profile_type)); }
     public function isBarter(): bool { return $this->barter_available || $this->collab_type === 'barter' || $this->collab_type === 'both'; }

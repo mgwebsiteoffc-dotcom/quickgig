@@ -6,6 +6,7 @@ use App\Models\Faq;
 use App\Models\Blog;
 use App\Models\Creator;
 use App\Models\Service;
+use App\Models\PortfolioItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -160,8 +161,19 @@ class LandingController extends Controller
             ['name' => 'Marketing & UGC',  'count' => '260 gigs', 'from' => '₹3,999', 'q' => 'UGC Video',  'icon' => 'M3 11v2a1 1 0 0 0 1 1h3l4 4V6L7 10H4a1 1 0 0 0-1 1zM16 8a5 5 0 0 1 0 8'],
         ];
 
-        // Recently delivered strip.
-        $gallery = [
+        // Recently delivered strip: admin-featured creator work first, demo gallery as fallback.
+        $gallery = [];
+        try {
+            $gallery = PortfolioItem::published()->featured()->with('creator')->latest('updated_at')->limit(8)->get()->map(fn ($item) => [
+                'img' => $item->cover ? (filter_var($item->cover, FILTER_VALIDATE_URL) ? $item->cover : asset('storage/'.$item->cover)) : 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=500&q=80',
+                'label' => $item->title,
+                'meta' => $item->category ?: ($item->creator?->name ?? 'Work sample'),
+                'href' => $item->external_url ?: ($item->video_url ?: route('creator.public', $item->creator_id)),
+            ])->all();
+        } catch (\Throwable $e) {
+            // Portfolio table may not exist before the first migration.
+        }
+        if (!$gallery) $gallery = [
             ['img' => 'https://images.unsplash.com/photo-1574717025058-2f8737d2e2b7?w=500&q=80', 'label' => 'Launch reel',      'meta' => '3h 12m'],
             ['img' => 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&q=80', 'label' => 'Thumbnail pack',   'meta' => '5h 40m'],
             ['img' => 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=500&q=80', 'label' => 'UGC unboxing',     'meta' => '1 day'],
@@ -192,7 +204,7 @@ class LandingController extends Controller
         ];
 
         $feeNotes = [
-            ['title' => '10% platform fee', 'body' => 'Freelancers keep 90% of every gig. No connects, no bidding credits, no listing fees.'],
+            ['title' => 'No creator fee', 'body' => 'Freelancers keep 100% of every gig. GST is shown to the client at checkout.'],
             ['title' => 'Escrow by default', 'body' => 'Funds are held the moment you order and released to the freelancer only after you approve.'],
             ['title' => 'Free to post',      'body' => 'Posting briefs, browsing freelancers and getting matched costs nothing.'],
         ];
@@ -204,8 +216,8 @@ class LandingController extends Controller
         ];
 
         $seo = [
-            'title'       => 'Quick GIGS — Hire verified freelancers in minutes, not weeks',
-            'description' => 'Quick GIGS writes your brief in one second and matches it to a verified freelancer or creator in minutes — video, design, copy, code, voice, UGC and marketing. Live tracking, flat pricing from ₹1,299, escrow-protected payments.',
+            'title'       => 'GIG60 — Hire verified freelancers in minutes, not weeks',
+            'description' => 'GIG60 writes your brief in one second and matches it to a verified freelancer or creator in minutes — video, design, copy, code, voice, UGC and marketing. Live tracking, flat pricing from ₹1,299, escrow-protected payments.',
             'canonical'   => url('/'),
             'image'       => url('/og-home.jpg'),
             'type'        => 'website',
@@ -246,11 +258,11 @@ class LandingController extends Controller
         }
 
         return collect([
-            (object) ['question' => 'How is Quick GIGS different from a normal freelance site?', 'answer' => 'You never post a job and wait for proposals. You pick a fixed-price gig or post a brief, and our matching engine assigns a verified freelancer in minutes. Payment sits in escrow until you approve the delivery.'],
+            (object) ['question' => 'How is GIG60 different from a normal freelance site?', 'answer' => 'You never post a job and wait for proposals. You pick a fixed-price gig or post a brief, and our matching engine assigns a verified freelancer in minutes. Payment sits in escrow until you approve the delivery.'],
             (object) ['question' => 'How fast is delivery, really?', 'answer' => 'Express gigs start in minutes and land in about three hours. Standard reels and thumbnails are next-day. Team packs and AI ads take up to two days.'],
             (object) ['question' => 'What if I do not like the work?', 'answer' => 'Every gig includes two free revisions. If the delivery still misses the brief, raise a dispute before you approve and the escrow is refunded.'],
             (object) ['question' => 'How are freelancers verified?', 'answer' => 'Every freelancer submits ID, portfolio and past client references. Our team reviews each profile manually and tracks on-time delivery, rating and response time after that.'],
-            (object) ['question' => 'What does it cost?', 'answer' => 'Gigs start at ₹1,299. The platform fee is a flat 10% — freelancers keep 90%. Posting briefs and browsing freelancers is free.'],
+            (object) ['question' => 'What does it cost?', 'answer' => 'Gigs start at ₹1,299. There is no creator platform fee. GST is shown clearly to the client at checkout. Posting briefs and browsing freelancers is free.'],
             (object) ['question' => 'How do freelancers get paid?', 'answer' => 'The moment you approve a delivery, the escrow is released and paid out to the freelancer’s UPI or bank account, usually within minutes.'],
         ]);
     }
@@ -272,6 +284,7 @@ class LandingController extends Controller
             if ($services->isNotEmpty()) {
                 return $services->map(fn ($s) => [
                     'id'     => $s->id,
+                    'slug'   => $s->slug,
                     'title'  => $s->title,
                     'price'  => $s->displayPrice(),
                     'mrp'    => $s->compareAt() ? '₹' . number_format($s->compareAt()) : null,
