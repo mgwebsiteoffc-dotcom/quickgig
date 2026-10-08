@@ -10,7 +10,7 @@
         Seven stages between <span class="grad-text">your idea</span> and a published asset.
       </h1>
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[600px]">
-        Most platforms automate the checkout and leave you to run the project. Quick GIGS automates the
+        Most platforms automate the checkout and leave you to run the project. GIG60 automates the
         parts that actually waste your week: writing the brief, choosing a freelancer, chasing status,
         checking quality and re-cutting for every format.
       </p>
@@ -90,7 +90,7 @@
           ['SLA or credit', 'Miss the promised window and the express premium is credited back automatically.'],
           ['Two free revisions', 'Included on every gig, translated into timestamped notes so they actually land.'],
           ['No lock-in', 'No subscription, no commitment fee, no minimum volume. Order one gig or two hundred.'],
-          ['Freelancers keep 90%', 'A flat 10% platform fee. No connects, no bidding credits, no listing charges.'],
+          ['Freelancers receive the agreed payout', 'No creator fee. No connects, no bidding credits, no listing charges.'],
           ['Your files, your rights', 'Full commercial rights transfer on approval, with licensed music and footage only.'],
         ] as $i => [$t, $b])
           <div class="reveal glass rounded-3xl p-6" style="transition-delay: {{ $i * 60 }}ms">
