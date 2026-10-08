@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-@include('components.seo', ['seo' => $seo ?? [], 'faqs' => $faqs ?? null, 'blog' => $blog ?? null, 'breadcrumbs' => $breadcrumbs ?? null])
+@include('components.seo', ['seo' => $seo ?? [], 'faqs' => $faqs ?? null, 'blog' => $blog ?? null, 'service' => $service ?? null, 'breadcrumbs' => $breadcrumbs ?? null])
 <script src="https://cdn.tailwindcss.com"></script>
 {{-- Alpine plugins must load before the core, or their directives are missing at init --}}
 <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
@@ -137,7 +137,8 @@ tailwind.config = {
   .pulse-dot::after { content:''; position:absolute; inset:-4px; border-radius:50%; border:1px solid currentColor; opacity:.5; animation:pulseRing 1.8s ease-out infinite; }
   @keyframes pulseRing { 0%{transform:scale(.7);opacity:.7} 100%{transform:scale(1.5);opacity:0} }
 
-  .marquee { display:flex; gap:3rem; width:max-content; animation:slide 34s linear infinite; }
+  .marquee { display:flex; gap:0; width:max-content; animation:slide 34s linear infinite; }
+  .marquee > * { margin-right:3rem; }
   .marquee:hover { animation-play-state:paused; }
   @keyframes slide { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
