@@ -70,7 +70,7 @@ class PageController extends Controller
     public static function comparison(): array
     {
         return [
-            'columns' => ['Quick GIGS', 'Quick-commerce gig apps', 'Managed agencies', 'Bidding marketplaces'],
+            'columns' => ['GIG60', 'Quick-commerce gig apps', 'Managed agencies', 'Bidding marketplaces'],
             'rows' => [
                 ['Time to a working freelancer',   'Matched in ~4 min',              '"Seconds" to checkout, then a queue', '30 min call, then onboarding', '2–5 days of proposals'],
                 ['Brief quality',               'Generated for you, free',         'You write it',                        'Discovery call required',      'You write it, 40 times'],
@@ -78,7 +78,7 @@ class PageController extends Controller
                 ['Money up front',              'Escrow, refundable',              'Prepaid checkout',                    'Commitment fee / retainer',    'Escrow + connects fees'],
                 ['Pre-delivery QA',             '6 automated checks',              'None',                                'Manual, variable',             'None'],
                 ['Revisions',                   '2 free, translated to notes',     'Paid add-on',                         'Scoped in contract',           'Negotiated per gig'],
-                ['Freelancer take-home',           '90%',                             '~70–80%',                             'Undisclosed',                  '~80% after fees'],
+                ['Freelancer take-home',           '100%',                             '~70–80%',                             'Undisclosed',                  '~80% after fees'],
                 ['Repurposing',                 'Automatic on approval',           'New order',                           'New line item',                'New gig'],
             ],
         ];
@@ -89,8 +89,8 @@ class PageController extends Controller
         return view('pages.how-it-works', [
             'pipeline' => self::pipeline(),
             'seo' => [
-                'title'       => 'How Quick GIGS works — brief, match, escrow, QA, delivery',
-                'description' => 'The seven-stage Quick GIGS pipeline: brief engine, explainable matching, escrow, freelancer copilot, automated QA gate, revision translator and auto-repurposing.',
+                'title'       => 'How GIG60 works — brief, match, escrow, QA, delivery',
+                'description' => 'The seven-stage GIG60 pipeline: brief engine, explainable matching, escrow, freelancer copilot, automated QA gate, revision translator and auto-repurposing.',
                 'canonical'   => route('how-it-works'),
             ],
         ]);
@@ -111,8 +111,8 @@ class PageController extends Controller
             'weights'  => MatchEngine::WEIGHTS,
             'pipeline' => self::pipeline(),
             'seo' => [
-                'title'       => 'The Quick GIGS engine — explainable matching, QA gate, revision translator',
-                'description' => 'Inside the Quick GIGS engine: transparent match scores, an automated quality gate that checks every delivery, and a revision translator that turns vague feedback into editor-ready notes.',
+                'title'       => 'The GIG60 engine — explainable matching, QA gate, revision translator',
+                'description' => 'Inside the GIG60 engine: transparent match scores, an automated quality gate that checks every delivery, and a revision translator that turns vague feedback into editor-ready notes.',
                 'canonical'   => route('ai'),
             ],
         ]);
@@ -123,8 +123,8 @@ class PageController extends Controller
         return view('pages.pricing', [
             'comparison' => self::comparison(),
             'seo' => [
-                'title'       => 'Pricing — flat gig prices, 10% platform fee, escrow included | Quick GIGS',
-                'description' => 'Transparent Quick GIGS pricing: gigs from ₹1,299, a flat 10% platform fee, freelancers keep 90%, escrow on every order and no subscription or commitment fee.',
+                'title'       => 'Pricing — flat gig prices, GST shown clearly, escrow included | GIG60',
+                'description' => 'Transparent GIG60 pricing: gigs from ₹1,299, GST shown clearly at checkout, freelancers keep 100%, escrow on every order and no subscription or commitment fee.',
                 'canonical'   => route('pricing'),
             ],
         ]);
@@ -137,8 +137,8 @@ class PageController extends Controller
         return view('pages.for-creators', [
             'creatorCount' => max($count, 1),
             'seo' => [
-                'title'       => 'Work on Quick GIGS — freelancers and creators keep 90%',
-                'description' => 'Join Quick GIGS as a creator: no bidding, no connects, no proposals. Get matched by skill and availability, work from a generated brief and keep 90% of every gig.',
+                'title'       => 'Work on GIG60 — freelancers and creators keep 100%',
+                'description' => 'Join GIG60 as a creator: no bidding, no connects, no proposals. Get matched by skill and availability, work from a generated brief and keep 100% of every gig.',
                 'canonical'   => route('for-creators'),
             ],
         ]);
@@ -159,7 +159,7 @@ class PageController extends Controller
                 ['UGC & influencer','Freelancers on camera, testimonials', 'bg-ink'],
             ],
             'seo' => [
-                'title'       => 'Quick GIGS for Business — your creative team on a subscription',
+                'title'       => 'GIG60 for Business — your creative team on a subscription',
                 'description' => 'Queue creative tasks on a shared board, get a verified specialist assigned in minutes and approve the work. Team seats, SLAs, escrow and one invoice — from ₹24,999 a month.',
                 'canonical'   => route('for-business'),
             ],
@@ -171,8 +171,8 @@ class PageController extends Controller
         return view('pages.compare', [
             'comparison' => self::comparison(),
             'seo' => [
-                'title'       => 'Quick GIGS vs gig apps, agencies and bidding marketplaces',
-                'description' => 'An honest comparison: matching speed, brief quality, transparency, escrow terms, QA, revisions and freelancer take-home across Quick GIGS, quick-commerce gig apps, managed agencies and bidding marketplaces.',
+                'title'       => 'GIG60 vs gig apps, agencies and bidding marketplaces',
+                'description' => 'An honest comparison: matching speed, brief quality, transparency, escrow terms, QA, revisions and freelancer take-home across GIG60, quick-commerce gig apps, managed agencies and bidding marketplaces.',
                 'canonical'   => route('compare'),
             ],
         ]);
@@ -182,7 +182,7 @@ class PageController extends Controller
     {
         return view('pages.enterprise', [
             'seo' => [
-                'title'       => 'Quick GIGS for teams — content pods, SLAs and consolidated billing',
+                'title'       => 'GIG60 for teams — content pods, SLAs and consolidated billing',
                 'description' => 'Run always-on content with dedicated expert pods, brand-locked briefs, SLA-backed turnaround, seat-based approvals and a single monthly invoice.',
                 'canonical'   => route('enterprise'),
             ],
@@ -197,8 +197,8 @@ class PageController extends Controller
                 'creators' => max(Creator::count(), 1),
             ],
             'seo' => [
-                'title'       => 'About Quick GIGS — the marketplace that removes the waiting',
-                'description' => 'Quick GIGS is building the fastest honest way to get creative work made: generated briefs, explainable matching, escrow payments and automated quality checks.',
+                'title'       => 'About GIG60 — the marketplace that removes the waiting',
+                'description' => 'GIG60 is building the fastest honest way to get creative work made: generated briefs, explainable matching, escrow payments and automated quality checks.',
                 'canonical'   => route('about'),
             ],
         ]);
@@ -213,8 +213,8 @@ class PageController extends Controller
             'faqs'   => $faqs,
             'groups' => $faqs->groupBy(fn ($f) => $f->category ?: 'General'),
             'seo' => [
-                'title'       => 'FAQ — how Quick GIGS works, pricing, escrow and payouts',
-                'description' => 'Answers on matching, delivery speed, revisions, escrow, refunds, pricing, GST invoices and freelancer payouts on Quick GIGS.',
+                'title'       => 'FAQ — how GIG60 works, pricing, escrow and payouts',
+                'description' => 'Answers on matching, delivery speed, revisions, escrow, refunds, pricing, GST invoices and freelancer payouts on GIG60.',
                 'canonical'   => route('faq'),
             ],
         ]);
@@ -224,8 +224,8 @@ class PageController extends Controller
     {
         return view('pages.contact', [
             'seo' => [
-                'title'       => 'Contact Quick GIGS',
-                'description' => 'Talk to the Quick GIGS team about gigs, freelancer verification, enterprise pods or partnerships.',
+                'title'       => 'Contact GIG60',
+                'description' => 'Talk to the GIG60 team about gigs, freelancer verification, enterprise pods or partnerships.',
                 'canonical'   => route('contact'),
             ],
         ]);
@@ -241,7 +241,14 @@ class PageController extends Controller
             'phone'   => ['nullable', 'string', 'max:20'],
             'volume'  => ['nullable', 'string', 'max:40'],
             'message' => ['nullable', 'string', 'max:1200'],
+            'captcha_answer' => ['required', 'integer'],
         ]);
+
+        if ((int) $data['captcha_answer'] !== (int) $request->session()->pull('lead_captcha_answer', -1)) {
+            return back()->withInput()->withErrors(['captcha_answer' => 'Please solve the spam check correctly.']);
+        }
+
+        unset($data['captcha_answer']);
 
         $data['type']   = $data['type'] ?? 'contact';
         $data['source'] = $request->input('source', url()->previous());
