@@ -11,7 +11,7 @@
       </h1>
       <p class="mt-5 text-[16px] leading-7 text-mut max-w-[620px]">
         Quick-commerce gig apps are fast to check out. Managed agencies take the quality burden off you.
-        Bidding marketplaces have the deepest supply. We built Quick GIGS because none of them tell you
+        Bidding marketplaces have the deepest supply. We built GIG60 because none of them tell you
         <em>why</em> a freelancer was chosen, or stop bad work before it reaches your inbox.
       </p>
     </div>
