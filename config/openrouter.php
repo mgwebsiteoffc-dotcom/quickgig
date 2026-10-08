@@ -16,7 +16,7 @@ return [
 
     // Sent to OpenRouter for attribution / leaderboards. Optional but recommended.
     'referer' => env('OPENROUTER_REFERER', env('APP_URL', 'http://localhost')),
-    'title'   => env('OPENROUTER_TITLE', env('APP_NAME', 'Quick GIGS')),
+    'title'   => env('OPENROUTER_TITLE', env('APP_NAME', 'GIG60')),
 
     'reasoning'   => (bool) env('OPENROUTER_REASONING', true),
     'temperature' => (float) env('OPENROUTER_TEMPERATURE', 0.4),

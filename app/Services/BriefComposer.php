@@ -5,7 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Str;
 
 /**
- * Quick GIGS Brief Engine.
+ * GIG60 Brief Engine.
  *
  * Turns a one-line idea into a production-ready brief: objective, hook options,
  * a timed beat sheet, deliverables, technical spec and the QA gate the delivery
