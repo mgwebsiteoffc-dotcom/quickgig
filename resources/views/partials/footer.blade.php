@@ -11,6 +11,9 @@
         <p class="mt-4 text-[12.5px] leading-5 text-faint max-w-[300px]">
           Vinayak Tower, Vibhuti Khand, Lucknow 226028
         </p>
+        <p class="mt-4 text-[12.5px] leading-5 text-faint max-w-[300px]">
+          Vinayak Tower, Vibhuti Khand, Lucknow 226028
+        </p>
         <div class="mt-5 flex items-center gap-2.5">
           @foreach(['x' => 'M18.9 2H22l-7 8 8.2 12h-6.4l-5-7.3-5.8 7.3H2.9l7.5-9.1L2.2 2h6.6l4.5 6.6z', 'in' => 'M4.98 3.5a2.5 2.5 0 11.02 5 2.5 2.5 0 01-.02-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.6 4.78 6V21h-4v-5.3c0-1.26-.02-2.9-1.8-2.9-1.8 0-2.07 1.38-2.07 2.8V21h-4z'] as $label => $d)
             <a href="#" aria-label="{{ $label }}" class="w-9 h-9 rounded-xl glass grid place-items-center hover:border-mint transition">
