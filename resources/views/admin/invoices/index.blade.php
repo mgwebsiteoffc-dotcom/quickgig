@@ -1,0 +1,18 @@
+@extends('admin.layout')
+@section('title','Payments & Invoices')
+@section('breadcrumb','Admin • Payments & Invoices')
+@section('content')
+<div class="flex flex-wrap items-center justify-between gap-3">
+  <div><h1 class="text-[22px] font-black tracking-tight">Payments & invoices</h1><p class="mt-1 text-[13px] text-[#7A7A78]">Review every customer payment, GST amount, escrow state and downloadable invoice.</p></div>
+  <a href="{{ route('admin.orders.index') }}" class="h-10 px-4 rounded-xl border border-[#E8E8E6] bg-white font-bold text-[13px] inline-flex items-center">View orders</a>
+</div>
+<div class="mt-5 grid sm:grid-cols-3 gap-4">
+  @foreach([['Paid volume','₹'.number_format($summary['paid'])],['Held in escrow','₹'.number_format($summary['held'])],['Released','₹'.number_format($summary['released'])]] as [$label,$value])
+    <div class="bg-white border border-[#E8E8E6] rounded-2xl p-5"><div class="text-[11px] font-bold uppercase tracking-widest text-[#7A7A78]">{{ $label }}</div><div class="mt-2 text-[24px] font-black">{{ $value }}</div></div>
+  @endforeach
+</div>
+<form method="GET" class="mt-5 bg-white border border-[#E8E8E6] rounded-2xl p-4 flex flex-wrap gap-3"><input name="q" value="{{ request('q') }}" placeholder="Search invoice, company or service" class="flex-1 min-w-[220px] h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"><select name="status" class="h-10 px-3 rounded-xl border border-[#E8E8E6] bg-[#F8F8F7] text-[13px]"><option value="">All payment states</option><option value="paid" @selected(request('status')==='paid')>Paid</option><option value="pending" @selected(request('status')==='pending')>Pending</option></select><button class="h-10 px-5 rounded-xl bg-[#0F0F0F] text-white font-bold text-[13px]">Filter</button></form>
+<div class="mt-4 bg-white border border-[#E8E8E6] rounded-2xl overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left text-[13px]"><thead class="bg-[#F8F8F7] text-[11px] font-bold uppercase tracking-widest text-[#7A7A78]"><tr><th class="px-4 py-3">Invoice / order</th><th class="px-4 py-3">Customer</th><th class="px-4 py-3">Service</th><th class="px-4 py-3">Subtotal</th><th class="px-4 py-3">GST</th><th class="px-4 py-3">Total</th><th class="px-4 py-3">Payment</th><th class="px-4 py-3"></th></tr></thead><tbody class="divide-y divide-[#F0F0EE]">
+@forelse($invoices as $order)<tr class="hover:bg-[#F8F8F7]/60"><td class="px-4 py-3 font-black">{{ $order->uid }}<div class="text-[11px] text-[#7A7A78]">{{ $order->created_at?->format('d M Y, H:i') }}</div></td><td class="px-4 py-3 font-semibold">{{ $order->company->name ?? '—' }}</td><td class="px-4 py-3">{{ $order->service->title ?? 'Custom service' }}</td><td class="px-4 py-3">₹{{ number_format(($order->subtotal ?? 0)+($order->fee ?? 0)) }}</td><td class="px-4 py-3">₹{{ number_format($order->tax_amount ?? 0) }}</td><td class="px-4 py-3 font-black">₹{{ number_format($order->total ?? 0) }}</td><td class="px-4 py-3"><span class="px-2.5 py-1 rounded-full text-[11px] font-bold {{ $order->payment_status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' }}">{{ ucfirst($order->payment_status ?: 'pending') }}</span><div class="mt-1 text-[11px] text-[#7A7A78]">Escrow: {{ ucfirst($order->escrow_status ?: 'pending') }}</div></td><td class="px-4 py-3"><a href="{{ route('orders.invoice', [$order->id,'buyer']) }}" target="_blank" class="h-8 px-3 rounded-lg bg-[#0F0F0F] text-white font-bold text-[11px] inline-flex items-center">Invoice</a></td></tr>@empty<tr><td colspan="8" class="px-4 py-12 text-center text-[#7A7A78]">No payment records found.</td></tr>@endforelse
+</tbody></table></div><div class="p-4">{{ $invoices->links() }}</div></div>
+@endsection
