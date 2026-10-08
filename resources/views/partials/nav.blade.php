@@ -4,13 +4,12 @@
 
   $platform = [
     ['How it works',  'The 7-stage delivery pipeline', route('how-it-works')],
-    ['The engine',    'Explainable matching, QA gate', route('ai')],
+    ['How it works',  'AI briefs, managed delivery, QA', route('ai')],
     ['Brief builder', 'Free tool — one line to brief', route('brief-builder')],
-    ['Compare',       'Quick GIGS vs the alternatives', route('compare')],
+    ['Compare',       'GIG60 vs the alternatives', route('compare')],
   ];
   $company = [
     ['For business', 'Task board, seats, one invoice', route('for-business')],
-    ['For talent',     'Freelancers & creators — keep 90%', route('for-creators')],
     ['For teams',    'Pods, SLAs, one invoice',     route('enterprise')],
     ['Insights',     'Playbooks and case studies',  route('blog.index')],
     ['FAQ',          'Answers without a sales call', route('faq')],
@@ -25,13 +24,8 @@
   <div class="max-w-shell mx-auto px-5 lg:px-8 h-[70px] flex items-center justify-between gap-6">
 
     {{-- Brand --}}
-    <a href="{{ route('landing') }}" class="flex items-center gap-2.5 shrink-0 group">
-      <span class="w-9 h-9 rounded-xl grid place-items-center bg-ink group-hover:scale-105 transition">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#00C48C"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
-      </span>
-      <span class="font-display text-[17px] tracking-tight leading-none">
-        <span class="font-medium">Quick</span><span class="font-bold text-mint-deep"> GIGS</span>
-      </span>
+    <a href="{{ route('landing') }}" class="flex items-center shrink-0 group" aria-label="GIG60 home">
+      <img src="{{ asset('gig60-logo.svg') }}" alt="GIG60" class="w-[126px] h-auto group-hover:scale-[1.02] transition">
     </a>
 
     {{-- Desktop menu: 2 dropdowns + 2 links --}}
@@ -66,8 +60,7 @@
         </div>
 
         @if($key === 'platform')
-          <a href="{{ route('marketplace') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-ink hover:bg-tint transition font-medium">Marketplace</a>
-          <a href="{{ route('pricing') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-ink hover:bg-tint transition font-medium">Pricing</a>
+          <a href="{{ route('services') }}" class="px-3.5 py-2 rounded-lg text-mut hover:text-ink hover:bg-tint transition font-medium">Services</a>
         @endif
       @endforeach
     </nav>
@@ -110,8 +103,7 @@
   {{-- Mobile drawer --}}
   <div x-show="open" x-cloak x-transition.origin.top class="lg:hidden border-t border-line px-5 py-4 bg-white max-h-[80vh] overflow-y-auto">
     <div class="flex flex-col gap-1">
-      <a href="{{ route('marketplace') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-ink hover:bg-tint">Marketplace</a>
-      <a href="{{ route('pricing') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-ink hover:bg-tint">Pricing</a>
+      <a href="{{ route('services') }}" class="px-3 py-3 rounded-xl text-[15px] font-medium text-ink hover:bg-tint">Services</a>
 
       <div class="mt-2 px-3 text-[10.5px] font-semibold tracking-[.16em] uppercase text-faint">Platform</div>
       @foreach($platform as [$label, $desc, $href])
