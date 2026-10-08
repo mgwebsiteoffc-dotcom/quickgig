@@ -27,7 +27,7 @@ class BlogController extends Controller
 
         // SEO for blog listing
         $seo = [
-            'title' => 'Blog — Reels, Thumbnails & AI Video Playbooks | Quick GIGS',
+            'title' => 'Blog — Reels, Thumbnails & AI Video Playbooks | GIG60',
             'description' => 'Playbooks from verified freelancers: retention cuts, CTR thumbs, Veo 3 UGC ads. -safe SOPs you can ship tomorrow.',
             'canonical' => url('/blog'),
             'image' => url('/og-blog.jpg'),
@@ -52,7 +52,7 @@ class BlogController extends Controller
             'image' => $blog->cover ? (filter_var($blog->cover, FILTER_VALIDATE_URL) ? $blog->cover : asset('storage/'.$blog->cover)) : url('/og-blog.jpg'),
             'type' => 'article',
             'published' => $blog->published_at,
-            'author' => $blog->author->name ?? 'Quick GIGS Team',
+            'author' => $blog->author->name ?? 'GIG60 Team',
             'tags' => $blog->tags,
         ];
 

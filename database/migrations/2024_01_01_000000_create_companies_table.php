@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('gstin')->nullable();
             $table->text('bio')->nullable();
             $table->string('address')->nullable();
-            $table->string('city')->default('Ghaziabad');
+            $table->string('city')->default('Lucknow');
             $table->string('state')->default('Uttar Pradesh');
             $table->string('pincode')->nullable();
             $table->string('industry')->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration {
             $table->timestamps();
         });
         DB::table('companies')->insert([
-            ['name'=>'Avante Studio','slug'=>'avante-studio','person_name'=>'Rohan Sharma','email'=>'rohan@avante.studio','phone'=>'98765 43210','website'=>'https://avante.studio','initials'=>'AS','plan'=>'Pro','gstin'=>'09ABCDE1234F1Z5','bio'=>'Avante Studio is a content-first D2C brand lab scaling reels and ads at speed.','address'=>'Kouchery Road, Ghaziabad','city'=>'Ghaziabad','state'=>'Uttar Pradesh','pincode'=>'201001','industry'=>'D2C & Media','team_size'=>14,'is_verified'=>true,'is_active'=>true,'created_at'=>now(),'updated_at'=>now()],
+            ['name'=>'Avante Studio','slug'=>'avante-studio','person_name'=>'Rohan Sharma','email'=>'rohan@avante.studio','phone'=>'98765 43210','website'=>'https://avante.studio','initials'=>'AS','plan'=>'Pro','gstin'=>'09ABCDE1234F1Z5','bio'=>'Avante Studio is a content-first D2C brand lab scaling reels and ads at speed.','address'=>'Vinayak Tower, Vibhuti Khand, Lucknow','city'=>'Lucknow','state'=>'Uttar Pradesh','pincode'=>'226028','industry'=>'D2C & Media','team_size'=>14,'is_verified'=>true,'is_active'=>true,'created_at'=>now(),'updated_at'=>now()],
             ['name'=>'BrandScale Media','slug'=>'brandscale-media','person_name'=>'Priya Kapoor','email'=>'priya@brandscale.in','phone'=>'98765 43211','website'=>'https://brandscale.in','initials'=>'BS','plan'=>'Team','gstin'=>null,'bio'=>'Performance creative agency for 50+ D2C brands.','address'=>null,'city'=>'Noida','state'=>'Uttar Pradesh','pincode'=>null,'industry'=>null,'team_size'=>null,'is_verified'=>true,'is_active'=>true,'created_at'=>now(),'updated_at'=>now()],
             ['name'=>'GrowthX Labs','slug'=>'growthx-labs','person_name'=>'Aman Verma','email'=>'aman@growthx.in','phone'=>'98765 43212','website'=>null,'initials'=>'GX','plan'=>'Starter','gstin'=>null,'bio'=>'Growth lab for early-stage startups.','address'=>null,'city'=>'Gurugram','state'=>'Haryana','pincode'=>null,'industry'=>null,'team_size'=>null,'is_verified'=>true,'is_active'=>true,'created_at'=>now(),'updated_at'=>now()],
         ]);
